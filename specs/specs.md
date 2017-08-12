@@ -4,6 +4,7 @@ Gut specification
 Make sure you read the section __Getting started__ before the rest so you are aware of how the flow is supposed to work.
 
 * [Getting started](#getting-started)
+  * [Installation](#installation)
   * [Initialization](#initialization)
     * [Configuration file](#configuration-file)
   * [Spirit of the git flow](#spirit-of-the-git-flow)
@@ -14,6 +15,10 @@ Make sure you read the section __Getting started__ before the rest so you are aw
   * [Clone](#clone)
 
 # Getting started
+
+## Installation
+
+Just run `npm i -g gut-flow`. You're all set!
 
 ## Initialization
 
