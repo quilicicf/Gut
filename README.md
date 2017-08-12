@@ -3,7 +3,8 @@ Gut git brauch
 
 ## Getting started
 
-The whole project is specified in the [specs document](./specs/specs.md). Everything you need, you should find it there.
+The whole project is specified in the [specs document](./specs/specs.md). 
+From installation to commands and git flow explanation, you should find everything there.
 If something's amiss, please create an issue.
 
 ## Contributing
