@@ -1,8 +1,11 @@
 {
-  "name": "gut",
+  "name": "gut-flow",
   "version": "1.0.0",
   "description": "Git gut brauch",
-  "main": "index.js",
+  "preferGlobal": true,
+  "bin": {
+    "gut": "index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,5 +22,10 @@
   "bugs": {
     "url": "https://github.com/quilicicf/Gut/issues"
   },
-  "homepage": "https://github.com/quilicicf/Gut#readme"
+  "homepage": "https://github.com/quilicicf/Gut#readme",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "lodash": "^4.17.4",
+    "nodegit": "^0.18.3"
+  }
 }
