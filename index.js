@@ -31,7 +31,7 @@ try {
 yargs
   .usage('usage: $0 <command>')
   .command([ 'branch', 'b' ], `Displays the given remote's branches`, yargs => require('./lib/branch.js').branch(yargs))
-  // .command([ 'clone', 'cl' ], `Clones a repository`, yargs => require('./lib/clone.js').clone(yargs, gutOptions)
+  .command([ 'clone', 'cl' ], `Clones a repository`, yargs => require('./lib/clone.js').clone(yargs, gutOptions))
   .command('groot', 'Display a random sentence, in French', () => {
     console.log(`Je s'appelle Groot`);
   })
