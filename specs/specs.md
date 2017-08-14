@@ -84,12 +84,10 @@ If the parameter is omitted, only the local branches are shown.
 
 ## Clone
 
-Usage: `gut clone <owner> <repo>`. 
+Usage: `gut clone -o owner -r repo`. 
 
 Clones the repository in `<forge>/<owner>/<repo>`.
 If you omit the owner, the username from your [configuration file](#configuration-file) will be used.
-
-The repository will be cloned in `<forge>/owner/repo`.
 
 # Contributors section
 
