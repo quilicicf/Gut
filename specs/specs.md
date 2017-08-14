@@ -12,6 +12,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
     * [Git branching](#git-branching)
       * [Branch naming](#branch-naming)
 * [Git features](#git-features)
+  * [Branch](#branch)
   * [Clone](#clone)
 * [Contributors section](#contributors-section)
   * [Utilities](#utilities)
@@ -53,8 +54,8 @@ this document and is structured like the following.
 ```
 forge
 ├── owner1
-│   ├── repo1
-│   └── repo2
+│   ├── repo1
+│   └── repo2
 └── owner2
     ├── repo1
     └── repo2
@@ -68,11 +69,24 @@ TODO
 
 # Git features
 
+## Branch
+
+Usage: `gut branch -r o`.
+
+Displays the branches on a specific remote. The parameter r is the name of the remote or all to show all branches. 
+There are a few shortcuts to go faster: 
+- a stands for all
+- l stands for local
+- o stands for origin
+- u stands for upstream
+
+If the parameter is omitted, only the local branches are shown.
+
 ## Clone
 
 Usage: `gut clone <owner> <repo>`. 
 
-It will clone the repository in `<forge>/<owner>/<repo>`.
+Clones the repository in `<forge>/<owner>/<repo>`.
 If you omit the owner, the username from your [configuration file](#configuration-file) will be used.
 
 The repository will be cloned in `<forge>/owner/repo`.
