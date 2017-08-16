@@ -30,6 +30,7 @@ try {
 
 yargs
   .usage('usage: $0 <command>')
+  .command([ 'add', 'a' ], `Adds all changes in the repository`, yargs => require('./lib/add.js').add())
   .command([ 'branch', 'b' ], `Displays the given remote's branches`, yargs => require('./lib/branch.js').branch(yargs))
   .command([ 'clone', 'cl' ], `Clones a repository`, yargs => require('./lib/clone.js').clone(yargs, gutOptions))
   .command('groot', 'Display a random sentence, in French', () => {
