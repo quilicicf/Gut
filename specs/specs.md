@@ -40,9 +40,13 @@ Contents of the file:
 ```json
 {
   "username": "Your git username",
-  "repositoriesPath": "The path to your folder containing git repositories. Yes it's assumed all are in one place!"
+  "repositoriesPath": "The path to your folder containing git repositories. Yes it's assumed all are in one place!",
+  "preferredGitServer": "The git server you are using"
 }
 ```
+
+For `preferredGitServer` the only accepted value at the time is github. Other servers will be added as well as the 
+possibility to configure yours in the future.
 
 ## Spirit of the git flow
 
@@ -53,12 +57,21 @@ this document and is structured like the following.
 
 ```
 forge
-├── owner1
-│   ├── repo1
-│   └── repo2
-└── owner2
-    ├── repo1
-    └── repo2
+├── github
+│   ├── owner1
+│   │   ├── repo1
+│   │   └── repo2
+│   └── owner2
+│       ├── repo1
+│       └── repo2
+└── gitlab
+    ├── owner1
+    │   ├── repo1
+    │   └── repo2
+    └── owner2
+        ├── repo1
+        └── repo2
+
 ```
 
 ### Git branching
@@ -84,10 +97,12 @@ If the parameter is omitted, only the local branches are shown.
 
 ## Clone
 
-Usage: `gut clone -o owner -r repo`. 
+Usage: `gut clone -s server -o owner -r repo`. 
 
-Clones the repository in `<forge>/<owner>/<repo>`.
-If you omit the owner, the username from your [configuration file](#configuration-file) will be used.
+Clones the repository in `<forge>/<server>/<owner>/<repo>`.
+
+If you omit the server, the `preferredGitServer` from your [configuration file](#configuration-file) will be used.
+If you omit the owner, the `username` from your [configuration file](#configuration-file) will be used.
 
 # Contributors section
 
