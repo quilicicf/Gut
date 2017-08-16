@@ -12,6 +12,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
     * [Git branching](#git-branching)
       * [Branch naming](#branch-naming)
 * [Git features](#git-features)
+  * [Add](#add)
   * [Branch](#branch)
   * [Clone](#clone)
 * [Contributors section](#contributors-section)
@@ -81,6 +82,12 @@ forge
 TODO
 
 # Git features
+
+## Add
+
+Usage: `gut add`.
+
+Adds all the changes in the repository. Literally does `git add <repository top level> -A`.
 
 ## Branch
 
