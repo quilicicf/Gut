@@ -33,9 +33,11 @@ yargs
   .command([ 'add', 'a' ], `Adds all changes in the repository`, yargs => require('./lib/add.js').add())
   .command([ 'branch', 'b' ], `Displays the given remote's branches`, yargs => require('./lib/branch.js').branch(yargs))
   .command([ 'clone', 'cl' ], `Clones a repository`, yargs => require('./lib/clone.js').clone(yargs, gutOptions))
+  .command([ 'commit', 'c' ], `Commits the staged changes`, yargs => require('./lib/commit.js').commit(yargs))
   .command('groot', 'Display a random sentence, in French', () => {
     console.log(`Je s'appelle Groot`);
   })
   .demandCommand(1, 'Specify the command you want to run!'.red)
   .help()
+  .epilogue('for more information, readd the manual at https://github.com/quilicicf/Gut/blob/master/specs/specs.md')
   .argv;
