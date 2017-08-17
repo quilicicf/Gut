@@ -10,6 +10,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
   * [Spirit of the git flow](#spirit-of-the-git-flow)
     * [Organization of your repositories](#organization-of-your-repositories)
     * [Git branching](#git-branching)
+      * [Branch flow](#branch-flow)
       * [Branch naming](#branch-naming)
 * [Git features](#git-features)
   * [Add](#add)
@@ -78,9 +79,52 @@ forge
 
 ### Git branching
 
+#### Branch flow
+
+The following rules apply to the branches: 
+- __Master:__ The branch `master` is a branch that strictly follows the production. It is therefore a faithful 
+representation of what's in production at ANY MOMENT
+- __Version branches:__ When starting the development of a version, a branch is created from master.
+- __Feature branches:__ A version can contain multiple features. In case two or more developers work on a feature, they 
+can 
+create a branch from the version branch to allow for scope adjustment. The feature can be merged in the next version if 
+need be.
+- __Dev branches:__ When working on a ticket, a dev creates a branch from the feature or version branch.
+
+1. It is allowed to force-push on branches that are only used by a single developer (to create a clean history).
+1. As soon as two developers start working on the same branch, force-push is prohibited (I'll implement safe-guards but 
+that's a little further down the roadmap).
+1. To have a clean history, the rebase is preferred to update the version/feature/dev branches to the last modifications. 
+They should be done when there's the fewest branches open and the branch that's to be rebased must be duplicated 
+first of course (there'll be tooling down the roadmap for that too).
+1. The rebase-and-merge feature is to be preferred when merging branches down.
+1. Delivery to the QA team is done y creating a tag named as a time stamp (ISO 8601)
+1. When the QA validates a tag, it is merged into master, then production tag is created and named `v<full version>`
+
+Benefits of this flow:
+- there is a branch that follows the production so it's easy to know what's in prod and debug it
+- the history is linear and really easy to read
+- forgetting to merge something seldom happens
+- even if the rebase was not done on alive branches after a merge to master, there should never be devs lost in 
+translation
+
+Attention point: 
+- the tag that goes to production is not exactly the tag validated by the QA. If the merge is not smooth, the QA 
+might need to re-check things
+- when a tag is merged into production, all live branches must be rebased
+
 #### Branch naming 
 
-TODO
+- Version branches: `<major version>.<minor version>.<patch version>` ex: `2.3.19`
+- Feature branches: `<full version>_<feature>` ex: `2.3.19_whatsNewDialog`
+- Dev branches: `<full version>_<feature>_<ticket number>_<dev>` ex: `2.3.19_whatsNewDialog_8495_optOut`
+
+Benefits of this naming: 
+- No need to look at the commit tree to find where a dev started
+- Easy to spot if a branch is not rebased to the right origin (merging `1.2.2_123_totoFeature` in `1.3.0` should 
+raise an alarm in your head)
+- Easy to clean the old local branches, just filter them with regex (there's gonna be a utility for that)
+- Easy to interact with CI/CD, the branch is parsable, the ticket number easy to retrieve
 
 # Git features
 
