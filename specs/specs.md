@@ -86,9 +86,8 @@ The following rules apply to the branches:
 representation of what's in production at ANY MOMENT
 - __Version branches:__ When starting the development of a version, a branch is created from master.
 - __Feature branches:__ A version can contain multiple features. In case two or more developers work on a feature, they 
-can 
-create a branch from the version branch to allow for scope adjustment. The feature can be merged in the next version if 
-need be.
+can create a branch from the version branch. To allow for scope adjustment, the feature can be merged in the next 
+version if need be.
 - __Dev branches:__ When working on a ticket, a dev creates a branch from the feature or version branch.
 
 1. It is allowed to force-push on branches that are only used by a single developer (to create a clean history).
