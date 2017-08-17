@@ -81,7 +81,7 @@ forge
 
 #### Branch flow
 
-The following rules apply to the branches: 
+Branch types:
 - __Master:__ The branch `master` is a branch that strictly follows the production. It is therefore a faithful 
 representation of what's in production at ANY MOMENT
 - __Version branches:__ When starting the development of a version, a branch is created from master.
@@ -90,6 +90,7 @@ can create a branch from the version branch. To allow for scope adjustment, the 
 version if need be.
 - __Dev branches:__ When working on a ticket, a dev creates a branch from the feature or version branch.
 
+The following rules apply to the branches: 
 1. It is allowed to force-push on branches that are only used by a single developer (to create a clean history).
 1. As soon as two developers start working on the same branch, force-push is prohibited (I'll implement safe-guards but 
 that's a little further down the roadmap).
@@ -107,7 +108,7 @@ Benefits of this flow:
 - even if the rebase was not done on alive branches after a merge to master, there should never be devs lost in 
 translation
 
-Attention point: 
+Attention points: 
 - the tag that goes to production is not exactly the tag validated by the QA. If the merge is not smooth, the QA 
 might need to re-check things
 - when a tag is merged into production, all live branches must be rebased
@@ -116,7 +117,8 @@ might need to re-check things
 
 - Version branches: `<major version>.<minor version>.<patch version>` ex: `2.3.19`
 - Feature branches: `<full version>_<feature>` ex: `2.3.19_whatsNewDialog`
-- Dev branches: `<full version>_<feature>_<ticket number>_<dev>` ex: `2.3.19_whatsNewDialog_8495_optOut`
+- Dev branches: `<full version>_<feature>_<ticket number>_<dev>` ex: `2.3.19_whatsNewDialog_8495_optOut` or if 
+there's no feature branch `2.3.19_456_noLogsBug`
 
 Benefits of this naming: 
 - No need to look at the commit tree to find where a dev started
