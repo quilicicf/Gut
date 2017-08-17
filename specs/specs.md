@@ -15,6 +15,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
   * [Add](#add)
   * [Branch](#branch)
   * [Clone](#clone)
+  * [Commit](#commit)
 * [Contributors section](#contributors-section)
   * [Utilities](#utilities)
     * [Get top level](#get-top-level)
@@ -110,6 +111,18 @@ Clones the repository in `<forge>/<server>/<owner>/<repo>`.
 
 If you omit the server, the `preferredGitServer` from your [configuration file](#configuration-file) will be used.
 If you omit the owner, the `username` from your [configuration file](#configuration-file) will be used.
+
+## Commit
+
+Usage: `gut commit -m <message>`. 
+
+Creates a commit with the provided message.
+
+Arguments: 
+* `-m`: The commit message.
+* `-c`: Creates a code review commit, the message is set to `:eyes: Code review`. Mutually exclusive with `-m`
+
+The commit should fail if the user has unstaged changes.
 
 # Contributors section
 
