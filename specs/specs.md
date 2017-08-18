@@ -6,12 +6,14 @@ Make sure you read the section __Getting started__ before the rest so you are aw
 * [Getting started](#getting-started)
   * [Installation](#installation)
   * [Initialization](#initialization)
-    * [Configuration file](#configuration-file)
+    * [Gut configuration file](#gut-configuration-file)
+    * [Repository configuration file](#repository-configuration-file)
   * [Spirit of the git flow](#spirit-of-the-git-flow)
     * [Organization of your repositories](#organization-of-your-repositories)
     * [Git branching](#git-branching)
       * [Branch flow](#branch-flow)
       * [Branch naming](#branch-naming)
+      * [Commit messages format](#commit-messages-format)
 * [Git features](#git-features)
   * [Add](#add)
   * [Branch](#branch)
@@ -33,7 +35,7 @@ Just run `npm i -g gut-flow`. You're all set!
 
 ## Initialization
 
-### Configuration file
+### Gut configuration file
 
 Gut keeps a configuration file in `~/.gut-config.json`. 
 This file is automatically bootstrapped to a (currently fixed) value at startup if it is not found.
@@ -50,6 +52,23 @@ Contents of the file:
 
 For `preferredGitServer` the only accepted value at the time is github. Other servers will be added as well as the 
 possibility to configure yours in the future.
+
+### Repository configuration file
+
+Gut will search for a file named `gut-config.json` in your repositories to retrieve the repository-specific 
+configuration.
+
+Contents of the file: 
+
+```json
+{
+  "commitMessageSuffixTemplate": "Template of the suffix that should be added to your commit messages"
+}
+```
+
+- `commitMessageSuffixTemplate`: when committing on a branch that contains a ticket number, gut will look for the 
+suffix template. If a suffix is found, the template will be used to suffix the commit message, replacing 
+`$ticketNumber` with the actual ticket number, retrieved from the branch name (see [branch naming](#branch-naming)).
 
 ## Spirit of the git flow
 
@@ -126,6 +145,16 @@ Benefits of this naming:
 raise an alarm in your head)
 - Easy to clean the old local branches, just filter them with regex (there's gonna be a utility for that)
 - Easy to interact with CI/CD, the branch is parsable, the ticket number easy to retrieve
+
+#### Commit messages format
+
+Commit messages should be suffixed with the ticket number so that your bug tracker/CI/CD can track them and associate
+ the commit to the ticket. 
+ 
+In GitHub, you can suffix your commit message with `#<ticket number>` and GitHub will reference the commit in the 
+ issue.
+ 
+In JIRA, you can suffix the commit message with `(<project id>-<ticket number>)` to get the same result.
 
 # Git features
 
