@@ -193,8 +193,10 @@ Usage: `gut commit -m <message>`.
 Creates a commit with the provided message.
 
 Arguments: 
-* `-m`: The commit message.
-* `-c`: Creates a code review commit, the message is set to `:eyes: Code review`. Mutually exclusive with `-m`
+* `-m`: The commit message, suffixed with the ticket number if available (in the branch name) and the repository is 
+configured (see [Repository configuration file](#repository-configuration-file)) with `commitMessageSuffixTemplate`
+* `-c`: Creates a code review commit, the message is set to `:eyes: Code review`, suffixed with the ticket number if 
+applicable. Mutually exclusive with `-m`
 
 The commit should fail if the user has unstaged changes.
 
