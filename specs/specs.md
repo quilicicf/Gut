@@ -55,8 +55,8 @@ possibility to configure yours in the future.
 
 ### Repository configuration file
 
-Gut will search for a file named `gut-config.json` in your repositories to retrieve the repository-specific 
-configuration.
+Gut will search for a file named `.gut-config.json` at the root of your repositories to retrieve the 
+repository-specific configuration.
 
 Contents of the file: 
 
