@@ -36,7 +36,7 @@ yargs
   .command([ 'clone', 'cl' ], `Clones a repository`, yargs => require('./lib/clone.js').clone(yargs, gutOptions))
   .command([ 'commit', 'c' ], `Commits the staged changes`, yargs => require('./lib/commit.js').commit(yargs))
   .command('groot', 'Display a random sentence, in French', () => {
-    console.log(`Je s'appelle Groot`);
+    utils.log(`Je s'appelle Groot`);
   })
   .demandCommand(1, 'Specify the command you want to run!'.red)
   .help()
