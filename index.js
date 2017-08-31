@@ -4,12 +4,13 @@
 // REQUIRE MODULES //
 /////////////////////
 
-const _ = require('lodash');
-const colors = require('colors');
+require('colors');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const yargs = require('yargs');
+
+const utils = require('./lib/utils');
 
 //////////////////////
 // RETRIEVE OPTIONS //
@@ -36,6 +37,7 @@ yargs
   .command([ 'commit', 'c' ], `Commits the staged changes`, yargs => require('./lib/commit.js').commit(yargs))
   .command('groot', 'Display a random sentence, in French', () => {
     console.log(`Je s'appelle Groot`);
+    console.log(utils.parseBranchName());
   })
   .demandCommand(1, 'Specify the command you want to run!'.red)
   .help()
