@@ -16,7 +16,7 @@ const utils = require('./lib/utils');
 // RETRIEVE OPTIONS //
 //////////////////////
 
-const gutOptionsPath = path.resolve(os.homedir(), '.gut-config.json');
+const gutOptionsPath = path.resolve(os.homedir(), utils.OPTIONS_FILE_NAME);
 let gutOptions;
 try {
   fs.statSync(gutOptionsPath);
@@ -37,7 +37,6 @@ yargs
   .command([ 'commit', 'c' ], `Commits the staged changes`, yargs => require('./lib/commit.js').commit(yargs))
   .command('groot', 'Display a random sentence, in French', () => {
     console.log(`Je s'appelle Groot`);
-    console.log(utils.parseBranchName());
   })
   .demandCommand(1, 'Specify the command you want to run!'.red)
   .help()
