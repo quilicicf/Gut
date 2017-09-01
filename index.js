@@ -40,5 +40,7 @@ yargs
   })
   .demandCommand(1, 'Specify the command you want to run!'.red)
   .help()
-  .epilogue('for more information, readd the manual at https://github.com/quilicicf/Gut/blob/master/specs/specs.md')
+  .version()
+  .wrap(null)
+  .epilogue('For more information, read the manual at https://github.com/quilicicf/Gut/blob/master/specs/specs.md')
   .argv;
