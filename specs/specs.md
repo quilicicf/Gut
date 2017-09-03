@@ -17,6 +17,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
 * [Git features](#git-features)
   * [Add](#add)
   * [Branch](#branch)
+  * [Checkout](#checkout)
   * [Clone](#clone)
   * [Commit](#commit)
 * [Contributors section](#contributors-section)
@@ -176,6 +177,30 @@ There are a few shortcuts to go faster:
 - u stands for upstream
 
 If the parameter is omitted, only the local branches are shown.
+
+## Checkout
+
+Usage: `gut checkout -t <target branch>`.
+
+Checks out a branch. You can create the branch and check it out in a single command.
+
+Arguments: 
+- `-t` target branch, if it exists
+- `-v` create a new version branch, the value of the parameter is the version (follows semver). You can only create a 
+version branch from master.
+- `-f` create a new feature branch, the value of the parameter is the feature's description. It can't contain an 
+underscore. You can only create a feature branch from master or a version branch.
+- `-i` only usable with `-f`. Is set, the feature branch will be built each time your commit on the branch.
+- `-d` create a new dev branch, the value of the parameter is the dev's description. It can't contain an underscore. 
+You can create dev branches from every type of branches but dev branches.
+- `-n` only usable with `-d`. The ticket number associated with the dev.
+
+Examples:
+- `gut checkout -t master` switches to branch `master`
+- `gut checkout -v 2.35.9` (called from `master`) creates a version branch named `2.35.9`
+- `gut checkout -f myFeature -i` (called from `2.35.9`) creates a feature branch named `2.35.9_build#myFeature`
+- `gut checkout -d myDev -n 123` (called from `2.35.9_build#myFeature`) creates a dev branch named 
+`2.35.9_build#myFeature_123_myDev`
 
 ## Clone
 
