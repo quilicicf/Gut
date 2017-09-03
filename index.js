@@ -31,10 +31,11 @@ try {
 
 yargs
   .usage('usage: $0 <command>')
-  .command([ 'add', 'a' ], `Adds all changes in the repository`, yargs => require('./lib/add.js').add())
-  .command([ 'branch', 'b' ], `Displays the given remote's branches`, yargs => require('./lib/branch.js').branch(yargs))
-  .command([ 'clone', 'cl' ], `Clones a repository`, yargs => require('./lib/clone.js').clone(yargs, gutOptions))
-  .command([ 'commit', 'c' ], `Commits the staged changes`, yargs => require('./lib/commit.js').commit(yargs))
+  .command([ 'add', 'a' ], `Adds all changes in the repository`, yargs => require('./lib/add').add())
+  .command([ 'branch', 'b' ], `Displays the given remote's branches`, yargs => require('./lib/branch').branch(yargs))
+  .command([ 'checkout', 'co' ], `Checks out a branch`, yargs => require('./lib/checkout').checkout(yargs, gutOptions))
+  .command([ 'clone', 'cl' ], `Clones a repository`, yargs => require('./lib/clone').clone(yargs, gutOptions))
+  .command([ 'commit', 'c' ], `Commits the staged changes`, yargs => require('./lib/commit').commit(yargs))
   .command('groot', 'Display a random sentence, in French', () => {
     utils.log(`Je s'appelle Groot`);
   })
