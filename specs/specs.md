@@ -244,6 +244,10 @@ Available formats:
 * `json`: the commits are returned as a JSON array
 * `sha`:  only the shas are returned. Very useful when used with reverse to cherry-pick a few commits!
 
+Log format `pretty`:
+
+![Log format pretty](./images/log_pretty.png)
+
 # Contributors section
 
 This section contains information about the internals of this module. They concern you only if either you contribute
