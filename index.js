@@ -36,8 +36,9 @@ yargs
   .command([ 'checkout', 'co' ], `Checks out a branch`, yargs => require('./lib/checkout').checkout(yargs, gutOptions))
   .command([ 'clone', 'cl' ], `Clones a repository`, yargs => require('./lib/clone').clone(yargs, gutOptions))
   .command([ 'commit', 'c' ], `Commits the staged changes`, yargs => require('./lib/commit').commit(yargs))
+  .command([ 'log', 'l' ], ``, yargs => require('./lib/log').log(yargs))
   .command('groot', 'Display a random sentence, in French', () => {
-    utils.log(`Je s'appelle Groot`);
+    utils.print(`Je s'appelle Groot`);
   })
   .demandCommand(1, 'Specify the command you want to run!'.red)
   .help()
