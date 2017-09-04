@@ -187,6 +187,7 @@ Checks out a branch. You can create the branch and check it out in a single comm
 
 Arguments: 
 - `-t` target branch, if it exists
+- `-r` regex to be used to search for the branch to check out
 - `-v` create a new version branch, the value of the parameter is the version (follows semver). You can only create a 
 version branch from master.
 - `-f` create a new feature branch, the value of the parameter is the feature's description. It can't contain an 
@@ -198,6 +199,7 @@ You can create dev branches from every type of branches but dev branches.
 
 Examples:
 - `gut checkout -t master` switches to branch `master`
+- `gut checkout -r 2345` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
 - `gut checkout -v 2.35.9` (called from `master`) creates a version branch named `2.35.9`
 - `gut checkout -f myFeature -i` (called from `2.35.9`) creates a feature branch named `2.35.9_build#myFeature`
 - `gut checkout -d myDev -n 123` (called from `2.35.9_build#myFeature`) creates a dev branch named 
