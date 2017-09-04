@@ -20,6 +20,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
   * [Checkout](#checkout)
   * [Clone](#clone)
   * [Commit](#commit)
+  * [Log](#log)
 * [Contributors section](#contributors-section)
   * [Utilities](#utilities)
     * [Get top level](#get-top-level)
@@ -224,6 +225,24 @@ configured (see [Repository configuration file](#repository-configuration-file))
 applicable. Mutually exclusive with `-m`
 
 The commit should fail if the user has unstaged changes.
+
+## Log
+
+Usage: `gut log`.
+
+Displays commits history.
+
+Arguments: 
+* `-f` format, the format in the list of predefined formats (see list below, defaults to `pretty`)
+* `-s` skip the n first commits in the history (defaults to 0)
+* `-n` shows only n commits (default to 100)
+* `-r` reverses the order in which the commits are shown. If not specified, the commits will be displayed from newest
+ to oldest.
+ 
+Available formats: 
+* `pretty`: a colored and well indented format, see screenshot below
+* `json`: the commits are returned as a JSON array
+* `sha`:  only the shas are returned. Very useful when used with reverse to cherry-pick a few commits!
 
 # Contributors section
 
