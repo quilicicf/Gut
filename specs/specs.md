@@ -21,6 +21,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
   * [Clone](#clone)
   * [Commit](#commit)
   * [Log](#log)
+  * [Push](#push)
 * [Contributors section](#contributors-section)
   * [Utilities](#utilities)
     * [Get top level](#get-top-level)
@@ -247,6 +248,17 @@ Available formats:
 Log format `pretty`:
 
 ![Log format pretty](./images/log_pretty.png)
+
+## Push
+
+Usage: `gut push`.
+
+Pushes changes to the remote and sets the branches upstream to `<remote>/<branchName>`. 
+The user can always change the remote to push to but he must do it the first time he pushes a branch if there's more 
+than one remote configured.
+
+Arguments:
+* `-r` remote, the remote to push to
 
 # Contributors section
 
