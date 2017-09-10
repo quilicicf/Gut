@@ -26,8 +26,6 @@
   "dependencies": {
     "colors": "^1.1.2",
     "lodash": "^4.17.4",
-    "nodegit": "^0.18.3",
-    "single-line-log": "^1.1.2",
     "yargs": "^8.0.2"
   }
 }
