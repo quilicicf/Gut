@@ -20,6 +20,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
   * [Checkout](#checkout)
   * [Clone](#clone)
   * [Commit](#commit)
+  * [Inspect](#inspect)
   * [Log](#log)
   * [Push](#push)
 * [Contributors section](#contributors-section)
@@ -229,20 +230,41 @@ applicable. Mutually exclusive with `-m`
 
 The commit should fail if the user has unstaged changes.
 
+## Inspect
+
+Usage: `gut inspect`.
+
+Inspects a git diff and displays a summary. Displayed items are:
+* Lines added/removed
+* Oddities found in the added code
+  * TODO
+  * FIXME
+  * Abusive printing (console.log in JS, System.out.print in Java)
+  * Local paths (looks for your home directory)
+
+Arguments:
+* `-n` inspect the n last commits (exclusive with -f and -t)
+* `-f` the commit from which to start the diff
+* `-t` the commit where the diff ends
+
+Example output:
+
+![Inspect output](./images/inspect_output.png)
+
 ## Log
 
 Usage: `gut log`.
 
 Displays commits history.
 
-Arguments: 
+Arguments:
 * `-f` format, the format in the list of predefined formats (see list below, defaults to `pretty`)
 * `-s` skip the n first commits in the history (defaults to 0)
 * `-n` shows only n commits (default to 100)
 * `-r` reverses the order in which the commits are shown. If not specified, the commits will be displayed from newest
  to oldest.
- 
-Available formats: 
+
+Available formats:
 * `pretty`: a colored and well indented format, see screenshot below
 * `json`: the commits are returned as a JSON array
 * `sha`:  only the shas are returned. Very useful when used with reverse to cherry-pick a few commits!
