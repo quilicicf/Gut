@@ -223,10 +223,19 @@ Usage: `gut commit -m <message>`.
 Creates a commit with the provided message.
 
 Arguments: 
-* `-m`: The commit message, suffixed with the ticket number if available (in the branch name) and the repository is 
-configured (see [Repository configuration file](#repository-configuration-file)) with `commitMessageSuffixTemplate`
+* `-m`: The commit message. It will be automatically suffixed with the ticket number if available (in the branch name)
+and the repository is configured (see [Repository configuration file](#repository-configuration-file))
+with `commitMessageSuffixTemplate`. The commit message is an array, you don't need to quote it (see examples).
 * `-c`: Creates a code review commit, the message is set to `:eyes: Code review`, suffixed with the ticket number if 
 applicable. Mutually exclusive with `-m`
+
+Examples:
+* `gut commit -m :memo: Specify better commit messages` will create a commit with a message set to
+`:memo: Specify better commit messages`. Note: you will need to quote it if you have a word that begin with `-` in the
+commit message, otherwise it will be seen as a parameter to the gut command.
+* `gut commit -m ':memo: Specify better commit messages'` will create a commit with a message set to
+`:memo: Specify better commit messages`.
+* `gut commit -c`will create a commit with a message set to `:eyes: Code review`.
 
 The commit should fail if the user has unstaged changes.
 
