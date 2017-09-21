@@ -35,6 +35,7 @@ yargs
   .command([ 'divisions', 'd' ], `Displays the given remote's branches`, yargs => require('./lib/divisions').divisions(yargs))
   .command([ 'execute', 'e' ], `Commits the staged changes`, yargs => require('./lib/execute').execute(yargs))
   .command([ 'history', 'h' ], `Displays the commit's history`, yargs => require('./lib/history').history(yargs))
+  .command([ 'install', 'i' ], `Installs the shell scripts`, yargs => require('./lib/install').install())
   .command([ 'obliterate', 'o' ], `Deletes a branch or a tag`, yargs => require('./lib/obliterate').obliterate(yargs))
   .command([ 'pile', 'p' ], `Adds all changes in the repository`, yargs => require('./lib/pile').pile())
   .command([ 'replicate', 'r' ], `Clones a repository`, yargs => require('./lib/replicate').replicate(yargs, gutOptions))
