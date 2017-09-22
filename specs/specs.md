@@ -5,6 +5,8 @@ Make sure you read the section __Getting started__ before the rest so you are aw
 
 * [Getting started](#getting-started)
   * [Installation](#installation)
+    * [Basic features](#basic-features)
+    * [Shell features](#shell-features)
   * [Initialization](#initialization)
     * [Gut configuration file](#gut-configuration-file)
     * [Repository configuration file](#repository-configuration-file)
@@ -21,6 +23,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
   * [History](#history)
   * [Obliterate](#obliterate)
   * [Pile](#pile)
+  * [Pushb popb](#pushb-popb)
   * [Replicate](#replicate)
   * [Switch](#switch)
   * [Thrust](#thrust)
@@ -36,7 +39,33 @@ Make sure you read the section __Getting started__ before the rest so you are aw
 
 ## Installation
 
+### Basic features
+
 Just run `npm i -g gut-flow`. You're all set!
+
+### Shell features
+
+Some features gut provides change the terminal's directory or maintain variables that should have the same life span
+as the terminal.
+
+It was not possible to implement those in pure NodeJS so some features are implemented in bash. You can find the list
+of available shell scripts in the folder [shell](https://github.com/quilicicf/Gut/blob/master/shell).
+
+To use these features, run `gut install` and paste the following code to your `.bashrc`:
+
+```shell
+# Installation of Gut scripts, see https://github.com/quilicicf/Gut/blob/master/specs/specs.md#shell-features
+# If the link is broken, you probably want to read the README again https://github.com/quilicicf/Gut/blob/master/README.md
+installGutScripts() {
+  local script
+  test -d ~/.config/gut && {
+    while read script; do
+      . "$script"
+    done <<< "$(find ~/.config/gut -name '*.sh')"
+  }
+}
+installGutScripts
+```
 
 ## Initialization
 
@@ -268,6 +297,14 @@ Usage: `gut pile`.
 
 Adds all the changes in the repository. Literally does `git add <repository top level> -A`.
 
+## Pushb popb
+
+Usage: `pushb <branch name>; do things; popb`
+
+Works like pushd and popd but for GitHub branches.
+
+> Note: This feature is implemented in bash, it requires some specific [installation steps](#shell-features).
+
 ## Replicate
 
 Usage: `gut replicate -s server -o owner -r repo`.
@@ -307,8 +344,8 @@ Examples:
 
 Usage: `gut thrust`.
 
-Pushes changes to the remote and sets the branches upstream to `<remote>/<branchName>`. 
-The user can always change the remote to push to but he must do it the first time he pushes a branch if there's more 
+Pushes changes to the remote and sets the branches upstream to `<remote>/<branchName>`.
+The user can always change the remote to push to but he must do it the first time he pushes a branch if there's more
 than one remote configured.
 
 Arguments:
