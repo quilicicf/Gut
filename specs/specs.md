@@ -15,14 +15,15 @@ Make sure you read the section __Getting started__ before the rest so you are aw
       * [Branch naming](#branch-naming)
       * [Commit messages format](#commit-messages-format)
 * [Git features](#git-features)
-  * [Add](#add)
-  * [Branch](#branch)
-  * [Checkout](#checkout)
-  * [Clone](#clone)
-  * [Commit](#commit)
-  * [Inspect](#inspect)
-  * [Log](#log)
-  * [Push](#push)
+  * [Audit](#audit)
+  * [Divisions](#divisions)
+  * [Execute](#execute)
+  * [History](#history)
+  * [Obliterate](#obliterate)
+  * [Pile](#pile)
+  * [Replicate](#replicate)
+  * [Switch](#switch)
+  * [Thrust](#thrust)
 * [Contributors section](#contributors-section)
   * [Utilities](#utilities)
     * [Get top level](#get-top-level)
@@ -131,21 +132,21 @@ Benefits of this flow:
 - even if the rebase was not done on alive branches after a merge to master, there should never be devs lost in 
 translation
 
-Attention points: 
-- the tag that goes to production is not exactly the tag validated by the QA. If the merge is not smooth, the QA 
+Attention points:
+- the tag that goes to production is not exactly the tag validated by the QA. If the merge is not smooth, the QA
 might need to re-check things
 - when a tag is merged into production, all live branches must be rebased
 
-#### Branch naming 
+#### Branch naming
 
 - Version branches: `<major version>.<minor version>.<patch version>` ex: `2.3.19`
 - Feature branches: `<full version>_<feature>` ex: `2.3.19_whatsNewDialog`
-- Dev branches: `<full version>_<feature>_<ticket number>_<dev>` ex: `2.3.19_whatsNewDialog_8495_optOut` or if 
+- Dev branches: `<full version>_<feature>_<ticket number>_<dev>` ex: `2.3.19_whatsNewDialog_8495_optOut` or if
 there's no feature branch `2.3.19_456_noLogsBug`
 
-Benefits of this naming: 
+Benefits of this naming:
 - No need to look at the commit tree to find where a dev started
-- Easy to spot if a branch is not rebased to the right origin (merging `1.2.2_123_totoFeature` in `1.3.0` should 
+- Easy to spot if a branch is not rebased to the right origin (merging `1.2.2_123_totoFeature` in `1.3.0` should
 raise an alarm in your head)
 - Easy to clean the old local branches, just filter them with regex (there's gonna be a utility for that)
 - Easy to interact with CI/CD, the branch is parsable, the ticket number easy to retrieve
@@ -153,95 +154,18 @@ raise an alarm in your head)
 #### Commit messages format
 
 Commit messages should be suffixed with the ticket number so that your bug tracker/CI/CD can track them and associate
- the commit to the ticket. 
- 
-In GitHub, you can suffix your commit message with `#<ticket number>` and GitHub will reference the commit in the 
+ the commit to the ticket.
+
+In GitHub, you can suffix your commit message with `#<ticket number>` and GitHub will reference the commit in the
  issue.
- 
+
 In JIRA, you can suffix the commit message with `(<project id>-<ticket number>)` to get the same result.
 
 # Git features
 
-## Add
+## Audit
 
-Usage: `gut add`.
-
-Adds all the changes in the repository. Literally does `git add <repository top level> -A`.
-
-## Branch
-
-Usage: `gut branch -r o`.
-
-Displays the branches on a specific remote. The parameter r is the name of the remote or all to show all branches. 
-There are a few shortcuts to go faster: 
-- a stands for all
-- l stands for local
-- o stands for origin
-- u stands for upstream
-
-If the parameter is omitted, only the local branches are shown.
-
-## Checkout
-
-Usage: `gut checkout -t <target branch>`.
-
-Checks out a branch. You can create the branch and check it out in a single command.
-
-Arguments: 
-- `-t` target branch, if it exists
-- `-r` regex to be used to search for the branch to check out
-- `-v` create a new version branch, the value of the parameter is the version (follows semver). You can only create a 
-version branch from master.
-- `-f` create a new feature branch, the value of the parameter is the feature's description. It can't contain an 
-underscore. You can only create a feature branch from master or a version branch.
-- `-i` only usable with `-f`. Is set, the feature branch will be built each time your commit on the branch.
-- `-d` create a new dev branch, the value of the parameter is the dev's description. It can't contain an underscore. 
-You can create dev branches from every type of branches but dev branches.
-- `-n` only usable with `-d`. The ticket number associated with the dev.
-
-Examples:
-- `gut checkout -t master` switches to branch `master`
-- `gut checkout -r 2345` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
-- `gut checkout -v 2.35.9` (called from `master`) creates a version branch named `2.35.9`
-- `gut checkout -f myFeature -i` (called from `2.35.9`) creates a feature branch named `2.35.9_build#myFeature`
-- `gut checkout -d myDev -n 123` (called from `2.35.9_build#myFeature`) creates a dev branch named 
-`2.35.9_build#myFeature_123_myDev`
-
-## Clone
-
-Usage: `gut clone -s server -o owner -r repo`. 
-
-Clones the repository in `<forge>/<server>/<owner>/<repo>`.
-
-If you omit the server, the `preferredGitServer` from your [configuration file](#configuration-file) will be used.
-If you omit the owner, the `username` from your [configuration file](#configuration-file) will be used.
-
-## Commit
-
-Usage: `gut commit -m <message>`. 
-
-Creates a commit with the provided message.
-
-Arguments: 
-* `-m`: The commit message. It will be automatically suffixed with the ticket number if available (in the branch name)
-and the repository is configured (see [Repository configuration file](#repository-configuration-file))
-with `commitMessageSuffixTemplate`. The commit message is an array, you don't need to quote it (see examples).
-* `-c`: Creates a code review commit, the message is set to `:eyes: Code review`, suffixed with the ticket number if 
-applicable. Mutually exclusive with `-m`
-
-Examples:
-* `gut commit -m :memo: Specify better commit messages` will create a commit with a message set to
-`:memo: Specify better commit messages`. Note: you will need to quote it if you have a word that begin with `-` in the
-commit message, otherwise it will be seen as a parameter to the gut command.
-* `gut commit -m ':memo: Specify better commit messages'` will create a commit with a message set to
-`:memo: Specify better commit messages`.
-* `gut commit -c`will create a commit with a message set to `:eyes: Code review`.
-
-The commit should fail if the user has unstaged changes.
-
-## Inspect
-
-Usage: `gut inspect`.
+Usage: `gut audit`.
 
 Inspects a git diff and displays a summary. Displayed items are:
 * Lines added/removed
@@ -258,13 +182,49 @@ Arguments:
 
 Example output:
 
-![Inspect output](./images/inspect_output.png)
+![Inspect output](./images/audit_output.png)
 
-## Log
+## Divisions
 
-Usage: `gut log`.
+Usage: `gut divisions -r o`.
 
-Displays commits history.
+Displays the branches on a specific remote. The parameter r is the name of the remote or all to show all branches.
+There are a few shortcuts to go faster:
+- a stands for all
+- l stands for local
+- o stands for origin
+- u stands for upstream
+
+If the parameter is omitted, only the local branches are shown.
+
+## Execute
+
+Usage: `gut execute -m <message>`.
+
+Creates a commit with the provided message.
+
+Arguments:
+* `-m`: The commit message. It will be automatically suffixed with the ticket number if available (in the branch name)
+and the repository is configured (see [Repository configuration file](#repository-configuration-file))
+with `commitMessageSuffixTemplate`. The commit message is an array, you don't need to quote it (see examples).
+* `-c`: Creates a code review commit, the message is set to `:eyes: Code review`, suffixed with the ticket number if
+applicable. Mutually exclusive with `-m`
+
+Examples:
+* `gut execute -m :memo: Specify better commit messages` will create a commit with a message set to
+`:memo: Specify better commit messages`. Note: you will need to quote it if you have a word that begin with `-` in the
+commit message, otherwise it will be seen as a parameter to the gut command.
+* `gut execute -m ':memo: Specify better commit messages'` will create a commit with a message set to
+`:memo: Specify better commit messages`.
+* `gut execute -c`will create a commit with a message set to `:eyes: Code review`.
+
+The commit should fail if the user has unstaged changes.
+
+## History
+
+Usage: `gut history`.
+
+Displays commits history (equivalent to `git log`).
 
 Arguments:
 * `-f` format, the format in the list of predefined formats (see list below, defaults to `pretty`)
@@ -282,9 +242,50 @@ Log format `pretty`:
 
 ![Log format pretty](./images/log_pretty.png)
 
-## Push
+## Pile
 
-Usage: `gut push`.
+Usage: `gut pile`.
+
+Adds all the changes in the repository. Literally does `git add <repository top level> -A`.
+
+## Replicate
+
+Usage: `gut replicate -s server -o owner -r repo`.
+
+Clones the repository in `<forge>/<server>/<owner>/<repo>`.
+
+If you omit the server, the `preferredGitServer` from your [configuration file](#configuration-file) will be used.
+If you omit the owner, the `username` from your [configuration file](#configuration-file) will be used.
+
+## Switch
+
+Usage: `gut switch -t <target branch>`.
+
+Checks out a branch. You can create the branch and check it out in a single command.
+
+Arguments:
+- `-t` target branch, if it exists
+- `-r` regex to be used to search for the branch to check out
+- `-v` create a new version branch, the value of the parameter is the version (follows semver). You can only create a
+version branch from master.
+- `-f` create a new feature branch, the value of the parameter is the feature's description. It can't contain an
+underscore. You can only create a feature branch from master or a version branch.
+- `-i` only usable with `-f`. Is set, the feature branch will be built each time your commit on the branch.
+- `-d` create a new dev branch, the value of the parameter is the dev's description. It can't contain an underscore.
+You can create dev branches from every type of branches but dev branches.
+- `-n` only usable with `-d`. The ticket number associated with the dev.
+
+Examples:
+- `gut switch -t master` switches to branch `master`
+- `gut switch -r 2345` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
+- `gut switch -v 2.35.9` (called from `master`) creates a version branch named `2.35.9`
+- `gut switch -f myFeature -i` (called from `2.35.9`) creates a feature branch named `2.35.9_build#myFeature`
+- `gut switch -d myDev -n 123` (called from `2.35.9_build#myFeature`) creates a dev branch named
+`2.35.9_build#myFeature_123_myDev`
+
+## Thrust
+
+Usage: `gut thrust`.
 
 Pushes changes to the remote and sets the branches upstream to `<remote>/<branchName>`. 
 The user can always change the remote to push to but he must do it the first time he pushes a branch if there's more 

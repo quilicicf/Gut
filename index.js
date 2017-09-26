@@ -31,14 +31,14 @@ try {
 
 yargs
   .usage('usage: $0 <command>')
-  .command([ 'add', 'a' ], `Adds all changes in the repository`, yargs => require('./lib/add').add())
-  .command([ 'branch', 'b' ], `Displays the given remote's branches`, yargs => require('./lib/branch').branch(yargs))
-  .command([ 'checkout', 'co' ], `Checks out a branch`, yargs => require('./lib/checkout').checkout(yargs, gutOptions))
-  .command([ 'clone', 'cl' ], `Clones a repository`, yargs => require('./lib/clone').clone(yargs, gutOptions))
-  .command([ 'commit', 'c' ], `Commits the staged changes`, yargs => require('./lib/commit').commit(yargs))
-  .command([ 'inspect', 'i' ], `Displays impacts on code base`, yargs => require('./lib/inspect').inspect(yargs, os))
-  .command([ 'log', 'l' ], `Displays the commit's history`, yargs => require('./lib/log').log(yargs))
-  .command([ 'push', 'p' ], `Pushes local changes to a remote`, yargs => require('./lib/push').push(yargs))
+  .command([ 'audit', 'a' ], `Audits a given diff`, yargs => require('./lib/audit').audit(yargs, os))
+  .command([ 'divisions', 'd' ], `Displays the given remote's branches`, yargs => require('./lib/divisions').divisions(yargs))
+  .command([ 'execute', 'e' ], `Commits the staged changes`, yargs => require('./lib/execute').execute(yargs))
+  .command([ 'history', 'h' ], `Displays the commit's history`, yargs => require('./lib/history').history(yargs))
+  .command([ 'pile', 'p' ], `Adds all changes in the repository`, yargs => require('./lib/pile').pile())
+  .command([ 'replicate', 'r' ], `Clones a repository`, yargs => require('./lib/replicate').replicate(yargs, gutOptions))
+  .command([ 'switch', 's' ], `Checks out a branch`, yargs => require('./lib/switch').switch(yargs, gutOptions))
+  .command([ 'thrust', 't' ], `Pushes local changes to a remote`, yargs => require('./lib/thrust').thrust(yargs))
   .command('groot', 'Display a random sentence, in French', () => {
     utils.print(`Je s'appelle Groot`);
   })
