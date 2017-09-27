@@ -74,21 +74,26 @@ installGutScripts
 
 ### Gut configuration file
 
-Gut keeps a configuration file in `~/.gut-config.json`. 
-This file is automatically bootstrapped to a (currently fixed) value at startup if it is not found.
+Gut keeps a configuration file in `~/.config/gut/config.json`.
+You'll be guided to build this file when you run any gut command if it does not exist.
 
 Contents of the file:
 
 ```json
 {
+  "accounts": {
+    "github": {
+      "username": "your GitHub username"
+    }
+  }
   "username": "Your git username",
   "repositoriesPath": "The path to your folder containing git repositories. Yes it's assumed all are in one place!",
   "preferredGitServer": "The git server you are using"
 }
 ```
 
-For `preferredGitServer` the only accepted value at the time is github. Other servers will be added as well as the 
-possibility to configure yours in the future.
+The only git server supported at the time is `github`. Other servers will potentially be added - as well as the
+possibility to configure yours - in the future.
 
 ### Repository configuration file
 
