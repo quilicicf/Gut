@@ -18,6 +18,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
       * [Commit messages format](#commit-messages-format)
 * [Git features](#git-features)
   * [Audit](#audit)
+  * [Birth](#birth)
   * [Divisions](#divisions)
   * [Execute](#execute)
   * [History](#history)
@@ -76,6 +77,8 @@ installGutScripts
 
 Gut keeps a configuration file in `~/.config/gut/config.json`.
 You'll be guided to build this file when you run any gut command if it does not exist.
+To change the configuration, run `gut configure` or update the file by hand.
+It is recommended not to update the file by hand.
 
 Contents of the file:
 
@@ -91,15 +94,15 @@ Contents of the file:
 }
 ```
 
-The only git server supported at the time is `github`. Other servers will potentially be added - as well as the
-possibility to configure yours - in the future.
+For `preferredGitServer` the only git server supported at the time is `github`. Other servers will potentially be added
+- as well as the possibility to configure yours - in the future.
 
 ### Repository configuration file
 
-Gut will search for a file named `.gut-config.json` at the root of your repositories to retrieve the 
+Gut will search for a file named `.gut-config.json` at the root of your repositories to retrieve the
 repository-specific configuration.
 
-Contents of the file: 
+Contents of the file:
 
 ```json
 {
@@ -107,15 +110,15 @@ Contents of the file:
 }
 ```
 
-- `commitMessageSuffixTemplate`: when committing on a branch that contains a ticket number, gut will look for the 
-suffix template. If a suffix is found, the template will be used to suffix the commit message, replacing 
+- `commitMessageSuffixTemplate`: when committing on a branch that contains a ticket number, gut will look for the
+suffix template. If a suffix is found, the template will be used to suffix the commit message, replacing
 `$ticketNumber` with the actual ticket number, retrieved from the branch name (see [branch naming](#branch-naming)).
 
 ## Spirit of the git flow
 
 ### Organization of your repositories
 
-It is assumed you'll keep all your repositories into a single folder, which will be named __forge__ in the rest of 
+It is assumed you'll keep all your repositories into a single folder, which will be named __forge__ in the rest of
 this document and is structured like the following.
 
 ```
@@ -142,20 +145,20 @@ forge
 #### Branch flow
 
 Branch types:
-- __Master:__ The branch `master` is a branch that strictly follows the production. It is therefore a faithful 
+- __Master:__ The branch `master` is a branch that strictly follows the production. It is therefore a faithful
 representation of what's in production at ANY MOMENT
 - __Version branches:__ When starting the development of a version, a branch is created from master.
-- __Feature branches:__ A version can contain multiple features. In case two or more developers work on a feature, they 
-can create a branch from the version branch. To allow for scope adjustment, the feature can be merged in the next 
+- __Feature branches:__ A version can contain multiple features. In case two or more developers work on a feature, they
+can create a branch from the version branch. To allow for scope adjustment, the feature can be merged in the next
 version if need be.
 - __Dev branches:__ When working on a ticket, a dev creates a branch from the feature or version branch.
 
-The following rules apply to the branches: 
+The following rules apply to the branches:
 1. It is allowed to force-push on branches that are only used by a single developer (to create a clean history).
-1. As soon as two developers start working on the same branch, force-push is prohibited (I'll implement safe-guards but 
+1. As soon as two developers start working on the same branch, force-push is prohibited (I'll implement safe-guards but
 that's a little further down the roadmap).
-1. To have a clean history, the rebase is preferred to update the version/feature/dev branches to the last modifications. 
-They should be done when there's the fewest branches open and the branch that's to be rebased must be duplicated 
+1. To have a clean history, the rebase is preferred to update the version/feature/dev branches to the last modifications.
+They should be done when there's the fewest branches open and the branch that's to be rebased must be duplicated
 first of course (there'll be tooling down the roadmap for that too).
 1. The rebase-and-merge feature is to be preferred when merging branches down.
 1. Delivery to the QA team is done y creating a tag named as a time stamp (ISO 8601)
@@ -165,7 +168,7 @@ Benefits of this flow:
 - there is a branch that follows the production so it's easy to know what's in prod and debug it
 - the history is linear and really easy to read
 - forgetting to merge something seldom happens
-- even if the rebase was not done on alive branches after a merge to master, there should never be devs lost in 
+- even if the rebase was not done on alive branches after a merge to master, there should never be devs lost in
 translation
 
 Attention points:
@@ -219,6 +222,28 @@ Arguments:
 Example output:
 
 ![Inspect output](./images/audit_output.png)
+
+## Birth
+
+Usage: `gut birth -v 2.10.0`
+
+Creates a new branch and checks it out.
+
+Arguments:
+- `-v` create a new version branch, the value of the parameter is the version (follows semver). You can only create a
+version branch from master or another version branch.
+- `-f` create a new feature branch, the value of the parameter is the feature's description. It can't contain an
+underscore. You can only create a feature branch from master or a version branch.
+- `-i` only usable with `-f`. If set, the feature branch will be built each time your commit on the branch.
+- `-d` create a new dev branch, the value of the parameter is the dev's description. It can't contain an underscore.
+You can create dev branches from every type of branches but dev branches.
+- `-n` only usable with `-d`. The ticket number associated with the dev.
+
+Examples:
+- `gut birth -v 2.35.9` (called from `master`) creates a version branch named `2.35.9`
+- `gut birth -f myFeature -i` (called from `2.35.9`) creates a feature branch named `2.35.9_build#myFeature`
+- `gut birth -d myDev -n 123` (called from `2.35.9_build#myFeature`) creates a dev branch named
+`2.35.9_build#myFeature_123_myDev`
 
 ## Divisions
 
@@ -325,27 +350,17 @@ If you omit the owner, the `username` from your [configuration file](#gut-config
 
 Usage: `gut switch -t <target branch>`.
 
-Checks out a branch. You can create the branch and check it out in a single command.
+Checks out a branch.
 
 Arguments:
 - `-t` target branch, if it exists
 - `-r` regex to be used to search for the branch to check out
-- `-v` create a new version branch, the value of the parameter is the version (follows semver). You can only create a
-version branch from master.
-- `-f` create a new feature branch, the value of the parameter is the feature's description. It can't contain an
-underscore. You can only create a feature branch from master or a version branch.
-- `-i` only usable with `-f`. Is set, the feature branch will be built each time your commit on the branch.
-- `-d` create a new dev branch, the value of the parameter is the dev's description. It can't contain an underscore.
-You can create dev branches from every type of branches but dev branches.
-- `-n` only usable with `-d`. The ticket number associated with the dev.
+- `-n` search the branch by ticket number
 
 Examples:
 - `gut switch -t master` switches to branch `master`
-- `gut switch -r 2345` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
-- `gut switch -v 2.35.9` (called from `master`) creates a version branch named `2.35.9`
-- `gut switch -f myFeature -i` (called from `2.35.9`) creates a feature branch named `2.35.9_build#myFeature`
-- `gut switch -d myDev -n 123` (called from `2.35.9_build#myFeature`) creates a dev branch named
-`2.35.9_build#myFeature_123_myDev`
+- `gut switch -r myDev` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
+- `gut switch -n 2345` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
 
 ## Thrust
 
@@ -365,9 +380,9 @@ This section contains information about the internals of this module. They conce
 
 ## Utilities
 
-The file `lib/utils.js` contains all the utility methods that a reused across the whole module. It contains the 
+The file `lib/utils.js` contains all the utility methods that a reused across the whole module. It contains the
 following methods.
-    
+
 ### Get top level
 
 Usage: `require(./utils.js).getTopLevel()`.
@@ -378,26 +393,26 @@ Returns the top level path to the current repository. Literally returns the resu
 
 Usage: `require(./utils.js).moveUpTop()`.
 
-Changes directory to top level path of the current repository. 
+Changes directory to top level path of the current repository.
 Literally does: `cd "$(git rev-parse  --show-toplevel)"`.
 
 ### IsDirty
 
 Usage: `require(./utils.js).isDirty()`
 
-Returns a boolean that tells if the repository it executes in is dirty or not. 
+Returns a boolean that tells if the repository it executes in is dirty or not.
 Returns the opposite of `git diff --no-ext-diff --quiet --exit-code`.
 
 ### HasStagedChanges
 
 Usage: `require(./utils.js).hasStagedChanges()`
 
-Returns a boolean that tells if the repository it executes in has staged changes or not. 
+Returns a boolean that tells if the repository it executes in has staged changes or not.
 Returns the opposite of `git diff-index --cached --quiet HEAD --`.
 
 ### HasUnstagedChanges
 
 Usage: `require(./utils.js).hasUnstagedChanges()`
 
-Returns a boolean that tells if the repository it executes in has unstaged changes or not. 
+Returns a boolean that tells if the repository it executes in has unstaged changes or not.
 Returns the result of `[ -n "$(git ls-files --others --exclude-standard)" ]`.
