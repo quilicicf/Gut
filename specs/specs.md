@@ -42,6 +42,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
 ### Basic features
 
 ~~Just run `npm i -g gut-flow`. You're all set!~~
+
 This package hasn't been released to npmjs.org because it's not stable enough at the moment. 
 It'll be released soon but in the meantime, you can try it out by cloning the repository and running `npm link` at the top-level.
 
