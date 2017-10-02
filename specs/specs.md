@@ -52,7 +52,7 @@ Some features gut provides change the terminal's directory or maintain variables
 as the terminal.
 
 It was not possible to implement those in pure NodeJS so some features are implemented in bash. You can find the list
-of available shell scripts in the folder [shell](https://github.com/quilicicf/Gut/blob/master/shell).
+of available shell scripts in the folder [shell](https://github.com/quilicicf/Gut/tree/master/shell).
 
 To use these features, run `gut install` and paste the following code to your `.bashrc`:
 
@@ -85,10 +85,9 @@ Contents of the file:
     "github": {
       "username": "your GitHub username"
     }
-  }
-  "username": "Your git username",
+  },
   "repositoriesPath": "The path to your folder containing git repositories. Yes it's assumed all are in one place!",
-  "preferredGitServer": "The git server you are using"
+  "preferredGitServer": "The git server you are using, only github supported ATM"
 }
 ```
 
@@ -319,8 +318,8 @@ Usage: `gut replicate -s server -o owner -r repo`.
 
 Clones the repository in `<forge>/<server>/<owner>/<repo>`.
 
-If you omit the server, the `preferredGitServer` from your [configuration file](#configuration-file) will be used.
-If you omit the owner, the `username` from your [configuration file](#configuration-file) will be used.
+If you omit the server, the `preferredGitServer` from your [configuration file](#gut-configuration-file) will be used.
+If you omit the owner, the `username` from your [configuration file](#gut-configuration-file) will be used.
 
 ## Switch
 

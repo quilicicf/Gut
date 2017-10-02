@@ -15,7 +15,7 @@ const yargs = require('yargs');
 yargs
   .usage('usage: $0 <command>')
   .command([ 'audit', 'a' ], `Audits a given diff`, yargs => require('./lib/audit').audit(yargs, os))
-  .command([ 'configure', 'c' ], `Guides you to create/replace your configuration file`, yargs => require('./lib/init').changeConfiguration())
+  .command([ 'configure', 'c' ], `Guides you to create/replace your configuration file`, yargs => require('./lib/configure').changeConfiguration())
   .command([ 'divisions', 'd' ], `Displays the given remote's branches`, yargs => require('./lib/divisions').divisions(yargs))
   .command([ 'execute', 'e' ], `Commits the staged changes`, yargs => require('./lib/execute').execute(yargs))
   .command([ 'history', 'h' ], `Displays the commit's history`, yargs => require('./lib/history').history(yargs))
