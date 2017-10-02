@@ -1,8 +1,6 @@
 # Gut
 
-> (/guːt/)
-
-Ein gut git Flow
+Ein gut git Flow [🔊](https://translate.google.com/?tl=de#de/en/Ein%20gut%20git%20Flow)
 
 [![Dependency Status](https://david-dm.org/quilicicf/gut.svg)](https://david-dm.org/quilicicf/gut)
 [![Known Vulnerabilities](https://snyk.io/test/github/quilicicf/gut/badge.svg)](https://snyk.io/test/github/quilicicf/gut)
