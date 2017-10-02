@@ -1,6 +1,9 @@
 # Gut
 Gut git brauch
 
+[![Dependency Status](https://david-dm.org/quilicicf/gut.svg)](https://david-dm.org/quilicicf/gut)
+[![Known Vulnerabilities](https://snyk.io/test/github/quilicicf/gut/badge.svg)](https://snyk.io/test/github/quilicicf/gut)
+
 ## Getting started
 
 The whole project is specified in the [specs document](./specs/specs.md). 
