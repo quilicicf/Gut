@@ -52,7 +52,7 @@ Some features gut provides change the terminal's directory or maintain variables
 as the terminal.
 
 It was not possible to implement those in pure NodeJS so some features are implemented in bash. You can find the list
-of available shell scripts in the folder [shell](https://github.com/quilicicf/Gut/blob/master/shell).
+of available shell scripts in the folder [shell](https://github.com/quilicicf/Gut/tree/master/shell).
 
 To use these features, run `gut install` and paste the following code to your `.bashrc`:
 
@@ -74,21 +74,25 @@ installGutScripts
 
 ### Gut configuration file
 
-Gut keeps a configuration file in `~/.gut-config.json`. 
-This file is automatically bootstrapped to a (currently fixed) value at startup if it is not found.
+Gut keeps a configuration file in `~/.config/gut/config.json`.
+You'll be guided to build this file when you run any gut command if it does not exist.
 
 Contents of the file:
 
 ```json
 {
-  "username": "Your git username",
+  "accounts": {
+    "github": {
+      "username": "your GitHub username"
+    }
+  },
   "repositoriesPath": "The path to your folder containing git repositories. Yes it's assumed all are in one place!",
-  "preferredGitServer": "The git server you are using"
+  "preferredGitServer": "The git server you are using, only github supported ATM"
 }
 ```
 
-For `preferredGitServer` the only accepted value at the time is github. Other servers will be added as well as the 
-possibility to configure yours in the future.
+The only git server supported at the time is `github`. Other servers will potentially be added - as well as the
+possibility to configure yours - in the future.
 
 ### Repository configuration file
 
@@ -314,8 +318,8 @@ Usage: `gut replicate -s server -o owner -r repo`.
 
 Clones the repository in `<forge>/<server>/<owner>/<repo>`.
 
-If you omit the server, the `preferredGitServer` from your [configuration file](#configuration-file) will be used.
-If you omit the owner, the `username` from your [configuration file](#configuration-file) will be used.
+If you omit the server, the `preferredGitServer` from your [configuration file](#gut-configuration-file) will be used.
+If you omit the owner, the `username` from your [configuration file](#gut-configuration-file) will be used.
 
 ## Switch
 
