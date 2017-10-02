@@ -18,7 +18,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
       * [Commit messages format](#commit-messages-format)
 * [Git features](#git-features)
   * [Audit](#audit)
-  * [Birth](#birth)
+  * [Burgeon](#burgeon)
   * [Divisions](#divisions)
   * [Execute](#execute)
   * [History](#history)
@@ -222,9 +222,9 @@ Example output:
 
 ![Inspect output](./images/audit_output.png)
 
-## Birth
+## Burgeon
 
-Usage: `gut birth -v 2.10.0`
+Usage: `gut burgeon -v 2.10.0`
 
 Creates a new branch and checks it out.
 
@@ -239,9 +239,9 @@ You can create dev branches from every type of branches but dev branches.
 - `-n` only usable with `-d`. The ticket number associated with the dev.
 
 Examples:
-- `gut birth -v 2.35.9` (called from `master`) creates a version branch named `2.35.9`
-- `gut birth -f myFeature -i` (called from `2.35.9`) creates a feature branch named `2.35.9_build#myFeature`
-- `gut birth -d myDev -n 123` (called from `2.35.9_build#myFeature`) creates a dev branch named
+- `gut burgeon -v 2.35.9` (called from `master`) creates a version branch named `2.35.9`
+- `gut burgeon -f myFeature -i` (called from `2.35.9`) creates a feature branch named `2.35.9_build#myFeature`
+- `gut burgeon -d myDev -n 123` (called from `2.35.9_build#myFeature`) creates a dev branch named
 `2.35.9_build#myFeature_123_myDev`
 
 ## Divisions
