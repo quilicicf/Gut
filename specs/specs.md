@@ -77,8 +77,7 @@ installGutScripts
 
 Gut keeps a configuration file in `~/.config/gut/config.json`.
 You'll be guided to build this file when you run any gut command if it does not exist.
-To change the configuration, run `gut configure` or update the file by hand.
-It is recommended not to update the file by hand.
+To change the configuration, run `gut configure`, it is recommended not to update the file by hand.
 
 Contents of the file:
 
