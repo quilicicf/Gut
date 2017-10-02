@@ -94,8 +94,8 @@ Contents of the file:
 }
 ```
 
-For `preferredGitServer` the only git server supported at the time is `github`. Other servers will potentially be added
-- as well as the possibility to configure yours - in the future.
+For `preferredGitServer` the only git server supported at the time is `github`. Other servers will potentially be
+added - as well as the possibility to configure yours - in the future.
 
 ### Repository configuration file
 
