@@ -154,14 +154,19 @@ version if need be.
 
 The following rules apply to the branches:
 1. It is allowed to force-push on branches that are only used by a single developer (to create a clean history).
-1. As soon as two developers start working on the same branch, force-push is prohibited (I'll implement safe-guards but
+2. As soon as two developers start working on the same branch, force-push is prohibited (I'll implement safe-guards but
 that's a little further down the roadmap).
-1. To have a clean history, the rebase is preferred to update the version/feature/dev branches to the last modifications.
+3. To have a clean history, the rebase is preferred to update the version/feature/dev branches to the last modifications.
 They should be done when there's the fewest branches open and the branch that's to be rebased must be duplicated
 first of course (there'll be tooling down the roadmap for that too).
-1. The rebase-and-merge feature is to be preferred when merging branches down.
-1. Delivery to the QA team is done y creating a tag named as a time stamp (ISO 8601)
-1. When the QA validates a tag, it is merged into master, then production tag is created and named `v<full version>`
+4. The rebase-and-merge feature is to be preferred when merging branches down.
+5. Delivery to the QA team is done y creating a tag named as a time stamp (ISO 8601)
+6. When the QA validates a tag, it is merged into master, then production tag is created and named `v<full version>`
+7. Build
+    1. All version branches and master should be built every time their source code changes
+    2. Feature branches can specify they should be built by adding `build` before the `#`
+    3. Dev branches should be built when the PR is done or on-demand (a feature is coming to make the on-demand part a
+    4. command away
 
 Benefits of this flow:
 - there is a branch that follows the production so it's easy to know what's in prod and debug it
@@ -178,8 +183,8 @@ might need to re-check things
 #### Branch naming
 
 - Version branches: `<major version>.<minor version>.<patch version>` ex: `2.3.19`
-- Feature branches: `<full version>_<feature>` ex: `2.3.19_whatsNewDialog`
-- Dev branches: `<full version>_<feature>_<ticket number>_<dev>` ex: `2.3.19_whatsNewDialog_8495_optOut` or if
+- Feature branches: `<full version>_#<feature>` ex: `2.3.19_#whatsNewDialog`
+- Dev branches: `<full version>_#<feature>_<ticket number>_<dev>` ex: `2.3.19_#whatsNewDialog_8495_optOut` or if
 there's no feature branch `2.3.19_456_noLogsBug`
 
 Benefits of this naming:
