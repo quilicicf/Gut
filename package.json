@@ -7,7 +7,7 @@
     "gut": "index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Tests are green but there's not tests!\""
   },
   "repository": {
     "type": "git",
