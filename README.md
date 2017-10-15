@@ -30,7 +30,7 @@ For the more code-specific things:
     though
     1. Make a pull request
 1. Code style
-    1. Please configure your IDE to use the `.jscsrc` file for formatting
+    1. Please configure your IDE to use the `.eslintrc` file for formatting
     1. Please favor immutable variables and pure functions where applicable
 1. Other
     1. Always let me know by issue before contributing so that we don't work on the same topic and waste time
