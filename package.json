@@ -29,6 +29,7 @@
     "colors": "^1.1.2",
     "lodash": "^4.17.4",
     "promptly": "^2.2.0",
+    "unirest": "^0.5.1",
     "yargs": "^9.0.1"
   },
   "devDependencies": {

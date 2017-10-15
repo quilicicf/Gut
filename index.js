@@ -14,7 +14,7 @@ const yargs = require('yargs');
 
 yargs
   .usage('usage: $0 <command>')
-  .command([ 'audit', 'a' ], `Audits a given diff`, yargs => require('./lib/audit').audit(yargs, os))
+  .command([ 'audit', 'a' ], `Audits a given diff`, yargs => require('./lib/audit').audit(yargs))
   .command([ 'burgeon', 'b' ], `Creates a branch`, yargs => require('./lib/burgeon').burgeon(yargs, os))
   .command([ 'configure', 'c' ], `Guides you to create/replace your configuration file`, yargs => require('./lib/configure').changeConfiguration())
   .command([ 'divisions', 'd' ], `Displays the given remote's branches`, yargs => require('./lib/divisions').divisions(yargs))
@@ -23,6 +23,7 @@ yargs
   .command([ 'install', 'i' ], `Installs the shell scripts`, yargs => require('./lib/install').install())
   .command([ 'obliterate', 'o' ], `Deletes a branch or a tag`, yargs => require('./lib/obliterate').obliterate(yargs))
   .command([ 'pile', 'p' ], `Adds all changes in the repository`, yargs => require('./lib/pile').pile())
+  .command([ 'query-inspection', 'q' ], `Ask for a peer-review by creating a PR`, yargs => require('./lib/query').query())
   .command([ 'replicate', 'r' ], `Clones a repository`, yargs => require('./lib/replicate').replicate(yargs))
   .command([ 'switch', 's' ], `Checks out a branch`, yargs => require('./lib/switch').switch(yargs))
   .command([ 'thrust', 't' ], `Pushes local changes to a remote`, yargs => require('./lib/thrust').thrust(yargs))

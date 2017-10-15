@@ -36,6 +36,15 @@
         "ignoreTemplateLiterals": true
       }
     ],
-    "no-plusplus": "off"
+    "space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "always",
+        "named": "always",
+        "asyncArrow": "always"
+      }
+    ],
+    "no-plusplus": "off",
+    "padded-blocks": "off"
   }
 }
