@@ -25,6 +25,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
   * [Obliterate](#obliterate)
   * [Pile](#pile)
   * [Pushb popb](#pushb-popb)
+  * [Query review](#query-review)
   * [Replicate](#replicate)
   * [Switch](#switch)
   * [Thrust](#thrust)
@@ -85,7 +86,8 @@ Contents of the file:
 {
   "accounts": {
     "github": {
-      "username": "your GitHub username"
+      "username": "your GitHub username",
+      "pullRequestToken": "your OAuth 2.0 token for creating pull requests"
     }
   },
   "repositoriesPath": "The path to your folder containing git repositories. Yes it's assumed all are in one place!",
@@ -105,7 +107,8 @@ Contents of the file:
 
 ```json
 {
-  "commitMessageSuffixTemplate": "Template of the suffix that should be added to your commit messages"
+  "commitMessageSuffixTemplate": "Template of the suffix that should be added to your commit messages",
+  "reviewTool": "Name of the review tool (only github supported ATM"
 }
 ```
 
@@ -340,6 +343,18 @@ Usage: `pushb <branch name>; do things; popb`
 Works like pushd and popd but for GitHub branches.
 
 > Note: This feature is implemented in bash, it requires some specific [installation steps](#shell-features).
+
+## Query review
+
+Usage: `gut query-review`
+
+Creates a pull-request on the tool of your choice (only GitHub implemented as of today).
+An audit of the commits added from the base branch is performed before anything else.
+
+The review tool must be configured in the [repository configuration file](#repository-configuration-file).
+A valid OAuth 2.0 token must be set in the [Gut configuration file](#gut-configuration-file).
+You can create the token [here](https://github.com/settings/tokens), please note these tokens should not be used for
+multiple usages.
 
 ## Replicate
 
