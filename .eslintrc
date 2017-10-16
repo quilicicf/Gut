@@ -14,14 +14,14 @@
   "rules": {
     "linebreak-style": "off",
     "array-bracket-spacing": [
-      1,
+      "warn",
       "always",
       {
         "arraysInArrays": false
       }
     ],
     "computed-property-spacing": [
-      1,
+      "warn",
       "always"
     ],
     "max-len": [
