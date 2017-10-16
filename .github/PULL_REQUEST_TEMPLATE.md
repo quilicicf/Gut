@@ -6,6 +6,10 @@
 
 > Add a link to the issue if any. Fixes #(issue)
 
+## Specification
+
+> Add a link to a commit with the update of specification that your commit implements (if your commit implies a change in the documentation). It can be in this PR or another, implemented by you or someone else.
+
 ## Type of change
 
 - [ ] Bug fix (non-breaking change which fixes an issue)
