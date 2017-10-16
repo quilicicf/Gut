@@ -14,11 +14,28 @@
   "rules": {
     "linebreak-style": "off",
     "array-bracket-spacing": [
-      2,
+      1,
       "always",
       {
         "arraysInArrays": false
       }
-    ]
+    ],
+    "computed-property-spacing": [
+      1,
+      "always"
+    ],
+    "max-len": [
+      "error",
+      120,
+      2,
+      {
+        "ignoreUrls": true,
+        "ignoreComments": false,
+        "ignoreRegExpLiterals": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
+      }
+    ],
+    "no-plusplus": "off"
   }
 }
