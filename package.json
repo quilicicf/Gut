@@ -8,7 +8,7 @@
   },
   "scripts": {
     "lint": "eslint lib/**",
-    "test": "echo \"Tests are green but there's not tests!\""
+    "test": "npm run lint; echo \"Only the eslint configuration is checked as of yet.\""
   },
   "repository": {
     "type": "git",
