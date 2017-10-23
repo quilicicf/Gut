@@ -8,6 +8,11 @@
     "node": true,
     "es6": true
   },
+  "globals": {
+    "describe": false,
+    "test": false,
+    "expect": false
+  },
   "parserOptions": {
     "sourceType": "module"
   },
