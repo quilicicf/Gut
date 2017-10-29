@@ -29,11 +29,13 @@
   },
   "homepage": "https://github.com/quilicicf/Gut#readme",
   "dependencies": {
+    "base-64": "0.1.0",
     "colors": "1.1.2",
     "inquirer": "3.3.0",
     "lodash": "4.17.4",
     "promptly": "2.2.0",
     "unirest": "0.5.1",
+    "utf8": "2.1.2",
     "yargs": "10.0.3"
   },
   "devDependencies": {
