@@ -3,6 +3,7 @@ Gut specification
 
 Make sure you read the section __Getting started__ before the rest so you are aware of how the flow is supposed to work.
 
+<!-- TOC: BEGIN -->
 * [Getting started](#getting-started)
   * [Installation](#installation)
     * [Basic features](#basic-features)
@@ -25,23 +26,28 @@ Make sure you read the section __Getting started__ before the rest so you are aw
   * [Obliterate](#obliterate)
   * [Pile](#pile)
   * [Pushb popb](#pushb-popb)
-  * [Query review](#query-review)
   * [Replicate](#replicate)
   * [Switch](#switch)
   * [Thrust](#thrust)
+* [Advanced features](#advanced-features)
+  * [CI](#ci)
+    * [Gut CI configuration example:](#gut-ci-configuration-example)
+  * [PR](#pr)
+    * [Gut PR configuration example](#gut-pr-configuration-example)
 
-# Getting started
+<!-- TOC: END -->
 
-## Installation
+## Getting started
 
-### Basic features
+### Installation
+
+#### Basic features
 
 ~~Just run `npm i -g gut-flow`. You're all set!~~
 
-This package hasn't been released to npmjs.org because it's not stable enough at the moment. 
-It'll be released soon but in the meantime, you can try it out by cloning the repository and running `npm link` at the top-level.
+This package hasn't been released to npmjs.org because it's not stable enough at the moment. It'll be released soon but in the meantime, you can try it out by cloning the repository and running `npm link` at the top-level.
 
-### Shell features
+#### Shell features
 
 Some features gut provides change the terminal's directory or maintain variables that should have the same life span
 as the terminal.
@@ -52,7 +58,7 @@ of available shell scripts in the folder [shell](https://github.com/quilicicf/Gu
 To use these features, run `gut install` and paste the following code to your `.bashrc`:
 
 ```shell
-# Installation of Gut scripts, see https://github.com/quilicicf/Gut/blob/master/specs/specs.md#shell-features
+# Installation of Gut scripts, see https://github.com/quilicicf/Gut/blob/master/specs/user_documentation.md#shell-features
 # If the link is broken, you probably want to read the README again https://github.com/quilicicf/Gut/blob/master/README.md
 installGutScripts() {
   local script
@@ -65,9 +71,9 @@ installGutScripts() {
 installGutScripts
 ```
 
-## Initialization
+### Initialization
 
-### Gut configuration file
+#### Gut configuration file
 
 Gut keeps a configuration file in `~/.config/gut/config.json`.
 You'll be guided to build this file when you run any gut command if it does not exist.
@@ -91,27 +97,62 @@ Contents of the file:
 For `preferredGitServer` the only git server supported at the time is `github`. Other servers will potentially be
 added - as well as the possibility to configure yours - in the future.
 
-### Repository configuration file
+#### Repository configuration file
 
-Gut will search for a file named `.gut-config.json` at the root of your repositories to retrieve the
-repository-specific configuration.
+Gut will search for a file named `.gut-config.json` at the root of your repositories to retrieve the repository-specific configuration. This file is supposed to be committed and shared among developers. It should never contain something you don't want to be online.
 
 Contents of the file:
 
 ```json
 {
+  "ci": {
+    "<CI tool name>": {
+      "<job name>": {
+        "server": "the tool's server name",
+        "uri": "the job's URI, relative to the selected server's URI",
+        "body": "the body that should be POSTed to the job's URI"
+      }
+    }
+  },
   "commitMessageSuffixTemplate": "Template of the suffix that should be added to your commit messages",
-  "reviewTool": "Name of the review tool (only github supported ATM"
+  "reviewTool": "Name of the review tool (only github supported ATM)"
 }
 ```
 
-- `commitMessageSuffixTemplate`: when committing on a branch that contains a ticket number, gut will look for the
+Example of configuration:
+
+```json
+{
+  "ci": {
+    "jenkins": {
+       "build": {
+         "server": "personal"
+         "uri": "/jobs/gut",
+         "body": {
+           "branch_or_tag": "$currentBranch"
+         }
+       }
+    }
+  },
+  "commitMessageSuffixTemplate": "#$ticketNumber",
+  "reviewTool": "github"
+}
+```
+
+* `ci`: contains the jobs configuration of your CI tools
+  * `<CI tool name>`: the name of the CI tool. Only `jenkins` is supported ATM.
+    * `<job name>`: configure your repository's jobs here.
+      * `server`: the name of the server to use. The server configuration will be retrieved by this name in your global configuration. This allows you to share your repository configurations without putting the URLs to your CI tool on the internet.
+      * `uri`: the job's URI, relative to the URI of your server.
+      * `body`: the JSON body that will be POSTed to the job's URI. See [the ci command](#ci) for more information.
+* `commitMessageSuffixTemplate`: when committing on a branch that contains a ticket number, gut will look for the
 suffix template. If a suffix is found, the template will be used to suffix the commit message, replacing
 `$ticketNumber` with the actual ticket number, retrieved from the branch name (see [branch naming](#branch-naming)).
+* `reviewTool`: the review tool to be used for this repository. Only `github` is supported ATM.
 
-## Spirit of the git flow
+### Spirit of the git flow
 
-### Organization of your repositories
+#### Organization of your repositories
 
 It is assumed you'll keep all your repositories into a single folder, which will be named __forge__ in the rest of
 this document and is structured like the following.
@@ -135,9 +176,9 @@ forge
 
 ```
 
-### Git branching
+#### Git branching
 
-#### Branch flow
+##### Branch flow
 
 Branch types:
 - __Master:__ The branch `master` is a branch that strictly follows the production. It is therefore a faithful
@@ -176,7 +217,7 @@ Attention points:
 might need to re-check things
 - when a tag is merged into production, all live branches must be rebased
 
-#### Branch naming
+##### Branch naming
 
 - Version branches: `<major version>.<minor version>.<patch version>` ex: `2.3.19`
 - Feature branches: `<full version>_#<feature>` ex: `2.3.19_#whatsNewDialog`
@@ -190,7 +231,7 @@ raise an alarm in your head)
 - Easy to clean the old local branches, just filter them with regex (there's gonna be a utility for that)
 - Easy to interact with CI/CD, the branch is parsable, the ticket number easy to retrieve
 
-#### Commit messages format
+##### Commit messages format
 
 Commit messages should be suffixed with the ticket number so that your bug tracker/CI/CD can track them and associate
  the commit to the ticket.
@@ -200,9 +241,11 @@ In GitHub, you can suffix your commit message with `#<ticket number>` and GitHub
 
 In JIRA, you can suffix the commit message with `(<project id>-<ticket number>)` to get the same result.
 
-# Git features
+## Git features
 
-## Audit
+The features in this section are mostly syntactic sugar over existing git features. You might wonder why their names are poor homonyms of the git features they replace. It's simply because git and gut are really close to one another and easily mistyped. The changed names make it clearer what you are using.
+
+### Audit
 
 Usage: `gut audit`.
 
@@ -223,7 +266,7 @@ Example output:
 
 ![Inspect output](./images/audit_output.png)
 
-## Burgeon
+### Burgeon
 
 Usage: `gut burgeon -v 2.10.0`
 
@@ -245,7 +288,7 @@ Examples:
 - `gut burgeon -d myDev -n 123` (called from `2.35.9_build#myFeature`) creates a dev branch named
 `2.35.9_build#myFeature_123_myDev`
 
-## Divisions
+### Divisions
 
 Usage: `gut divisions -r o`.
 
@@ -258,7 +301,7 @@ There are a few shortcuts to go faster:
 
 If the parameter is omitted, only the local branches are shown.
 
-## Execute
+### Execute
 
 Usage: `gut execute -m <message>`.
 
@@ -281,7 +324,7 @@ commit message, otherwise it will be seen as a parameter to the gut command.
 
 The commit should fail if the user has unstaged changes.
 
-## History
+### History
 
 Usage: `gut history`.
 
@@ -303,7 +346,7 @@ Log format `pretty`:
 
 ![Log format pretty](./images/log_pretty.png)
 
-## Obliterate
+### Obliterate
 
 Usage: `gut obliterate -b master_deleteSpec -r o`
 
@@ -323,13 +366,13 @@ Examples:
   * `gut obliterate -t v1.2.3 -r o` deletes the tag `v1.2.3` on `origin`.
   Literally does `git push --delete origin v1.2.3`
 
-## Pile
+### Pile
 
 Usage: `gut pile`.
 
 Adds all the changes in the repository. Literally does `git add <repository top level> -A`.
 
-## Pushb popb
+### Pushb popb
 
 Usage: `pushb <branch name>; do things; popb`
 
@@ -337,19 +380,7 @@ Works like pushd and popd but for GitHub branches.
 
 > Note: This feature is implemented in bash, it requires some specific [installation steps](#shell-features).
 
-## Query review
-
-Usage: `gut query-review`
-
-Creates a pull-request on the tool of your choice (only GitHub implemented as of today).
-An audit of the commits added from the base branch is performed before anything else.
-
-The review tool must be configured in the [repository configuration file](#repository-configuration-file).
-A valid OAuth 2.0 token must be set in the [Gut configuration file](#gut-configuration-file).
-You can create the token [here](https://github.com/settings/tokens), please note these tokens should not be used for
-multiple usages.
-
-## Replicate
+### Replicate
 
 Usage: `gut replicate -s server -o owner -r repo`.
 
@@ -358,7 +389,7 @@ Clones the repository in `<forge>/<server>/<owner>/<repo>`.
 If you omit the server, the `preferredGitServer` from your [configuration file](#gut-configuration-file) will be used.
 If you omit the owner, the `username` from your [configuration file](#gut-configuration-file) will be used.
 
-## Switch
+### Switch
 
 Usage: `gut switch -t <target branch>`.
 
@@ -374,7 +405,7 @@ Examples:
 - `gut switch -r myDev` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
 - `gut switch -n 2345` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
 
-## Thrust
+### Thrust
 
 Usage: `gut thrust`.
 
@@ -384,3 +415,93 @@ than one remote configured.
 
 Arguments:
 * `-r` remote, the remote to push to
+
+## Advanced features
+
+The features in this section are the most powerful in gut. They allow you to configure your git flow precisely and to integrate with the tools you are using in your everyday life.
+
+### CI
+
+Usage: `gut ci`
+
+Allows you to run CI jobs on your repository from the command line.
+
+Configure the jobs for your repository in the [repository configuration file](#repository-configuration-file). Make sure to add the CI server/account in your [Gut configuration file](#gut-configuration-file).
+
+When you run the command, it will either run the job if it's alone or display the list of existing jobs and ask you which one should be run.
+
+#### Gut CI configuration example:
+
+Global configuration file (personal file):
+
+```json
+{
+  "accounts": {
+    "jenkins": {
+      "username": "quilicicf",
+      "password": "tititatatoto"
+    }
+  },
+  "tools": {
+    "jenkins": {
+      "servers": {
+        "personal": "https://jenkins.quilicicf.fr",
+        "company": "https://jenkins.mycompany.com"
+      }
+    }
+  }
+}
+```
+
+Repository configuration file (shared via git):
+
+```json
+{
+  "ci": {
+    "jenkins": {
+       "build": {
+         "server": "personal",
+         "uri": "/jobs/gut/build",
+         "body": {
+           "branch_or_tag": "$currentBranch"
+         }
+       }
+    }
+  }
+}
+```
+
+### PR
+
+Usage: `gut pr`
+
+Creates a pull-request on the tool of your choice (only GitHub implemented as of today).
+An audit of the commits added from the base branch is performed before anything else.
+
+The review tool must be configured in the [repository configuration file](#repository-configuration-file).
+A valid OAuth 2.0 token must be set in the [Gut configuration file](#gut-configuration-file).
+You can create the token [here](https://github.com/settings/tokens), please note these tokens should not be used for
+multiple usages.
+
+#### Gut PR configuration example
+
+Global configuration file (personal file):
+
+```json
+{
+  "accounts": {
+    "github": {
+      "username": "quilicicf",
+      "pullRequestToken": "tititatatoto"
+    }
+  }
+}
+```
+
+Repository configuration file (shared via git):
+
+```json
+{
+  "reviewTool": "github"
+}
+```
