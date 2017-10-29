@@ -10,7 +10,7 @@ For the more code-specific things:
     1. Create an issue on this repository so we can discuss your contribution
     1. Fork this repository
     1. Hack on a separate topic branch created from the latest `master` and named following the
-    [branch naming convention](./specs/specs.md#branch-naming)
+    [branch naming convention](../specs/user_documentation.md#branch-naming)
     1. Commit and push the topic branch
     1. Every behaviour modification should be reported in the specs, you can ask me to do that if you find it boring
     though

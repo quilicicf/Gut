@@ -9,7 +9,7 @@ Ein gut git Flow [🔊](https://translate.google.com/?tl=de#de/en/Ein%20gut%20gi
 
 ## Getting started
 
-The whole project is specified in the [specs document](./specs/specs.md).
+The whole project is specified in the [specs document](./specs/user_documentation.md).
 From installation to commands and git flow explanation, you should find everything there.
 If something's amiss, please create an issue.
 
