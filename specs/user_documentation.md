@@ -126,7 +126,7 @@ Example of configuration:
   "ci": {
     "jenkins": {
        "build": {
-         "server": "personal"
+         "server": "personal",
          "uri": "/jobs/gut",
          "body": {
            "branch_or_tag": "$currentBranch"
