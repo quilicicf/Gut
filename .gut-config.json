@@ -1,3 +1,15 @@
 {
-  "commitMessageSuffixTemplate": "#$ticketNumber"
+  "ci": {
+    "jenkins": {
+      "build": {
+        "server": "personal",
+        "uri": "/jobs/gut",
+        "body": {
+          "branch_or_tag": "$currentBranch"
+        }
+      }
+    }
+  },
+  "commitMessageSuffixTemplate": "#$ticketNumber",
+  "reviewTool": "github"
 }
