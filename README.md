@@ -2,6 +2,7 @@
 
 Ein gut git Flow [🔊](https://translate.google.com/?tl=de#de/en/Ein%20gut%20git%20Flow)
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Dependency Status](https://david-dm.org/quilicicf/gut.svg)](https://david-dm.org/quilicicf/gut)
 [![Known Vulnerabilities](https://snyk.io/test/github/quilicicf/gut/badge.svg)](https://snyk.io/test/github/quilicicf/gut)
 [![Build status](https://travis-ci.org/quilicicf/Gut.svg?branch=master)](https://travis-ci.org/quilicicf/Gut/builds)
