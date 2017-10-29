@@ -43,4 +43,4 @@ yargs
   .version()
   .wrap(null)
   .epilogue('For more information, read the manual at https://github.com/quilicicf/Gut/blob/master/specs/specs.md')
-  .parse(process.argv.slice(2));
+  .argv;
