@@ -42,5 +42,5 @@ yargs
   .help()
   .version()
   .wrap(null)
-  .epilogue('For more information, read the manual at https://github.com/quilicicf/Gut/blob/master/specs/specs.md')
+  .epilogue('For more information, read the manual at https://github.com/quilicicf/Gut/blob/master/specs/user_documentation.md')
   .argv;
