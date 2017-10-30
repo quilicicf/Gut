@@ -35,6 +35,8 @@ Make sure you read the section __Getting started__ before the rest so you are aw
     * [Gut CI configuration example:](#gut-ci-configuration-example)
   * [PR](#pr)
     * [Gut PR configuration example](#gut-pr-configuration-example)
+* [Miscellaneous features](#miscellaneous-features)
+  * [Copy branch](#copy-branch)
 
 <!-- TOC: END -->
 
@@ -527,3 +529,15 @@ Repository configuration file (shared via git):
   "reviewTool": "github"
 }
 ```
+
+## Miscellaneous features
+
+All the features that don't belong to other categories but are still quite handy!
+
+### Copy branch
+
+Usage: `gut copy-branch`
+
+Copies the current branch to the clipboard.
+
+It uses the node package [copy-paste](https://www.npmjs.com/package/copy-paste) to interact with your system's clipboard. If it does not work on your system, and you get copy-paste to support it, create an issue and the version will get bumped.

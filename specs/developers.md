@@ -22,6 +22,7 @@ The code is structured like this:
 ├── lib ===========> All Gut's internals
 │   ├── advanced ==> Gut's advanced features (mostly integrations), one file per Gut command
 │   ├── git =======> Gut's git features, one file per Gut command
+│   ├── misc ======> Gut's miscellaneous features, one file per Gut command
 │   └── utils =====> Utility code
 ├── shell =========> Shell features, one file per feature
 ├── specs =========> Gut's documentation
