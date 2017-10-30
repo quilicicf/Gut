@@ -399,6 +399,10 @@ Arguments:
 - `-t` target branch, if it exists
 - `-r` regex to be used to search for the branch to check out
 - `-n` search the branch by ticket number
+* `-m` switch to master
+* `-v` switch to the version branch
+* `-f` switch to the feature branch
+* `-b` switch to the base branch
 
 Examples:
 - `gut switch -t master` switches to branch `master`
