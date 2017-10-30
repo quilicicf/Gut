@@ -396,18 +396,23 @@ Usage: `gut switch -t <target branch>`.
 Checks out a branch.
 
 Arguments:
-- `-t` target branch, if it exists
-- `-r` regex to be used to search for the branch to check out
-- `-n` search the branch by ticket number
+* `-t` target branch, if it exists
+* `-r` regex to be used to search for the branch to check out
+* `-n` search the branch by ticket number
 * `-m` switch to master
 * `-v` switch to the version branch
 * `-f` switch to the feature branch
 * `-b` switch to the base branch
 
 Examples:
-- `gut switch -t master` switches to branch `master`
-- `gut switch -r myDev` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
-- `gut switch -n 2345` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
+* `gut switch -t master` switches to branch `master`
+* `gut switch -r myDev` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
+* `gut switch -n 2345` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
+* `gut switch -m` would switch to `master`
+* `gut switch -v` on branch `2.11.0_#myFeature` would switch to `2.11.0`
+* `gut switch -f` on branch `2.11.0_#myFeature_123_myDev` would switch to `2.11.0_#myFeature`
+* `gut switch -b` on branch `2.11.0_#myFeature` would switch to `2.11.0`
+* `gut switch -b` on branch `2.11.0_#myFeature_123_myDev` would switch to `2.11.0_#myFeature`
 
 ### Thrust
 
