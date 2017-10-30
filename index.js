@@ -36,6 +36,9 @@ yargs
   .command('ci', 'Interact with your CI tool', () => require('./lib/advanced/ci').ci())
   .command('pr', 'Creates a pull request on your git server', () => require('./lib/advanced/pr').pr())
 
+  // Miscellaneous
+  .command([ 'copy-branch', 'cb' ], 'Copies the current branch name to the clipboard', () => require('./lib/misc/copyBranch').copyBranch())
+
   // To check that Gut is installed or just mess around
   .command('groot', 'Display a random sentence, in French', () => require('./lib/utils/execution').print('Je s\'appelle Groot'))
 
