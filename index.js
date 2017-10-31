@@ -36,7 +36,7 @@ yargs
   .command('pr', 'Creates a pull request on your git server', () => require('./lib/advanced/pr').pr())
 
   // To check that Gut is installed or just mess around
-  .command('groot', 'Display a random sentence, in French', () => console.log('Je s\'appelle Groot'))
+  .command('groot', 'Display a random sentence, in French', () => require('./lib/utils/execution').print('Je s\'appelle Groot'))
 
   // Undocumented methods (used in scripts for example, only interesting to developers
   .command('jump', false, _yargs => require('./lib/git/jump').jump(_yargs))
