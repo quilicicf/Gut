@@ -30,6 +30,7 @@ yargs
   .command([ 'replicate', 'r' ], 'Clones a repository', (_yargs) => require('./lib/git/replicate').replicate(_yargs))
   .command([ 'switch', 's' ], 'Checks out a branch', (_yargs) => require('./lib/git/switch').switch(_yargs))
   .command([ 'thrust', 't' ], 'Pushes local changes to a remote', (_yargs) => require('./lib/git/thrust').thrust(_yargs))
+  .command([ 'undo', 'u' ], 'Undoes commits', (_yargs) => require('./lib/git/undo').undo(_yargs))
 
   // Advanced/integration features
   .command('ci', 'Interact with your CI tool', () => require('./lib/advanced/ci').ci())
