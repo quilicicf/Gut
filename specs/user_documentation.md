@@ -29,6 +29,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
   * [Replicate](#replicate)
   * [Switch](#switch)
   * [Thrust](#thrust)
+  * [Undo](#undo)
 * [Advanced features](#advanced-features)
   * [CI](#ci)
     * [Gut CI configuration example:](#gut-ci-configuration-example)
@@ -424,6 +425,18 @@ than one remote configured.
 
 Arguments:
 * `-r` remote, the remote to push to
+
+### Undo
+
+Usage: `gut undo -n 2`.
+
+Undoes the last n commits.
+
+Arguments:
+* `-n` commits number, the number or commits to undo
+* `-s` stash, stashes the changes
+* `-d` description, use with `stash`, stashes the changes with the given description as stash item name
+* `-h` hard, erases the changes, a confirmation is shown to prevent unwanted data loss
 
 ## Advanced features
 
