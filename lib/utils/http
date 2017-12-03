@@ -1,0 +1,53 @@
+const _ = require('lodash');
+const url = require('url');
+const https = require('https');
+
+module.exports = (() => {
+  const HTTP_METHODS = {
+    GET: 'GET',
+    POST: 'POST'
+  };
+
+  const send = (targetUrl, options) => {
+    return new Promise((resolve, reject) => {
+      const callOptions = {
+        ...url.parse(targetUrl),
+        ...options
+      };
+
+      const request = https.request(callOptions, (response) => {
+        const responseChunks = [];
+        // response.setEncoding('utf8');
+
+        response
+          .on('data', (chunk) => {
+            responseChunks.push(chunk);
+          })
+          .on('end', () => {
+            const responseBody = _.isEmpty(responseChunks)
+              ? null
+              : JSON.parse(_.join(responseChunks));
+
+            resolve({
+              statusCode: response.statusCode,
+              body: responseBody
+            });
+          })
+          .on('error', (error) => {
+            reject(error);
+          });
+      });
+
+      request.on('error', reject);
+
+      request.end();
+    });
+  };
+
+
+  return {
+    HTTP_METHODS,
+
+    send
+  };
+})();
