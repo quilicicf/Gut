@@ -1,0 +1,79 @@
+const _ = require('lodash');
+const url = require('url');
+const https = require('https');
+
+module.exports = (() => {
+  const HTTP_METHODS = {
+    GET: 'GET',
+    POST: 'POST'
+  };
+
+  const send = (targetUrl, options) => {
+    return new Promise((resolve, reject) => {
+      const callOptions = {
+        ...url.parse(targetUrl),
+        ...options
+      };
+
+      const request = https.request(callOptions, (response) => {
+        const responseChunks = [];
+
+        response
+          .on('data', (chunk) => {
+            responseChunks.push(chunk);
+          })
+          .on('end', () => {
+            const responseAsString = _.join(responseChunks, '');
+            if (response.statusCode > 299) {
+              try {
+                resolve({
+                  statusCode: response.statusCode,
+                  body: JSON.parse(responseAsString)
+                });
+
+              } catch (parsingError) {
+                resolve({
+                  statusCode: response.statusCode,
+                  body: responseAsString
+                });
+              }
+
+            } else {
+              try {
+                console.log(responseAsString);
+                const responseBody = JSON.parse(responseAsString);
+                resolve({
+                  statusCode: response.statusCode,
+                  body: responseBody
+                });
+
+              } catch (parsingError) {
+                reject(parsingError);
+              }
+
+            }
+          })
+          .on('error', (error) => {
+            reject(error);
+          });
+      });
+
+      request.on('error', reject);
+
+      if (options.body) {
+        request.write(options.json
+          ? JSON.stringify(options.body)
+          : options.body);
+      }
+
+      request.end();
+    });
+  };
+
+
+  return {
+    HTTP_METHODS,
+
+    send
+  };
+})();
