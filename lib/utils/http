@@ -17,21 +17,25 @@ module.exports = (() => {
 
       const request = https.request(callOptions, (response) => {
         const responseChunks = [];
-        response.setEncoding('utf8');
 
         response
           .on('data', (chunk) => {
             responseChunks.push(chunk);
           })
           .on('end', () => {
-            const responseBody = _.isEmpty(responseChunks)
-              ? null
-              : JSON.parse(_.join(responseChunks));
+            try {
+              const responseBody = _.isEmpty(responseChunks)
+                ? null
+                : JSON.parse(_.join(responseChunks));
 
-            resolve({
-              statusCode: response.statusCode,
-              body: responseBody
-            });
+              resolve({
+                statusCode: response.statusCode,
+                body: responseBody
+              });
+
+            } catch (parsingError) {
+              reject(parsingError);
+            }
           })
           .on('error', (error) => {
             reject(error);
@@ -39,6 +43,12 @@ module.exports = (() => {
       });
 
       request.on('error', reject);
+
+      if (options.body) {
+        request.write(options.json
+          ? JSON.stringify(options.body)
+          : options.body);
+      }
 
       request.end();
     });

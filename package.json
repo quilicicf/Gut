@@ -43,6 +43,7 @@
     "eslint-config-airbnb-base": "12.1.0",
     "eslint-plugin-import": "2.8.0",
     "eslint-plugin-jest": "21.3.2",
+    "http-shutdown": "1.2.0",
     "jest": "21.2.1",
     "npm-check-updates": "2.13.0"
   }
