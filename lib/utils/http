@@ -17,7 +17,7 @@ module.exports = (() => {
 
       const request = https.request(callOptions, (response) => {
         const responseChunks = [];
-        // response.setEncoding('utf8');
+        response.setEncoding('utf8');
 
         response
           .on('data', (chunk) => {
