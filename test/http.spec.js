@@ -23,11 +23,8 @@ const createServer = (port, requestHandler) => {
   server.on('request', requestHandler);
 };
 
-let successServer;
-let errorServer;
-
 beforeAll(() => {
-  successServer = createServer(SUCCESS_PORT, (request, response) => {
+  createServer(SUCCESS_PORT, (request, response) => {
     const requestChunks = [];
     request
       .on('data', (chunk) => {
@@ -44,15 +41,10 @@ beforeAll(() => {
       });
   });
 
-  errorServer = createServer(ERROR_PORT, (request, response) => {
+  createServer(ERROR_PORT, (request, response) => {
     response.status(400);
     response.send('{"message": "This is an error server"}');
   });
-});
-
-afterAll(() => {
-  console.log('toto');
-  successServer.close();
 });
 
 describe('HTTP client', () => {
@@ -72,7 +64,6 @@ describe('HTTP client', () => {
       .then((response) => {
         expect(response.statusCode).toBe(200);
         expect(response.body).toEqual(body);
-        console.log('tata');
       });
   });
 });
