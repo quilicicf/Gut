@@ -23,18 +23,33 @@ module.exports = (() => {
             responseChunks.push(chunk);
           })
           .on('end', () => {
-            try {
-              const responseBody = _.isEmpty(responseChunks)
-                ? null
-                : JSON.parse(_.join(responseChunks));
+            const responseAsString = _.join(responseChunks);
+            if (response.statusCode > 299) {
+              try {
+                resolve({
+                  statusCode: response.statusCode,
+                  body: JSON.parse(responseAsString)
+                });
 
-              resolve({
-                statusCode: response.statusCode,
-                body: responseBody
-              });
+              } catch (parsingError) {
+                resolve({
+                  statusCode: response.statusCode,
+                  body: responseAsString
+                });
+              }
 
-            } catch (parsingError) {
-              reject(parsingError);
+            } else {
+              try {
+                const responseBody = JSON.parse(responseAsString);
+                resolve({
+                  statusCode: response.statusCode,
+                  body: responseBody
+                });
+
+              } catch (parsingError) {
+                reject(parsingError);
+              }
+
             }
           })
           .on('error', (error) => {
