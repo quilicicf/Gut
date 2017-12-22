@@ -34,7 +34,7 @@ beforeAll(() => {
         response.writeHead(200, { 'Content-type': 'application/json' });
 
         if (!_.isEmpty(requestChunks)) {
-          response.end(_.join(requestChunks));
+          response.end(_.join(requestChunks, ''));
         } else {
           response.end();
         }
