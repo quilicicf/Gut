@@ -23,7 +23,7 @@ module.exports = (() => {
             responseChunks.push(chunk);
           })
           .on('end', () => {
-            const responseAsString = _.join(responseChunks);
+            const responseAsString = _.join(responseChunks, '');
             if (response.statusCode > 299) {
               try {
                 resolve({
@@ -40,6 +40,7 @@ module.exports = (() => {
 
             } else {
               try {
+                console.log(responseAsString);
                 const responseBody = JSON.parse(responseAsString);
                 resolve({
                   statusCode: response.statusCode,
