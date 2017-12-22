@@ -42,7 +42,6 @@ module.exports = (() => {
 
             } else {
               try {
-                console.log(responseAsString);
                 const responseBody = JSON.parse(responseAsString);
                 resolve({
                   statusCode: response.statusCode,
