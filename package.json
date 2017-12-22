@@ -7,7 +7,7 @@
     "gut": "index.js"
   },
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint '*/**' 'index.js'",
     "pretest": "npm run lint",
     "test": "jest",
     "install-prod": "npm install --save --save-exact",
