@@ -38,6 +38,7 @@
     "yargs": "10.0.3"
   },
   "devDependencies": {
+    "babel-eslint": "7.2.3",
     "eslint": "4.13.1",
     "eslint-config-airbnb-base": "12.1.0",
     "eslint-plugin-import": "2.8.0",
