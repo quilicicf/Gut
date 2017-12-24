@@ -10,8 +10,6 @@ require('colors');
 const os = require('os');
 const yargs = require('yargs');
 
-const configure = require('./lib/git/configure');
-
 /***********************
  *  PROCESS ARGUMENTS  *
  **********************/
