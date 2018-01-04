@@ -31,14 +31,14 @@
   "dependencies": {
     "base-64": "0.1.0",
     "colors": "1.1.2",
-    "inquirer": "4.0.1",
+    "inquirer": "4.0.2",
     "lodash": "4.17.4",
     "promptly": "2.2.0",
     "utf8": "3.0.0",
     "yargs": "10.0.3"
   },
   "devDependencies": {
-    "eslint": "4.13.1",
+    "eslint": "4.14.0",
     "eslint-config-airbnb-base": "12.1.0",
     "eslint-plugin-import": "2.8.0",
     "eslint-plugin-jest": "21.5.0",
