@@ -27,7 +27,7 @@ yargs
   .command([ 'install', 'i' ], 'Installs the shell scripts', () => require('./lib/git/install').install())
   .command([ 'obliterate', 'o' ], 'Deletes a branch or a tag', (_yargs) => require('./lib/git/obliterate').obliterate(_yargs))
   .command([ 'pile', 'p' ], 'Adds all changes in the repository', () => require('./lib/git/pile').pile())
-  .command([ 'replicate', 'r' ], 'Clones a repository', (_yargs) => require('./lib/git/replicate').replicate(_yargs))
+  .command([ 'replicate', 'r' ], 'Clones a repository', async (_yargs) => require('./lib/git/replicate').replicate(_yargs))
   .command([ 'switch', 's' ], 'Checks out a branch', (_yargs) => require('./lib/git/switch').switch(_yargs))
   .command([ 'thrust', 't' ], 'Pushes local changes to a remote', (_yargs) => require('./lib/git/thrust').thrust(_yargs))
   .command([ 'undo', 'u' ], 'Undoes commits', (_yargs) => require('./lib/git/undo').undo(_yargs))

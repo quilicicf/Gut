@@ -35,9 +35,10 @@
     "lodash": "4.17.4",
     "promptly": "2.2.0",
     "utf8": "3.0.0",
-    "yargs": "10.0.3"
+    "yargs": "10.1.0"
   },
   "devDependencies": {
+    "babel-eslint": "7.2.3",
     "eslint": "4.13.1",
     "eslint-config-airbnb-base": "12.1.0",
     "eslint-plugin-import": "2.8.0",
