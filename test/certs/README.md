@@ -7,6 +7,6 @@ If they need to be renewed, run:
 
 ```shell
 cd "$GUT/test/certs"
-openssl req -x509 -newkey rsa:2048 -nodes -sha256 -subj '/CN=localhost' \
+openssl req -x509 -days 3650 -newkey rsa:2048 -nodes -sha256 -subj '/CN=localhost' \
   -keyout privkey.pem -out cert.pem
 ```
