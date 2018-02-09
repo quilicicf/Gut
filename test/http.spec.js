@@ -47,8 +47,8 @@ beforeAll(() => {
   });
 });
 
-describe('HTTP client', () => {
-  test('It should read the response', () => {
+describe('HTTP client', async () => {
+  test('It should read the response', async () => {
     const body = { test: 'toto' };
 
     const options = {
@@ -60,10 +60,8 @@ describe('HTTP client', () => {
       body
     };
 
-    return httpModule.send(`https://localhost:${SUCCESS_PORT}`, options)
-      .then((response) => {
-        expect(response.statusCode).toBe(200);
-        expect(response.body).toEqual(body);
-      });
+    const response = await httpModule.send(`https://localhost:${SUCCESS_PORT}`, options);
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual(body);
   });
 });
