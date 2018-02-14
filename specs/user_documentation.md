@@ -406,6 +406,7 @@ Arguments:
 * `-v` switch to the version branch
 * `-f` switch to the feature branch
 * `-b` switch to the base branch
+* `-l` switch to the last visited branch (run `git checkout -`)
 
 Examples:
 * `gut switch -t master` switches to branch `master`
