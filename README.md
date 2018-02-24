@@ -43,7 +43,7 @@ The example below shows the differences in workflow for a simple contribution on
   </tr>
   <tr>
     <td>
-		<pre lang="shell">
+      <pre lang="shell">
 cd "$REPOSITORIES_PATH"
 # You must cd to where yuo want to clone
 git clone git@github.com:owner/repository.git
@@ -52,9 +52,9 @@ cd 'repository'
 # You must cd again to begin working
 git checkout -b "$devBranchName"
 # Create the new branch
-
+<br>
 # Actual work
-
+<br>
 git add . -A
 git status -sb
 # To verify which files where changed
@@ -62,35 +62,38 @@ git commit -m ":new: My new feature #$ticketNumber"
 # Add the ticket number by hand so that GitHub tracks the commit in the ticket
 git push --set-upstream-to "origin/$devBranchName"
 # Set the upstream by hand, 99% of the case you will type this exact line
-
+<br>
 # Open GitHub
 # Use the compare and pull request feature to create a PR
 # Copy the PR URL
 # Open your chat system
 # Paste it with a message to ask a team mate to review it
-        </pre>
+      </pre>
     </td>
     <td>
-		<pre lang="shell">
+      <pre lang="shell">
 gut replicate -s 'github' -o 'owner' -r 'repository'
 # The path where the repository is cloned is defined in gut's configuration
 jump repository
 # Find the repository in the repositories path by glob and cd it
 gut burgeon -n ticketNumber -d devDescription
 # Creates a branch with a name including the ticket number for later use
+<br>
 # Actual work
+<br>
 gut pile
 # Adds all the unstaged changes in the repository, shows the changed files with git status -sb
 gut execute -m :new: My new feature
 # Creates the commit, no quotes for the message, ticket number is added automatically
-git thrust
+gut thrust
 # Pushes to the server, upstream is set by default to "origin/$devBranchName"
+<br>
 gut pr
 # Audits the PR for TODOs, FIXMEs etc...
 # Helps you build the PR (title, description). Outputs the PR's URL
 # Better yet, the base branch is deducted from the name of the current branch!
 # COMING SOON => write a message to Slack with the PR's URL automatically added
-        </pre>
+      </pre>
     </td>
   </tr>
 </table>
