@@ -35,7 +35,6 @@ But most importantly, gut is built atop git, this means you can use small bits o
 ## So how do git and gut compare?
 
 The example below shows the differences in workflow for a simple contribution on a GitHub repository.
-Each line represents a user action.
 
 <table style="width:100%">
   <tr>
@@ -45,33 +44,52 @@ Each line represents a user action.
   <tr>
     <td>
 		<pre lang="shell">
-        cd "$REPOSITORIES_PATH"
-        git clone git@github.com:owner/repository.git # Or open GitHub page and copy the path
-        cd 'repository'
-        git checkout -b "$devBranchName"
-        # Actual work
-        git add . -A
-        git status -sb # To verify which files where changed
-        git commit -m ":new: My new feature #$ticketNumber" # Add the ticket number by hand so that  GitHub tracks the changes in the ticket
-        git push --set-upstream-to "origin/$devBranchName"
-        # Open GitHub
-        # Use the compare and pull request feature to create a PR
-        # Copy the PR URL
-        # Open your chat system
-        # Paste it with a message to ask a team mate to review it
+cd "$REPOSITORIES_PATH"
+# You must cd to where yuo want to clone
+git clone git@github.com:owner/repository.git
+# You either have to remember the syntax or open GitHub to find the URL
+cd 'repository'
+# You must cd again to begin working
+git checkout -b "$devBranchName"
+# Create the new branch
+
+# Actual work
+
+git add . -A
+git status -sb
+# To verify which files where changed
+git commit -m ":new: My new feature #$ticketNumber"
+# Add the ticket number by hand so that GitHub tracks the commit in the ticket
+git push --set-upstream-to "origin/$devBranchName"
+# Set the upstream by hand, 99% of the case you will type this exact line
+
+# Open GitHub
+# Use the compare and pull request feature to create a PR
+# Copy the PR URL
+# Open your chat system
+# Paste it with a message to ask a team mate to review it
         </pre>
     </td>
     <td>
 		<pre lang="shell">
-        gut replicate -s 'github' -o 'owner' -r 'repository' # The path where the repository is cloned is defined in gut's configuration
-        jump repository # Find the repository in the repositories path by glob and cd it
-        gut burgeon -n ticketNumber -d devDescription # Creates a branch with a name including the ticket number for later use
-        # Actual work
-        gut pile # Adds all the unstaged changes in the repository, shows the changed files with git status -sb
-        gut execute -m :new: My new feature # Creates the commit, no quotes for the message, ticket number is added automatically
-        git thrust # Pushes to the server, upstream is set by default to "origin/$devBranchName"
-        gut pr # Audits the PR for TODOs, FIXMEs etc..., helps you build the PR (title, description). Outputs the PR's URL
-        # COMING SOON => write a message to Slack with the PR's URL automatically added
+gut replicate -s 'github' -o 'owner' -r 'repository'
+# The path where the repository is cloned is defined in gut's configuration
+jump repository
+# Find the repository in the repositories path by glob and cd it
+gut burgeon -n ticketNumber -d devDescription
+# Creates a branch with a name including the ticket number for later use
+# Actual work
+gut pile
+# Adds all the unstaged changes in the repository, shows the changed files with git status -sb
+gut execute -m :new: My new feature
+# Creates the commit, no quotes for the message, ticket number is added automatically
+git thrust
+# Pushes to the server, upstream is set by default to "origin/$devBranchName"
+gut pr
+# Audits the PR for TODOs, FIXMEs etc...
+# Helps you build the PR (title, description). Outputs the PR's URL
+# Better yet, the base branch is deducted from the name of the current branch!
+# COMING SOON => write a message to Slack with the PR's URL automatically added
         </pre>
     </td>
   </tr>
