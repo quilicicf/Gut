@@ -45,7 +45,7 @@ The example below shows the differences in workflow for a simple contribution on
     <td>
       <pre lang="shell">
 cd "$REPOSITORIES_PATH"
-# You must cd to where yuo want to clone
+# You must cd to where you want to clone
 git clone git@github.com:owner/repository.git
 # You either have to remember the syntax or open GitHub to find the URL
 cd 'repository'
