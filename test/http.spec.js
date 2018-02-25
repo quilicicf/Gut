@@ -3,8 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-require('http-shutdown').extend();
-
 const httpModule = require('../lib/utils/http');
 
 const SUCCESS_PORT = 5200;
@@ -13,18 +11,29 @@ const ERROR_PORT = 5500;
 const privateKey = fs.readFileSync(path.resolve(__dirname, 'certs', 'privkey.pem'));
 const publicKey = fs.readFileSync(path.resolve(__dirname, 'certs', 'cert.pem'));
 
+const servers = {};
+
 const createServer = (port, requestHandler) => {
   const certificateOptions = {
     key: privateKey,
     cert: publicKey
   };
 
-  const server = https.createServer(certificateOptions).listen(port);
+  const server = https
+    .createServer(certificateOptions)
+    .listen(port);
   server.on('request', requestHandler);
+  server.sockets = [];
+
+  server.on('connection', (socket) => {
+    server.sockets.push(socket);
+  });
+
+  return server;
 };
 
 beforeAll(() => {
-  createServer(SUCCESS_PORT, (request, response) => {
+  servers.success = createServer(SUCCESS_PORT, (request, response) => {
     const requestChunks = [];
     request
       .on('data', (chunk) => {
@@ -41,7 +50,7 @@ beforeAll(() => {
       });
   });
 
-  createServer(ERROR_PORT, (request, response) => {
+  servers.error = createServer(ERROR_PORT, (request, response) => {
     response.status(400);
     response.send('{"message": "This is an error server"}');
   });
@@ -63,5 +72,14 @@ describe('HTTP client', async () => {
     const response = await httpModule.send(`https://localhost:${SUCCESS_PORT}`, options);
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual(body);
+  });
+});
+
+afterAll(() => {
+  _.each(servers, (server) => {
+    server.close();
+    _.each(server.sockets, (socket) => {
+      socket.destroy();
+    });
   });
 });

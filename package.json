@@ -8,8 +8,7 @@
   },
   "scripts": {
     "lint": "eslint '*/**' 'index.js'",
-    "pretest": "npm run lint",
-    "test": "jest",
+    "test": "node test/cleanup.js; npm run lint; jest",
     "install-prod": "npm install --save --save-exact",
     "install-dev": "npm install --save-dev --save-exact",
     "ncu": "npm-check-updates"
@@ -42,7 +41,7 @@
     "eslint-config-airbnb-base": "12.1.0",
     "eslint-plugin-import": "2.8.0",
     "eslint-plugin-jest": "21.5.0",
-    "http-shutdown": "1.2.0",
+    "fs-extra": "5.0.0",
     "jest": "22.2.1",
     "npm-check-updates": "2.14.0"
   }
