@@ -13,8 +13,26 @@ const yargs = require('yargs');
  *  REQUIRE GUT MODULES  *
  ************************/
 
-const commands = require('./lib/commands');
+const audit = require('./lib/git/audit');
+const burgeon = require('./lib/git/burgeon');
+const configure = require('./lib/git/configure');
+const divisions = require('./lib/git/divisions');
+const execute = require('./lib/git/execute');
+const history = require('./lib/git/history');
+const install = require('./lib/git/install');
+const obliterate = require('./lib/git/obliterate');
+const pile = require('./lib/git/pile');
 const replicate = require('./lib/git/replicate');
+const sweetch = require('./lib/git/switch');
+const thrust = require('./lib/git/thrust');
+const undo = require('./lib/git/undo');
+
+const ci = require('./lib/advanced/ci');
+const pr = require('./lib/advanced/pr');
+
+const copyBranch = require('./lib/misc/copyBranch');
+
+const jump = require('./lib/git/jump');
 
 /*************************
  *   PROCESS ARGUMENTS   *
@@ -24,32 +42,32 @@ yargs
   .usage('usage: $0 <command>')
 
   // Public methods
-  .command(commands.audit.identifiers(), commands.audit.description, commands.audit.builder, commands.audit.command)
-  .command(commands.burgeon.identifiers(), commands.burgeon.description, commands.burgeon.builder, commands.burgeon.command)
-  .command(commands.configure.identifiers(), commands.configure.description, commands.configure.builder, commands.configure.command)
-  .command(commands.divisions.identifiers(), commands.divisions.description, commands.divisions.builder, commands.divisions.command)
-  .command(commands.execute.identifiers(), commands.execute.description, commands.execute.builder, commands.execute.command)
-  .command(commands.history.identifiers(), commands.history.description, commands.history.builder, commands.history.command)
-  .command(commands.install.identifiers(), commands.install.description, commands.install.builder, commands.install.command)
-  .command(commands.obliterate.identifiers(), commands.obliterate.description, commands.obliterate.builder, commands.obliterate.command)
-  .command(commands.pile.identifiers(), commands.pile.description, commands.pile.builder, commands.pile.command)
+  .command(audit.IDENTIFIERS, audit.DESCRIPTION, audit.builder, audit.command)
+  .command(burgeon.IDENTIFIERS, burgeon.DESCRIPTION, burgeon.builder, burgeon.command)
+  .command(configure.IDENTIFIERS, configure.DESCRIPTION, configure.builder, configure.command)
+  .command(divisions.IDENTIFIERS, divisions.DESCRIPTION, divisions.builder, divisions.command)
+  .command(execute.IDENTIFIERS, execute.DESCRIPTION, execute.builder, execute.command)
+  .command(history.IDENTIFIERS, history.DESCRIPTION, history.builder, history.command)
+  .command(install.IDENTIFIERS, install.DESCRIPTION, install.builder, install.command)
+  .command(obliterate.IDENTIFIERS, obliterate.DESCRIPTION, obliterate.builder, obliterate.command)
+  .command(pile.IDENTIFIERS, pile.DESCRIPTION, pile.builder, pile.command)
   .command(replicate.IDENTIFIERS, replicate.DESCRIPTION, replicate.builder, replicate.command)
-  .command(commands.switch.identifiers(), commands.switch.description, commands.switch.builder, commands.switch.command)
-  .command(commands.thrust.identifiers(), commands.thrust.description, commands.thrust.builder, commands.thrust.command)
-  .command(commands.undo.identifiers(), commands.undo.description, commands.undo.builder, commands.undo.command)
+  .command(sweetch.IDENTIFIERS, sweetch.DESCRIPTION, sweetch.builder, sweetch.command)
+  .command(thrust.IDENTIFIERS, thrust.DESCRIPTION, thrust.builder, thrust.command)
+  .command(undo.IDENTIFIERS, undo.DESCRIPTION, undo.builder, undo.command)
 
   // Advanced/integration features
-  .command(commands.ci.identifiers(), commands.ci.description, commands.ci.builder, commands.ci.command)
-  .command(commands.pr.identifiers(), commands.pr.description, commands.pr.builder, commands.pr.command)
+  .command(ci.IDENTIFIERS, ci.DESCRIPTION, ci.builder, ci.command)
+  .command(pr.IDENTIFIERS, pr.DESCRIPTION, pr.builder, pr.command)
 
   // Miscellaneous
-  .command(commands.copyBranch.identifiers(), commands.copyBranch.description, commands.copyBranch.builder, commands.copyBranch.command)
+  .command(copyBranch.IDENTIFIERS, copyBranch.DESCRIPTION, copyBranch.builder, copyBranch.command)
 
   // To check that Gut is installed or just mess around
   .command('groot', 'Display a random sentence, in French', () => process.stdout.write('Je s\'appelle Groot\n'))
 
   // Undocumented methods (used in scripts for example, only interesting to developers
-  .command(commands.copyBranch.identifiers(), commands.copyBranch.description, commands.copyBranch.builder, commands.copyBranch.command)
+  .command(jump.IDENTIFIERS, jump.DESCRIPTION, jump.builder, jump.command)
 
   .demandCommand(1, 'Specify the command you want to run!'.red)
   .help()
