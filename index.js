@@ -13,61 +13,40 @@ const yargs = require('yargs');
  *  REQUIRE GUT MODULES  *
  ************************/
 
-const audit = require('./lib/git/audit');
-const burgeon = require('./lib/git/burgeon');
-const configure = require('./lib/git/configure');
-const divisions = require('./lib/git/divisions');
-const execute = require('./lib/git/execute');
-const history = require('./lib/git/history');
-const install = require('./lib/git/install');
-const obliterate = require('./lib/git/obliterate');
-const pile = require('./lib/git/pile');
-const replicate = require('./lib/git/replicate');
-const sweetch = require('./lib/git/switch');
-const thrust = require('./lib/git/thrust');
-const undo = require('./lib/git/undo');
-
-const ci = require('./lib/advanced/ci');
-const pr = require('./lib/advanced/pr');
-
-const copyBranch = require('./lib/misc/copyBranch');
-
-const jump = require('./lib/git/jump');
-
+// noinspection BadExpressionStatementJS
 /*************************
  *   PROCESS ARGUMENTS   *
  ************************/
 
 yargs
-  .usage('usage: $0 <command>')
+  .usage('usage: gut <command>')
 
   // Public methods
-  .command(audit.IDENTIFIERS, audit.DESCRIPTION, audit.builder, audit.command)
-  .command(burgeon.IDENTIFIERS, burgeon.DESCRIPTION, burgeon.builder, burgeon.command)
-  .command(configure.IDENTIFIERS, configure.DESCRIPTION, configure.builder, configure.command)
-  .command(divisions.IDENTIFIERS, divisions.DESCRIPTION, divisions.builder, divisions.command)
-  .command(execute.IDENTIFIERS, execute.DESCRIPTION, execute.builder, execute.command)
-  .command(history.IDENTIFIERS, history.DESCRIPTION, history.builder, history.command)
-  .command(install.IDENTIFIERS, install.DESCRIPTION, install.builder, install.command)
-  .command(obliterate.IDENTIFIERS, obliterate.DESCRIPTION, obliterate.builder, obliterate.command)
-  .command(pile.IDENTIFIERS, pile.DESCRIPTION, pile.builder, pile.command)
-  .command(replicate.IDENTIFIERS, replicate.DESCRIPTION, replicate.builder, replicate.command)
-  .command(sweetch.IDENTIFIERS, sweetch.DESCRIPTION, sweetch.builder, sweetch.command)
-  .command(thrust.IDENTIFIERS, thrust.DESCRIPTION, thrust.builder, thrust.command)
-  .command(undo.IDENTIFIERS, undo.DESCRIPTION, undo.builder, undo.command)
+  .command(require('./lib/commands/git/audit'))
+  .command(require('./lib/commands/git/burgeon'))
+  .command(require('./lib/commands/git/configure'))
+  .command(require('./lib/commands/git/divisions'))
+  .command(require('./lib/commands/git/execute'))
+  .command(require('./lib/commands/git/history'))
+  .command(require('./lib/commands/git/install'))
+  .command(require('./lib/commands/git/obliterate'))
+  .command(require('./lib/commands/git/pile'))
+  .command(require('./lib/commands/git/replicate'))
+  .command(require('./lib/commands/git/switch'))
+  .command(require('./lib/commands/git/thrust'))
 
   // Advanced/integration features
-  .command(ci.IDENTIFIERS, ci.DESCRIPTION, ci.builder, ci.command)
-  .command(pr.IDENTIFIERS, pr.DESCRIPTION, pr.builder, pr.command)
+  .command(require('./lib/commands/advanced/ci'))
+  .command(require('./lib/commands/advanced/pr'))
 
   // Miscellaneous
-  .command(copyBranch.IDENTIFIERS, copyBranch.DESCRIPTION, copyBranch.builder, copyBranch.command)
+  .command(require('./lib/commands/misc/copyBranch'))
 
   // To check that Gut is installed or just mess around
   .command('groot', 'Display a random sentence, in French', () => process.stdout.write('Je s\'appelle Groot\n'))
 
-  // Undocumented methods (used in scripts for example, only interesting to developers
-  .command(jump.IDENTIFIERS, jump.DESCRIPTION, jump.builder, jump.command)
+  // Undocumented methods (used in scripts for example, only interesting to developers)
+  .command(require('./lib/commands/hidden/jump'))
 
   .demandCommand(1, 'Specify the command you want to run!'.red)
   .help()

@@ -6,7 +6,7 @@ const {
   ARG_OWNER,
   ARG_REPOSITORY,
   ARG_SERVER
-} = require('../../lib/git/replicate');
+} = require('../../lib/commands/git/replicate');
 
 const PATH_TO_INDEX = path.resolve(__dirname, '..', '..', 'index.js');
 const PATH_TO_GUT_TESTS = path.resolve(__dirname, '..', 'repositories', 'github', 'quilicicf', 'Gut-tests');
