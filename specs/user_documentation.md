@@ -503,6 +503,9 @@ Usage: `gut pr`
 Creates a pull-request on the tool of your choice (only GitHub implemented as of today).
 An audit of the commits added from the base branch is performed before anything else.
 
+Arguments:
+* `-o` opens the PR URL in the system's default browser
+
 The review tool must be configured in the [repository configuration file](#repository-configuration-file).
 A valid OAuth 2.0 token must be set in the [Gut configuration file](#gut-configuration-file).
 You can create the token [here](https://github.com/settings/tokens), please note these tokens should not be used for
