@@ -6,8 +6,8 @@ Make sure you read the section __Getting started__ before the rest so you are aw
 <!-- TOC: BEGIN -->
 * [Getting started](#getting-started)
   * [Installation](#installation)
-    * [Basic features](#basic-features)
-    * [Shell features](#shell-features)
+    * [Basic features installation](#basic-features-installation)
+    * [Shell features installation](#shell-features-installation)
   * [Initialization](#initialization)
     * [Gut configuration file](#gut-configuration-file)
     * [Repository configuration file](#repository-configuration-file)
@@ -30,6 +30,8 @@ Make sure you read the section __Getting started__ before the rest so you are aw
   * [Switch](#switch)
   * [Thrust](#thrust)
   * [Undo](#undo)
+* [Shell features](#shell-features)
+  * [Jump](#jump)
 * [Advanced features](#advanced-features)
   * [CI](#ci)
     * [Gut CI configuration example:](#gut-ci-configuration-example)
@@ -44,13 +46,13 @@ Make sure you read the section __Getting started__ before the rest so you are aw
 
 ### Installation
 
-#### Basic features
+#### Basic features installation
 
 ~~Just run `npm i -g gut-flow`. You're all set!~~
 
 This package hasn't been released to npmjs.org because it's not stable enough at the moment. It'll be released soon but in the meantime, you can try it out by cloning the repository and running `npm link` at the top-level.
 
-#### Shell features
+#### Shell features installation
 
 Some features gut provides change the terminal's directory or maintain variables that should have the same life span
 as the terminal.
@@ -440,6 +442,26 @@ Arguments:
 * `-s` stash, stashes the changes
 * `-d` description, use with `stash`, stashes the changes with the given description as stash item name
 * `-h` hard, erases the changes, a confirmation is shown to prevent unwanted data loss
+
+## Shell features
+
+### Jump
+
+Usage: `jump gut`.
+
+Changes the shell's directory to a repository that matches the search.
+
+Arguments:
+* `-g` git server, ex: github, bitbucket... By default, all of them match
+* `-o` the repository owner. By default, all of them match
+* `-r` the repository name. By default, all of them match
+* `positional argument 1` if there is only one argument, it'll be used as the repository name
+
+Each element is a glob, defaulting to `**`. The search it based on the assumption that your repositories are all in a single folder as described in chapter [organization of your repositories](#organization-of-your-repositories).
+
+To simplify the typing, the repository name search you provide will be surrounded with `*`. This means that `jump tube` will actually run `find "$repositoriesFolder" -maxdepth 3 -ipath '**/**/*tube*' | sort`.
+
+> Note: the search is case-insensitive.
 
 ## Advanced features
 
