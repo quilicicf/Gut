@@ -527,6 +527,7 @@ An audit of the commits added from the base branch is performed before anything 
 
 Arguments:
 * `-o` opens the PR URL in the system's default browser
+* `-c` copies the PR URL to the system's clipboard
 
 The review tool must be configured in the [repository configuration file](#repository-configuration-file).
 A valid OAuth 2.0 token must be set in the [Gut configuration file](#gut-configuration-file).
