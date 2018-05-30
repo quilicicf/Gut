@@ -341,6 +341,7 @@ Arguments:
 * `-n` shows only n commits (default to 100)
 * `-r` reverses the order in which the commits are shown. If not specified, the commits will be displayed from newest
  to oldest.
+* `-b` show commits that were added from base branch
 
 Available formats:
 * `pretty`: a colored and well indented format, see screenshot below
