@@ -7,4 +7,3 @@ const GUT_TESTS_REPOSITORY_PATH = path.resolve(__dirname, 'repositories');
 
 removeSync(GUT_TESTS_REPOSITORY_PATH);
 mkdirsSync(GUT_TESTS_REPOSITORY_PATH);
-
