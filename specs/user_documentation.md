@@ -412,6 +412,7 @@ Arguments:
 * `-l` switch to the last visited branch (run `git checkout -`)
 
 Examples:
+* `gut switch` triggers an interactive branch switch. Gut will display the available branches and let you choose your target
 * `gut switch -t master` switches to branch `master`
 * `gut switch -r myDev` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
 * `gut switch -n 2345` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
