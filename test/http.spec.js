@@ -16,7 +16,7 @@ const servers = {};
 const createServer = (port, requestHandler) => {
   const certificateOptions = {
     key: privateKey,
-    cert: publicKey
+    cert: publicKey,
   };
 
   const server = https
@@ -66,7 +66,7 @@ describe('HTTP client', async () => {
       requestCert: true,
       ca: publicKey,
       json: true,
-      body
+      body,
     };
 
     const response = await httpModule.send(`https://localhost:${SUCCESS_PORT}`, options);

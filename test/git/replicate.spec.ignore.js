@@ -5,7 +5,7 @@ const {
   NAME,
   ARG_OWNER,
   ARG_REPOSITORY,
-  ARG_SERVER
+  ARG_SERVER,
 } = require('../../lib/commands/git/replicate');
 
 const PATH_TO_INDEX = path.resolve(__dirname, '..', '..', 'index.js');

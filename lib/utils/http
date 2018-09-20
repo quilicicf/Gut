@@ -4,70 +4,68 @@ const https = require('https');
 
 const HTTP_METHODS = {
   GET: 'GET',
-  POST: 'POST'
+  POST: 'POST',
 };
 
-const send = (targetUrl, options) => {
-  return new Promise((resolve, reject) => {
-    const callOptions = {
-      ...url.parse(targetUrl),
-      ...options
-    };
+const send = (targetUrl, options) => new Promise((resolve, reject) => {
+  const callOptions = {
+    ...url.parse(targetUrl),
+    ...options,
+  };
 
-    _.set(callOptions, 'headers.User-Agent', 'Gut <https://github.com/quilicicf/Gut>');
+  _.set(callOptions, 'headers.User-Agent', 'Gut <https://github.com/quilicicf/Gut>');
 
-    const request = https.request(callOptions, (response) => {
-      const responseChunks = [];
+  const request = https.request(callOptions, (response) => {
+    const responseChunks = [];
 
-      response
-        .on('data', (chunk) => {
-          responseChunks.push(chunk);
-        })
-        .on('end', () => {
-          const responseAsString = _.join(responseChunks, '');
-          if (response.statusCode > 299) {
-            try {
-              resolve({
-                statusCode: response.statusCode,
-                body: JSON.parse(responseAsString)
-              });
+    response
+      .on('data', (chunk) => {
+        responseChunks.push(chunk);
+      })
+      .on('end', () => {
+        const responseAsString = _.join(responseChunks, '');
+        if (response.statusCode > 299) {
+          try {
+            resolve({
+              statusCode: response.statusCode,
+              body: JSON.parse(responseAsString),
+            });
 
-            } catch (parsingError) {
-              resolve({
-                statusCode: response.statusCode,
-                body: responseAsString
-              });
-            }
-
-          } else {
-            try {
-              const responseBody = JSON.parse(responseAsString);
-              resolve({
-                statusCode: response.statusCode,
-                body: responseBody
-              });
-
-            } catch (parsingError) {
-              reject(parsingError);
-            }
-
+          } catch (parsingError) {
+            resolve({
+              statusCode: response.statusCode,
+              body: responseAsString,
+            });
           }
-        })
-        .on('error', (error) => {
-          reject(error);
-        });
-    });
 
-    request.on('error', reject);
+        } else {
+          try {
+            const responseBody = JSON.parse(responseAsString);
+            resolve({
+              statusCode: response.statusCode,
+              body: responseBody,
+            });
 
-    if (options.body) {
-      request.write(options.json
-        ? JSON.stringify(options.body)
-        : options.body);
-    }
+          } catch (parsingError) {
+            reject(parsingError);
+          }
 
-    request.end();
+        }
+      })
+      .on('error', (error) => {
+        reject(error);
+      });
   });
-};
+
+  request.on('error', reject);
+
+  if (options.body) {
+    request.write(options.json
+      ? JSON.stringify(options.body)
+      : options.body);
+  }
+
+  request.end();
+});
 
 module.exports = { HTTP_METHODS, send };
