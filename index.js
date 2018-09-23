@@ -33,6 +33,7 @@ yargs
   .command(require('./lib/commands/git/switch'))
   .command(require('./lib/commands/git/thrust'))
   .command(require('./lib/commands/git/undo'))
+  .command(require('./lib/commands/git/yield'))
 
   // Advanced/integration features
   .command(require('./lib/commands/advanced/ci'))
