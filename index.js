@@ -24,23 +24,24 @@ yargs
   // Public methods
   .command(require('./lib/commands/git/audit'))
   .command(require('./lib/commands/git/burgeon'))
-  .command(require('./lib/commands/git/configure'))
   .command(require('./lib/commands/git/divisions'))
   .command(require('./lib/commands/git/execute'))
   .command(require('./lib/commands/git/history'))
-  .command(require('./lib/commands/git/install'))
   .command(require('./lib/commands/git/obliterate'))
   .command(require('./lib/commands/git/pile'))
   .command(require('./lib/commands/git/replicate'))
   .command(require('./lib/commands/git/switch'))
   .command(require('./lib/commands/git/thrust'))
+  .command(require('./lib/commands/git/undo'))
 
   // Advanced/integration features
   .command(require('./lib/commands/advanced/ci'))
   .command(require('./lib/commands/advanced/pr'))
 
   // Miscellaneous
+  .command(require('./lib/commands/misc/configure'))
   .command(require('./lib/commands/misc/copyBranch'))
+  .command(require('./lib/commands/misc/install'))
 
   // To check that Gut is installed or just mess around
   .command('groot', 'Display a random sentence, in French', () => process.stdout.write('Je s\'appelle Groot\n'))
