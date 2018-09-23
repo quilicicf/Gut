@@ -30,6 +30,7 @@ Make sure you read the section __Getting started__ before the rest so you are aw
   * [Switch](#switch)
   * [Thrust](#thrust)
   * [Undo](#undo)
+  * [Yield](#yield)
 * [Shell features](#shell-features)
   * [Jump](#jump)
 * [Advanced features](#advanced-features)
@@ -444,6 +445,16 @@ Arguments:
 * `-s` stash, stashes the changes
 * `-d` description, use with `stash`, stashes the changes with the given description as stash item name
 * `-h` hard, erases the changes, a confirmation is shown to prevent unwanted data loss
+
+### Yield
+
+Usage: `gut yield -r origin`.
+
+Fetches from the given remote.
+
+Arguments:
+
+* `-r` the remote to fetch from. Defaults to `origin`
 
 ## Shell features
 
