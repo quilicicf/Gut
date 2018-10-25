@@ -281,18 +281,18 @@ Creates a new branch and checks it out.
 Arguments:
 - `-v` create a new version branch, the value of the parameter is the version (follows semver). You can only create a
 version branch from master or another version branch.
-- `-f` create a new feature branch, the value of the parameter is the feature's description. It can't contain an
-underscore. You can only create a feature branch from master or a version branch.
+- `-f` create a new feature branch, the value of the parameter is the feature's description. It is an array that can't contain an
+underscore and will be camel-case joined in the created branch name. You can only create a feature branch from master or a version branch.
 - `-i` only usable with `-f`. If set, the feature branch will be built each time your commit on the branch.
-- `-d` create a new dev branch, the value of the parameter is the dev's description. It can't contain an underscore.
+- `-d` create a new dev branch, the value of the parameter is the development's description. It is an array that can't contain an underscore and will be camel-case joined in the created branch name.
 You can create dev branches from every type of branches but dev branches.
 - `-n` only usable with `-d`. The ticket number associated with the dev.
 
 Examples:
 - `gut burgeon -v 2.35.9` (called from `master`) creates a version branch named `2.35.9`
-- `gut burgeon -f myFeature -i` (called from `2.35.9`) creates a feature branch named `2.35.9_build#myFeature`
-- `gut burgeon -d myDev -n 123` (called from `2.35.9_build#myFeature`) creates a dev branch named
-`2.35.9_build#myFeature_123_myDev`
+- `gut burgeon -f my feature -i` (called from `2.35.9`) creates a feature branch named `2.35.9_build#myFeature`
+- `gut burgeon -d fix that thing -n 123` (called from `2.35.9_build#myFeature`) creates a dev branch named
+`2.35.9_build#myFeature_123_fixThatThing`
 
 ### Divisions
 
