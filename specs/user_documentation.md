@@ -537,6 +537,7 @@ Usage: `gut pr`
 
 Creates a pull-request on the tool of your choice (only GitHub implemented as of today).
 An audit of the commits added from the base branch is performed before anything else.
+By default, the assignee is the creator.
 
 Arguments:
 * `-o` opens the PR URL in the system's default browser
