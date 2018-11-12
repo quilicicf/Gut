@@ -16,7 +16,7 @@ Ein gut git Flow [🔊](https://translate.google.com/?tl=de#de/en/Ein%20gut%20gi
 ### Static analysis
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/a090970db27a541d83b3/maintainability)](https://codeclimate.com/github/quilicicf/Gut/maintainability)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d5723842f6e14066a6e68e692ced1c4e)](https://www.codacy.com/app/quilicicf/Gut?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=quilicicf/Gut&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d5723842f6e14066a6e68e692ced1c4e)](https://www.codacy.com/app/quilicicf/Gut?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=quilicicf/Gut&amp;utm_campaign=Badge_Grade) [![Greenkeeper badge](https://badges.greenkeeper.io/quilicicf/Gut.svg)](https://greenkeeper.io/)
 
 ## Why Gut?
 
