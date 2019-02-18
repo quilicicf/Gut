@@ -194,20 +194,20 @@ Branch types:
 * __Dev branches:__ When working on a ticket, a dev creates a branch from the feature or version branch.
 
 The following rules apply to the branches:
-1\. It is allowed to force-push on branches that are only used by a single developer (to create a clean history).
-2\. As soon as two developers start working on the same branch, force-push is prohibited (I'll implement safe-guards but
+1. It is allowed to force-push on branches that are only used by a single developer (to create a clean history).
+2. As soon as two developers start working on the same branch, force-push is prohibited (I'll implement safe-guards but
 that's a little further down the roadmap).
-3\. To have a clean history, the rebase is preferred to update the version/feature/dev branches to the last modifications.
+3. To have a clean history, the rebase is preferred to update the version/feature/dev branches to the last modifications.
 They should be done when there's the fewest branches open and the branch that's to be rebased must be duplicated
 first of course (there'll be tooling down the roadmap for that too).
-4\. The rebase-and-merge feature is to be preferred when merging branches down.
-5\. Delivery to the QA team is done y creating a tag named as a time stamp (ISO 8601)
-6\. When the QA validates a tag, it is merged into master, then production tag is created and named `v<full version>`
-7\. Build
-    1\. All version branches and master should be built every time their source code changes
-    2\. Feature branches can specify they should be built by adding `build` before the `#`
-    3\. Dev branches should be built when the PR is done or on-demand (a feature is coming to make the on-demand part a
-    4\. command away
+4. The rebase-and-merge feature is to be preferred when merging branches down.
+5. Delivery to the QA team is done y creating a tag named as a time stamp (ISO 8601)
+6. When the QA validates a tag, it is merged into master, then production tag is created and named `v<full version>`
+7. Build
+    1. All version branches and master should be built every time their source code changes
+    2. Feature branches can specify they should be built by adding `build` before the `#`
+    3. Dev branches should be built when the PR is done or on-demand (a feature is coming to make the on-demand part a
+    4. command away
 
 Benefits of this flow:
 
@@ -267,9 +267,10 @@ Inspects a git diff and displays a summary. Displayed items are:
 
 Arguments:
 
-* `-n` inspect the n last commits (exclusive with -f and -t)
-* `-f` the commit from which to start the diff
-* `-t` the commit where the diff ends
+* `--commits-number, -n` inspect the n last commits (exclusive with -f and -t)
+* `--from, -f` the commit from which to start the diff
+* `--to, -t` the commit where the diff ends
+* `--from-base-branch, -b` inspect the commits that are on this branch but not it's parent
 
 Example output:
 
@@ -283,19 +284,19 @@ Creates a new branch and checks it out.
 
 Arguments:
 
-* `-v` create a new version branch, the value of the parameter is the version (follows semver). You can only create a
+* `--new-version, -V` create a new version branch, the value of the parameter is the version (follows semver). You can only create a
   version branch from master or another version branch.
-* `-f` create a new feature branch, the value of the parameter is the feature's description. It is an array that can't contain an
+* `--feature, -f` create a new feature branch, the value of the parameter is the feature's description. It is an array that can't contain an
   underscore and will be camel-case joined in the created branch name. You can only create a feature branch from master or a version branch.
-* `-i` only usable with `-f`. If set, the feature branch will be built each time your commit on the branch.
-* `-d` create a new dev branch, the value of the parameter is the development's description. It is an array that can't contain an underscore and will be camel-case joined in the created branch name.
+* `--buildable, -b` only usable with `-f`. If set, the feature branch will be built each time your commit on the branch.
+* `--description, -d` create a new dev branch, the value of the parameter is the development's description. It is an array that can't contain an underscore and will be camel-case joined in the created branch name.
   You can create dev branches from every type of branches but dev branches.
-* `-n` only usable with `-d`. The ticket number associated with the dev.
+* `--ticket-number, -n` only usable with `-d`. The ticket number associated with the dev.
 
 Examples:
 
 * `gut burgeon -v 2.35.9` (called from `master`) creates a version branch named `2.35.9`
-* `gut burgeon -f my feature -i` (called from `2.35.9`) creates a feature branch named `2.35.9_build#myFeature`
+* `gut burgeon -f my feature -b` (called from `2.35.9`) creates a feature branch named `2.35.9_build#myFeature`
 * `gut burgeon -d fix that thing -n 123` (called from `2.35.9_build#myFeature`) creates a dev branch named
   `2.35.9_build#myFeature_123_fixThatThing`
 
@@ -306,10 +307,11 @@ Usage: `gut divisions -r o`.
 Displays the branches on a specific remote. The parameter r is the name of the remote or all to show all branches.
 There are a few shortcuts to go faster:
 
-* a stands for all
-* l stands for local
-* o stands for origin
-* u stands for upstream
+* `--remote, -r` the remote to inspect. You can either use its full name or one of the aliases below
+  * a stands for all
+  * l stands for local
+  * o stands for origin
+  * u stands for upstream
 
 If the parameter is omitted, only the local branches are shown.
 
@@ -321,10 +323,10 @@ Creates a commit with the provided message.
 
 Arguments:
 
-* `-m`: The commit message. It will be automatically suffixed with the ticket number if available (in the branch name)
+* `--message, -m`: The commit message. It will be automatically suffixed with the ticket number if available (in the branch name)
   and the repository is configured (see [Repository configuration file](#repository-configuration-file))
   with `commitMessageSuffixTemplate`. The commit message is an array, you don't need to quote it (see examples).
-* `-c`: Creates a code review commit, the message is set to `:eyes: Code review`, suffixed with the ticket number if
+* `--code-review, -c`: Creates a code review commit, the message is set to `:eyes: Code review`, suffixed with the ticket number if
   applicable. Mutually exclusive with `-m`
 
 Examples:
@@ -346,18 +348,15 @@ Displays commits history (equivalent to `git log`).
 
 Arguments:
 
-* `-f` format, the format in the list of predefined formats (see list below, defaults to `pretty`)
-* `-s` skip the n first commits in the history (defaults to 0)
-* `-n` shows only n commits (default to 100)
-* `-r` reverses the order in which the commits are shown. If not specified, the commits will be displayed from newest
+* `--format, -f` format, the format in the list of predefined formats (see list below, defaults to `pretty`)
+  * `pretty`: a colored and well indented format, see screenshot below
+  * `json`: the commits are returned as a JSON array
+  * `sha`:  only the shas are returned. Very useful when used with reverse to cherry-pick a few commits!
+* `--skip, -s` skip the n first commits in the history (defaults to 0)
+* `--number, -n` shows only n commits (default to 100)
+* `--reverse, -r` reverses the order in which the commits are shown. If not specified, the commits will be displayed from newest
   to oldest.
-* `-b` show commits that were added from base branch
-
-Available formats:
-
-* `pretty`: a colored and well indented format, see screenshot below
-* `json`: the commits are returned as a JSON array
-* `sha`:  only the shas are returned. Very useful when used with reverse to cherry-pick a few commits!
+* `--from-base-branch, -b` show commits that were added from base branch
 
 Log format `pretty`:
 
@@ -371,12 +370,12 @@ Deletes an item on the specified remote. Can delete branches and tags.
 
 Arguments:
 
-* `-r` The remote where the item should be deleted, defaults to `local`. Can be:
+* `--remote, -r` The remote where the item should be deleted, defaults to `local`. Can be:
   * local: if not defined or in `['l', 'local']`)
   * origin: if in `['o', 'origin']`
   * upstream: if in `['u', 'upstream']`
-* `-b` The name of the branch to delete. Exclusive with `-t`
-* `-t` The name of the tag to delete. Exclusive with `-b`
+* `--branch, -b` The name of the branch to delete. Exclusive with `-t`
+* `--tag, -t` The name of the tag to delete. Exclusive with `-b`
 
 Examples:
 
@@ -405,8 +404,13 @@ Usage: `gut replicate -s server -o owner -r repo`.
 
 Clones the repository in `<forge>/<server>/<owner>/<repo>`.
 
-If you omit the server, the `preferredGitServer` from your [configuration file](#gut-configuration-file) will be used.
-If you omit the owner, the `username` from your [configuration file](#gut-configuration-file) will be used.
+Arguments:
+
+* `--server, -s` the server where the repo is. Currently only `github` supported
+  * If you omit the server, the `preferredGitServer` from your [configuration file](#gut-configuration-file) will be used.
+* `--owner, -o` the repository owner
+  * If you omit the owner, the `username` from your [configuration file](#gut-configuration-file) will be used.
+* `--repository, -r` the repository name
 
 ### Switch
 
@@ -416,14 +420,14 @@ Checks out a branch.
 
 Arguments:
 
-* `-t` target branch, if it exists
-* `-r` regex to be used to search for the branch to check out
-* `-n` search the branch by ticket number
-* `-m` switch to master
-* `-v` switch to the version branch
-* `-f` switch to the feature branch
-* `-b` switch to the base branch
-* `-l` switch to the last visited branch (run `git checkout -`)
+* `--target, -t` target branch, if it exists
+* `--regex, -r` regex to be used to search for the branch to check out
+* `--ticket-number, -n` search the branch by ticket number
+* `--base, -b` switch to the base branch
+* `--last, -l` switch to the last visited branch (run `git checkout -`)
+* `-m` alias to switch to master
+* `-v` alias to switch to the version branch
+* `-f` alias to switch to the feature branch
 
 Examples:
 
@@ -447,7 +451,7 @@ than one remote configured.
 
 Arguments:
 
-* `-r` remote, the remote to push to
+* `--remote, -r` remote, the remote to push to
 
 ### Undo
 
@@ -457,10 +461,10 @@ Undoes the last n commits.
 
 Arguments:
 
-* `-n` commits number, the number or commits to undo
-* `-s` stash, stashes the changes
-* `-d` description, use with `stash`, stashes the changes with the given description as stash item name
-* `-h` hard, erases the changes, a confirmation is shown to prevent unwanted data loss
+* `--commits-number, -n` commits number, the number or commits to undo
+* `--stash-changes, -s` stash, stashes the changes
+* `--description, -d` description, use with `stash`, stashes the changes with the given description as stash item name
+* `--hard, -h` hard, erases the changes, a confirmation is shown to prevent unwanted data loss
 
 ### Yield
 
@@ -470,9 +474,9 @@ Fetches from the given remote.
 
 Arguments:
 
-* `-r` the remote to fetch from. Defaults to `origin`
-* `-p` pull the remote changes into the local branch (does a `git rebase $remote/$current_branch`)
-* `-f` only usable with `-p`. Force-updates current branch to its remote counter-part (confirmation asked)
+* `--remote, -r` the remote to fetch from. Defaults to `origin`
+* `--pull, -p` pull the remote changes into the local branch (does a `git rebase $remote/$current_branch`)
+* `--force, -f` only usable with `-p`. Force-updates current branch to its remote counter-part (confirmation asked)
 
 ## Shell features
 
@@ -560,8 +564,9 @@ By default, the assignee is the creator.
 
 Arguments:
 
-* `-o` opens the PR URL in the system's default browser
-* `-c` copies the PR URL to the system's clipboard
+* `--open, -o` opens the PR URL in the system's default browser
+* `--copy-url, -c` copies the PR URL to the system's clipboard
+* `--assignee, -a` sets the PR assignee (asynchronously), defaults to the github user from the [Gut configuration file](#gut-configuration-file)
 
 The review tool must be configured in the [repository configuration file](#repository-configuration-file).
 A valid OAuth 2.0 token must be set in the [Gut configuration file](#gut-configuration-file).
