@@ -1,9 +1,9 @@
-Gut specification
-=================
+# Gut specification
 
 Make sure you read the section __Getting started__ before the rest so you are aware of how the flow is supposed to work.
 
 <!-- TOC: BEGIN -->
+
 * [Getting started](#getting-started)
   * [Installation](#installation)
     * [Basic features installation](#basic-features-installation)
@@ -152,8 +152,8 @@ Example of configuration:
       * `uri`: the job's URI, relative to the URI of your server.
       * `body`: the JSON body that will be POSTed to the job's URI. See [the ci command](#ci) for more information.
 * `commitMessageSuffixTemplate`: when committing on a branch that contains a ticket number, gut will look for the
-suffix template. If a suffix is found, the template will be used to suffix the commit message, replacing
-`$ticketNumber` with the actual ticket number, retrieved from the branch name (see [branch naming](#branch-naming)).
+  suffix template. If a suffix is found, the template will be used to suffix the commit message, replacing
+  `$ticketNumber` with the actual ticket number, retrieved from the branch name (see [branch naming](#branch-naming)).
 * `reviewTool`: the review tool to be used for this repository. Only `github` is supported ATM.
 
 ### Spirit of the git flow
@@ -163,79 +163,80 @@ suffix template. If a suffix is found, the template will be used to suffix the c
 It is assumed you'll keep all your repositories into a single folder, which will be named __forge__ in the rest of
 this document and is structured like the following.
 
-```
-forge
-├── github
-│   ├── owner1
-│   │   ├── repo1
-│   │   └── repo2
-│   └── owner2
-│       ├── repo1
-│       └── repo2
-└── gitlab
-    ├── owner1
-    │   ├── repo1
-    │   └── repo2
-    └── owner2
-        ├── repo1
-        └── repo2
-
-```
+    forge
+    ├── github
+    │   ├── owner1
+    │   │   ├── repo1
+    │   │   └── repo2
+    │   └── owner2
+    │       ├── repo1
+    │       └── repo2
+    └── gitlab
+        ├── owner1
+        │   ├── repo1
+        │   └── repo2
+        └── owner2
+            ├── repo1
+            └── repo2
 
 #### Git branching
 
 ##### Branch flow
 
 Branch types:
-- __Master:__ The branch `master` is a branch that strictly follows the production. It is therefore a faithful
-representation of what's in production at ANY MOMENT
-- __Version branches:__ When starting the development of a version, a branch is created from master.
-- __Feature branches:__ A version can contain multiple features. In case two or more developers work on a feature, they
-can create a branch from the version branch. To allow for scope adjustment, the feature can be merged in the next
-version if need be.
-- __Dev branches:__ When working on a ticket, a dev creates a branch from the feature or version branch.
+
+* __Master:__ The branch `master` is a branch that strictly follows the production. It is therefore a faithful
+  representation of what's in production at ANY MOMENT
+* __Version branches:__ When starting the development of a version, a branch is created from master.
+* __Feature branches:__ A version can contain multiple features. In case two or more developers work on a feature, they
+  can create a branch from the version branch. To allow for scope adjustment, the feature can be merged in the next
+  version if need be.
+* __Dev branches:__ When working on a ticket, a dev creates a branch from the feature or version branch.
 
 The following rules apply to the branches:
-1. It is allowed to force-push on branches that are only used by a single developer (to create a clean history).
-2. As soon as two developers start working on the same branch, force-push is prohibited (I'll implement safe-guards but
+1\. It is allowed to force-push on branches that are only used by a single developer (to create a clean history).
+2\. As soon as two developers start working on the same branch, force-push is prohibited (I'll implement safe-guards but
 that's a little further down the roadmap).
-3. To have a clean history, the rebase is preferred to update the version/feature/dev branches to the last modifications.
+3\. To have a clean history, the rebase is preferred to update the version/feature/dev branches to the last modifications.
 They should be done when there's the fewest branches open and the branch that's to be rebased must be duplicated
 first of course (there'll be tooling down the roadmap for that too).
-4. The rebase-and-merge feature is to be preferred when merging branches down.
-5. Delivery to the QA team is done y creating a tag named as a time stamp (ISO 8601)
-6. When the QA validates a tag, it is merged into master, then production tag is created and named `v<full version>`
-7. Build
-    1. All version branches and master should be built every time their source code changes
-    2. Feature branches can specify they should be built by adding `build` before the `#`
-    3. Dev branches should be built when the PR is done or on-demand (a feature is coming to make the on-demand part a
-    4. command away
+4\. The rebase-and-merge feature is to be preferred when merging branches down.
+5\. Delivery to the QA team is done y creating a tag named as a time stamp (ISO 8601)
+6\. When the QA validates a tag, it is merged into master, then production tag is created and named `v<full version>`
+7\. Build
+    1\. All version branches and master should be built every time their source code changes
+    2\. Feature branches can specify they should be built by adding `build` before the `#`
+    3\. Dev branches should be built when the PR is done or on-demand (a feature is coming to make the on-demand part a
+    4\. command away
 
 Benefits of this flow:
-- there is a branch that follows the production so it's easy to know what's in prod and debug it
-- the history is linear and really easy to read
-- forgetting to merge something seldom happens
-- even if the rebase was not done on alive branches after a merge to master, there should never be devs lost in
-translation
+
+* there is a branch that follows the production so it's easy to know what's in prod and debug it
+* the history is linear and really easy to read
+* forgetting to merge something seldom happens
+* even if the rebase was not done on alive branches after a merge to master, there should never be devs lost in
+  translation
 
 Attention points:
-- the tag that goes to production is not exactly the tag validated by the QA. If the merge is not smooth, the QA
-might need to re-check things
-- when a tag is merged into production, all live branches must be rebased
+
+* the tag that goes to production is not exactly the tag validated by the QA. If the merge is not smooth, the QA
+  might need to re-check things
+* when a tag is merged into production, all live branches must be rebased
 
 ##### Branch naming
 
-- Version branches: `<major version>.<minor version>.<patch version>` ex: `2.3.19`
-- Feature branches: `<full version>_#<feature>` ex: `2.3.19_#whatsNewDialog`
-- Dev branches: `<full version>_#<feature>_<ticket number>_<dev>` ex: `2.3.19_#whatsNewDialog_8495_optOut` or if
-there's no feature branch `2.3.19_456_noLogsBug`
+* Version branches: `<major version>.<minor version>.<patch version>` ex: `2.3.19`
+* Feature branches: `<full version>_#<feature>` ex: `2.3.19_#whatsNewDialog`
+* Dev branches: `<full version>_#<feature>_<ticket number>_<dev>` ex: `2.3.19_#whatsNewDialog_8495_optOut` or if
+  there's no feature branch `2.3.19_456_noLogsBug`
 
 Benefits of this naming:
-- No need to look at the commit tree to find where a dev started
-- Easy to spot if a branch is not rebased to the right origin (merging `1.2.2_123_totoFeature` in `1.3.0` should
-raise an alarm in your head)
-- Easy to clean the old local branches, just filter them with regex (there's gonna be a utility for that)
-- Easy to interact with CI/CD, the branch is parsable, the ticket number easy to retrieve
+
+* No need to look at the commit tree to find where a dev started
+* Easy to spot if a branch is not rebased to the right origin (merging `1.2.2_123_totoFeature` in `1.3.0` should
+  raise an alarm in your head)
+* Easy to clean the old local branches, just filter them with regex (there's gonna be a utility for that)
+* Easy to interact with CI/CD, the branch is parsable, the ticket number easy to retrieve
 
 ##### Commit messages format
 
@@ -256,6 +257,7 @@ The features in this section are mostly syntactic sugar over existing git featur
 Usage: `gut audit`.
 
 Inspects a git diff and displays a summary. Displayed items are:
+
 * Lines added/removed
 * Oddities found in the added code
   * TODO
@@ -264,6 +266,7 @@ Inspects a git diff and displays a summary. Displayed items are:
   * Local paths (looks for your home directory)
 
 Arguments:
+
 * `-n` inspect the n last commits (exclusive with -f and -t)
 * `-f` the commit from which to start the diff
 * `-t` the commit where the diff ends
@@ -279,20 +282,22 @@ Usage: `gut burgeon -v 2.10.0`
 Creates a new branch and checks it out.
 
 Arguments:
-- `-v` create a new version branch, the value of the parameter is the version (follows semver). You can only create a
-version branch from master or another version branch.
-- `-f` create a new feature branch, the value of the parameter is the feature's description. It is an array that can't contain an
-underscore and will be camel-case joined in the created branch name. You can only create a feature branch from master or a version branch.
-- `-i` only usable with `-f`. If set, the feature branch will be built each time your commit on the branch.
-- `-d` create a new dev branch, the value of the parameter is the development's description. It is an array that can't contain an underscore and will be camel-case joined in the created branch name.
-You can create dev branches from every type of branches but dev branches.
-- `-n` only usable with `-d`. The ticket number associated with the dev.
+
+* `-v` create a new version branch, the value of the parameter is the version (follows semver). You can only create a
+  version branch from master or another version branch.
+* `-f` create a new feature branch, the value of the parameter is the feature's description. It is an array that can't contain an
+  underscore and will be camel-case joined in the created branch name. You can only create a feature branch from master or a version branch.
+* `-i` only usable with `-f`. If set, the feature branch will be built each time your commit on the branch.
+* `-d` create a new dev branch, the value of the parameter is the development's description. It is an array that can't contain an underscore and will be camel-case joined in the created branch name.
+  You can create dev branches from every type of branches but dev branches.
+* `-n` only usable with `-d`. The ticket number associated with the dev.
 
 Examples:
-- `gut burgeon -v 2.35.9` (called from `master`) creates a version branch named `2.35.9`
-- `gut burgeon -f my feature -i` (called from `2.35.9`) creates a feature branch named `2.35.9_build#myFeature`
-- `gut burgeon -d fix that thing -n 123` (called from `2.35.9_build#myFeature`) creates a dev branch named
-`2.35.9_build#myFeature_123_fixThatThing`
+
+* `gut burgeon -v 2.35.9` (called from `master`) creates a version branch named `2.35.9`
+* `gut burgeon -f my feature -i` (called from `2.35.9`) creates a feature branch named `2.35.9_build#myFeature`
+* `gut burgeon -d fix that thing -n 123` (called from `2.35.9_build#myFeature`) creates a dev branch named
+  `2.35.9_build#myFeature_123_fixThatThing`
 
 ### Divisions
 
@@ -300,10 +305,11 @@ Usage: `gut divisions -r o`.
 
 Displays the branches on a specific remote. The parameter r is the name of the remote or all to show all branches.
 There are a few shortcuts to go faster:
-- a stands for all
-- l stands for local
-- o stands for origin
-- u stands for upstream
+
+* a stands for all
+* l stands for local
+* o stands for origin
+* u stands for upstream
 
 If the parameter is omitted, only the local branches are shown.
 
@@ -314,18 +320,20 @@ Usage: `gut execute -m <message>`.
 Creates a commit with the provided message.
 
 Arguments:
+
 * `-m`: The commit message. It will be automatically suffixed with the ticket number if available (in the branch name)
-and the repository is configured (see [Repository configuration file](#repository-configuration-file))
-with `commitMessageSuffixTemplate`. The commit message is an array, you don't need to quote it (see examples).
+  and the repository is configured (see [Repository configuration file](#repository-configuration-file))
+  with `commitMessageSuffixTemplate`. The commit message is an array, you don't need to quote it (see examples).
 * `-c`: Creates a code review commit, the message is set to `:eyes: Code review`, suffixed with the ticket number if
-applicable. Mutually exclusive with `-m`
+  applicable. Mutually exclusive with `-m`
 
 Examples:
+
 * `gut execute -m :memo: Specify better commit messages` will create a commit with a message set to
-`:memo: Specify better commit messages`. Note: you will need to quote it if you have a word that begin with `-` in the
-commit message, otherwise it will be seen as a parameter to the gut command.
+  `:memo: Specify better commit messages`. Note: you will need to quote it if you have a word that begin with `-` in the
+  commit message, otherwise it will be seen as a parameter to the gut command.
 * `gut execute -m ':memo: Specify better commit messages'` will create a commit with a message set to
-`:memo: Specify better commit messages`.
+  `:memo: Specify better commit messages`.
 * `gut execute -c`will create a commit with a message set to `:eyes: Code review`.
 
 The commit should fail if the user has unstaged changes.
@@ -337,14 +345,16 @@ Usage: `gut history`.
 Displays commits history (equivalent to `git log`).
 
 Arguments:
+
 * `-f` format, the format in the list of predefined formats (see list below, defaults to `pretty`)
 * `-s` skip the n first commits in the history (defaults to 0)
 * `-n` shows only n commits (default to 100)
 * `-r` reverses the order in which the commits are shown. If not specified, the commits will be displayed from newest
- to oldest.
+  to oldest.
 * `-b` show commits that were added from base branch
 
 Available formats:
+
 * `pretty`: a colored and well indented format, see screenshot below
 * `json`: the commits are returned as a JSON array
 * `sha`:  only the shas are returned. Very useful when used with reverse to cherry-pick a few commits!
@@ -360,17 +370,19 @@ Usage: `gut obliterate -b master_deleteSpec -r o`
 Deletes an item on the specified remote. Can delete branches and tags.
 
 Arguments:
-  * `-r` The remote where the item should be deleted, defaults to `local`. Can be:
-    * local: if not defined or in `['l', 'local']`)
-    * origin: if in `['o', 'origin']`
-    * upstream: if in `['u', 'upstream']`
-  * `-b` The name of the branch to delete. Exclusive with `-t`
-  * `-t` The name of the tag to delete. Exclusive with `-b`
+
+* `-r` The remote where the item should be deleted, defaults to `local`. Can be:
+  * local: if not defined or in `['l', 'local']`)
+  * origin: if in `['o', 'origin']`
+  * upstream: if in `['u', 'upstream']`
+* `-b` The name of the branch to delete. Exclusive with `-t`
+* `-t` The name of the tag to delete. Exclusive with `-b`
 
 Examples:
-  * `gut obliterate -b master_deleteSpec`: deletes the branch `master_deleteSpec` locally.
+
+* `gut obliterate -b master_deleteSpec`: deletes the branch `master_deleteSpec` locally.
   Literally does `git branch -D master_deleteSpec`
-  * `gut obliterate -t v1.2.3 -r o` deletes the tag `v1.2.3` on `origin`.
+* `gut obliterate -t v1.2.3 -r o` deletes the tag `v1.2.3` on `origin`.
   Literally does `git push --delete origin v1.2.3`
 
 ### Pile
@@ -403,6 +415,7 @@ Usage: `gut switch -t <target branch>`.
 Checks out a branch.
 
 Arguments:
+
 * `-t` target branch, if it exists
 * `-r` regex to be used to search for the branch to check out
 * `-n` search the branch by ticket number
@@ -413,6 +426,7 @@ Arguments:
 * `-l` switch to the last visited branch (run `git checkout -`)
 
 Examples:
+
 * `gut switch` triggers an interactive branch switch. Gut will display the available branches and let you choose your target
 * `gut switch -t master` switches to branch `master`
 * `gut switch -r myDev` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
@@ -432,6 +446,7 @@ The user can always change the remote to push to but he must do it the first tim
 than one remote configured.
 
 Arguments:
+
 * `-r` remote, the remote to push to
 
 ### Undo
@@ -441,6 +456,7 @@ Usage: `gut undo -n 2`.
 Undoes the last n commits.
 
 Arguments:
+
 * `-n` commits number, the number or commits to undo
 * `-s` stash, stashes the changes
 * `-d` description, use with `stash`, stashes the changes with the given description as stash item name
@@ -448,13 +464,15 @@ Arguments:
 
 ### Yield
 
-Usage: `gut yield -r origin`.
+Usage: `gut yield -r upstream -p`.
 
 Fetches from the given remote.
 
 Arguments:
 
 * `-r` the remote to fetch from. Defaults to `origin`
+* `-p` pull the remote changes into the local branch (does a `git rebase $remote/$current_branch`)
+* `-f` only usable with `-p`. Force-updates current branch to its remote counter-part (confirmation asked)
 
 ## Shell features
 
@@ -465,6 +483,7 @@ Usage: `jump gut`.
 Changes the shell's directory to a repository that matches the search.
 
 Arguments:
+
 * `-g` git server, ex: github, bitbucket... By default, all of them match
 * `-o` the repository owner. By default, all of them match
 * `-r` the repository name. By default, all of them match
@@ -540,6 +559,7 @@ An audit of the commits added from the base branch is performed before anything 
 By default, the assignee is the creator.
 
 Arguments:
+
 * `-o` opens the PR URL in the system's default browser
 * `-c` copies the PR URL to the system's clipboard
 
