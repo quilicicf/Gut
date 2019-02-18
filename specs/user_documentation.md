@@ -163,21 +163,23 @@ Example of configuration:
 It is assumed you'll keep all your repositories into a single folder, which will be named __forge__ in the rest of
 this document and is structured like the following.
 
-    forge
-    ├── github
-    │   ├── owner1
-    │   │   ├── repo1
-    │   │   └── repo2
-    │   └── owner2
-    │       ├── repo1
-    │       └── repo2
-    └── gitlab
-        ├── owner1
-        │   ├── repo1
-        │   └── repo2
-        └── owner2
-            ├── repo1
-            └── repo2
+```
+forge
+├── github
+│   ├── owner1
+│   │   ├── repo1
+│   │   └── repo2
+│   └── owner2
+│       ├── repo1
+│       └── repo2
+└── gitlab
+    ├── owner1
+    │   ├── repo1
+    │   └── repo2
+    └── owner2
+        ├── repo1
+        └── repo2
+```
 
 #### Git branching
 
