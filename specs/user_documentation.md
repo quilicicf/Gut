@@ -416,15 +416,12 @@ Arguments:
 
 ### Switch
 
-Usage: `gut switch -t <target branch>`.
+Usage: `gut switch`.
 
 Checks out a branch.
 
 Arguments:
 
-* `--target, -t` target branch, if it exists
-* `--regex, -r` regex to be used to search for the branch to check out
-* `--ticket-number, -n` search the branch by ticket number
 * `--base, -b` switch to the base branch
 * `--last, -l` switch to the last visited branch (run `git checkout -`)
 * `-m` alias to switch to master
@@ -433,10 +430,7 @@ Arguments:
 
 Examples:
 
-* `gut switch` triggers an interactive branch switch. Gut will display the available branches and let you choose your target
-* `gut switch -t master` switches to branch `master`
-* `gut switch -r myDev` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
-* `gut switch -n 2345` would match branch `9.1.6_2345_myDev` and check it out if it were the only match
+* `gut switch` triggers an interactive branch switch. Gut will display the available branches and let you choose your target with auto-complete
 * `gut switch -m` would switch to `master`
 * `gut switch -v` on branch `2.11.0_#myFeature` would switch to `2.11.0`
 * `gut switch -f` on branch `2.11.0_#myFeature_123_myDev` would switch to `2.11.0_#myFeature`
