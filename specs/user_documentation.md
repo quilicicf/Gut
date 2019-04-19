@@ -329,6 +329,7 @@ Arguments:
   and the repository is configured (see [Repository configuration file](#repository-configuration-file))
   with `commitMessageSuffixTemplate`. The commit message is an array, you don't need to quote it (see examples).
 * `--code-review, -c`: Creates a code review commit, the message is set to `:eyes: Code review`, suffixed with the ticket number if
+* `--wip, -w`: Creates a WIP commit, the message is set to `:construction: WIP`, suffixed with the ticket number if
   applicable. Mutually exclusive with `-m`
 
 Examples:
