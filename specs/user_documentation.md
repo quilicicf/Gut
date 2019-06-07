@@ -353,6 +353,7 @@ Arguments:
 
 * `--format, -f` format, the format in the list of predefined formats (see list below, defaults to `pretty`)
   * `pretty`: a colored and well indented format, see screenshot below
+  * `simple`: a colored format, shortened to one line
   * `json`: the commits are returned as a JSON array
   * `sha`:  only the shas are returned. Very useful when used with reverse to cherry-pick a few commits!
 * `--skip, -s` skip the n first commits in the history (defaults to 0)
