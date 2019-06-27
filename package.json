@@ -1,7 +1,7 @@
 {
   "name": "gut-flow",
   "version": "1.0.0",
-  "description": "Ein gut git Flow",
+  "name": "Ein gut git Flow",
   "preferGlobal": true,
   "bin": {
     "gut": "index.js"
