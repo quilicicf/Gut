@@ -330,7 +330,7 @@ Arguments:
   with `commitMessageSuffixTemplate`. The commit message is an array, you don't need to quote it (see examples).
 * `--code-review, -c`: Creates a code review commit, the message is set to `:eyes: Code review`, suffixed with the ticket number if
 * `--wip, -w`: Creates a WIP commit, the message is set to `:construction: WIP`, suffixed with the ticket number if
-  applicable. Mutually exclusive with `-m`
+* `--emoji, -e`: Displays a selector to add one of [these commit emojis](https://github.com/quilicicf/Docs/blob/master/contribution/main.md) as a prefix to the commit message. Ignored when `--code-review` or `--wip` is defined
 
 Examples:
 
