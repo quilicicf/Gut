@@ -30,7 +30,7 @@
     "copy-paste-win32fix": "1.4.0",
     "inquirer": "6.4.1",
     "inquirer-autocomplete-prompt": "1.0.1",
-    "lodash": "4.17.12",
+    "lodash": "4.17.15",
     "utf8": "3.0.0",
     "yargs": "13.2.4"
   },
