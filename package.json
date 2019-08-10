@@ -38,7 +38,7 @@
     "@talend/eslint-config": "2.0.1",
     "babel-eslint": "10.0.2",
     "eslint": "6.0.1",
-    "eslint-config-airbnb": "17.1.1",
+    "eslint-config-airbnb": "18.0.0",
     "eslint-plugin-import": "2.18.1",
     "eslint-plugin-jest": "22.11.1",
     "eslint-plugin-jsx-a11y": "6.2.3",
