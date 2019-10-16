@@ -35,7 +35,7 @@
     "yargs": "14.2.0"
   },
   "devDependencies": {
-    "@talend/eslint-config": "2.0.1",
+    "@talend/eslint-config": "2.1.0",
     "babel-eslint": "10.0.3",
     "eslint": "6.4.0",
     "eslint-config-airbnb": "18.0.1",
