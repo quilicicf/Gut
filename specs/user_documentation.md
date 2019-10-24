@@ -380,6 +380,7 @@ Arguments:
   * upstream: if in `['u', 'upstream']`
 * `--branch, -b` The name of the branch to delete. Exclusive with `-t`
 * `--tag, -t` The name of the tag to delete. Exclusive with `-b`
+* `--assume-yes, -y` Does not ask for a confirmation before deleting an element. To be used with caution
 
 Examples:
 
