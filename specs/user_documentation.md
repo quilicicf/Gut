@@ -492,9 +492,12 @@ Arguments:
 * `-r` the repository name. By default, all of them match
 * `positional argument 1` if there is only one argument, it'll be used as the repository name
 
-Each element is a glob, defaulting to `**`. The search it based on the assumption that your repositories are all in a single folder as described in chapter [organization of your repositories](#organization-of-your-repositories).
+Each element is a glob, defaulting to `*`. The search it based on the assumption that your repositories are all in a single folder as described in chapter [organization of your repositories](#organization-of-your-repositories).
 
-To simplify the typing, the repository name search you provide will be surrounded with `*`. This means that `jump tube` will actually run `find "$repositoriesFolder" -maxdepth 3 -ipath '**/**/*tube*' | sort`.
+To simplify the typing, the search you provide will be surrounded with `*`. This means that:
+
+* `jump tube` will actually return any repository whose `git server` || `owner` || `repository name` matches `*tube*`
+* `jump -o git` will actually return any repository whose `owner` matches `*git*`
 
 > Note: the search is case-insensitive.
 
