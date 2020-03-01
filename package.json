@@ -34,7 +34,7 @@
     "lodash": "4.17.15",
     "minimatch": "3.0.4",
     "utf8": "3.0.0",
-    "yargs": "15.0.2"
+    "yargs": "15.2.0"
   },
   "devDependencies": {
     "@talend/eslint-config": "2.1.0",
