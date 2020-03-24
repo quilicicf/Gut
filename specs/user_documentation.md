@@ -496,10 +496,17 @@ Each element is a glob, defaulting to `*`. The search it based on the assumption
 
 To simplify the typing, the search you provide will be surrounded with `*`. This means that:
 
-* `jump tube` will actually return any repository whose `git server` || `owner` || `repository name` matches `*tube*`
+* `jump tube` will actually return any repository whose repository name matches `*tube*`
 * `jump -o git` will actually return any repository whose `owner` matches `*git*`
 
-> Note: the search is case-insensitive.
+Jump will skip the repository selection if one match is strictly case-insensitive-equal to the repository search. Examples:
+
+* `jump tube` will skip repository selection if you have one repository named `Tube` and one named `youtube-thingies`
+* `jump -r tube` will behave as the previous example
+* `jump *ube` won't skip validation, you'll have to select between the repositories `Tube` and `youtube-thingies`
+
+> Note: the search is case-insensitive
+> Note 2: the current repository is always ignored
 
 ## Advanced features
 
