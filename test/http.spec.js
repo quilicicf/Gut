@@ -56,7 +56,7 @@ beforeAll(() => {
   });
 });
 
-describe('HTTP client', async () => {
+describe('HTTP client', () => {
   test('It should read the response', async () => {
     const body = { test: 'toto' };
 
