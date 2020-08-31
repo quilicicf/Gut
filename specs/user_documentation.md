@@ -576,6 +576,7 @@ Arguments:
 * `--open, -o` opens the PR URL in the system's default browser
 * `--copy-url, -c` copies the PR URL to the system's clipboard
 * `--assignee, -a` sets the PR assignee (asynchronously), defaults to the github user from the [Gut configuration file](#gut-configuration-file)
+* `--base-branch, -b` sets the base branch manually rather than letting Gut figure it out
 
 The review tool must be configured in the [repository configuration file](#repository-configuration-file).
 A valid OAuth 2.0 token must be set in the [Gut configuration file](#gut-configuration-file).
