@@ -331,6 +331,7 @@ Arguments:
 * `--code-review, -c`: Creates a code review commit, the message is set to `:eyes: Code review`, suffixed with the ticket number if
 * `--wip, -w`: Creates a WIP commit, the message is set to `:construction: WIP`, suffixed with the ticket number if
 * `--emoji, -e`: Displays a selector to add one of [these commit emojis](https://github.com/quilicicf/Docs/blob/master/contribution/main.md) as a prefix to the commit message. Ignored when `--code-review` or `--wip` is defined
+* `--squash, s`: Squashes the staged modifications in a previous commit. The user chooses the commit interactively in the last 30
 
 Examples:
 
