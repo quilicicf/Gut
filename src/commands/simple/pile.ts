@@ -1,7 +1,7 @@
 import { YargsType } from 'https://deno.land/x/yargs/types.ts';
 
-import { moveUpTop } from '../../utils/git.ts';
-import { exec, OutputMode } from '../../utils/exec.ts';
+import { moveUpTop } from '../../lib/git.ts';
+import { exec, OutputMode } from '../../dependencies/exec.ts';
 
 export default {
   command: 'pile',
@@ -11,14 +11,10 @@ export default {
   handler: async ({ isTestRun }: { isTestRun: boolean }) => {
     await moveUpTop();
     await exec('git add . --all', { output: OutputMode.None });
-    const command = 'git -c color.status=always status --short --branch';
 
-    if (isTestRun) {
-      const { output } = await exec(command, { output: OutputMode.Capture });
-      return output;
-    }
-
-    await exec(command, { output: OutputMode.StdOut });
-    return ''; // Consistent return, ignored by yargs anyway
+    const { output } = isTestRun
+      ? await exec('git -c color.status=never status --short --branch', { output: OutputMode.Capture })
+      : await exec('git -c color.status=always status --short --branch', { output: OutputMode.StdOut });
+    return output;
   },
 };

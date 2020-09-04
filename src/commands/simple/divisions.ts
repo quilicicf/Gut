@@ -1,6 +1,6 @@
 import { YargsType } from 'https://deno.land/x/yargs/types.ts';
 
-import { exec, OutputMode } from '../../utils/exec.ts';
+import { exec, OutputMode } from '../../dependencies/exec.ts';
 
 const REMOTES_SHORTCUTS: { [ id: string ]: string } = {
   o: 'origin',
@@ -20,16 +20,17 @@ export default {
         type: 'string',
       }),
   handler: async ({ remote, isTestRun }: { remote?: string, isTestRun: boolean }) => {
-    const command = remote
-      ? `git branch --remotes --column=always --list "${REMOTES_SHORTCUTS[ remote ] || remote}/*"`
-      : 'git branch --color';
-
-    if (isTestRun) {
-      const { output } = await exec(command, { output: OutputMode.Capture });
+    if (remote) {
+      const filter = `--list "${REMOTES_SHORTCUTS[ remote ] || remote}/*"`;
+      const { output } = isTestRun
+        ? await exec(`git -c color.branch=never branch --remotes --column=always ${filter}`, { output: OutputMode.Capture })
+        : await exec(`git --remotes --column=always ${filter}`, { output: OutputMode.StdOut });
       return output;
     }
 
-    await exec(command, { output: OutputMode.StdOut });
-    return ''; // Consistent return, ignored by yargs anyway
+    const { output } = isTestRun
+      ? await exec('git -c color.branch=never branch', { output: OutputMode.Capture })
+      : await exec('git branch --color', { output: OutputMode.StdOut });
+    return output;
   },
 };

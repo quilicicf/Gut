@@ -1,12 +1,14 @@
-import { resolve } from '../../../src/utils/path.ts';
+import { resolve } from '../../../src/dependencies/path.ts';
 import { assertEquals } from '../../utils/assert.ts';
-import { exec, execSequence, OutputMode } from '../../../src/utils/exec.ts';
+import { exec, execSequence, OutputMode } from '../../../src/dependencies/exec.ts';
 
 import divisionsCommand from '../../../src/commands/simple/divisions.ts';
 
 Deno.test('local divisions', async () => {
   const testRepositoryPath = await Deno.makeTempDir({ prefix: 'gut_test_divisions_local' });
-  await Deno.chdir(testRepositoryPath);
+  Deno.chdir(testRepositoryPath);
+  const tmpDir = resolve(testRepositoryPath, '..');
+
   await exec('git init', { output: OutputMode.None });
   await Deno.writeTextFile('whatever', resolve(testRepositoryPath, 'aFile'));
   await execSequence([
@@ -20,13 +22,14 @@ Deno.test('local divisions', async () => {
   const { handler: divisions } = divisionsCommand;
   const output = await divisions({ isTestRun: true });
 
+  Deno.chdir(tmpDir); // Don't remove cwd, duh
   await Deno.remove(testRepositoryPath, { recursive: true });
 
   assertEquals(output, `\
-master[m
-  tata[m
-  titi[m
-* [32mtoto[m`);
+master
+  tata
+  titi
+* toto`);
 });
 
 const initiateRemote = async (tmpDir: string, testRepositoryPath: string, originName: string) => {
@@ -62,6 +65,7 @@ Deno.test('remote divisions', async () => {
   const outputU = await divisions({ remote: 'u', isTestRun: true });
   const outputUpstream = await divisions({ remote: 'upstream', isTestRun: true });
 
+  Deno.chdir(tmpDir); // Don't remove cwd, duh
   await Deno.remove(testRepositoryPath, { recursive: true });
   await Deno.remove(originRepositoryPath, { recursive: true });
   await Deno.remove(upstreamRepositoryPath, { recursive: true });

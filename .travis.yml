@@ -1,10 +1,14 @@
-language: node_js
+language: sh
 sudo: false
+install:
+  - curl -L https://deno.land/x/install/install.sh | bash
+  - export PATH="$HOME/.deno/bin:$PATH"
+script:
+  - deno --version
+  - deno test test/ --allow-write=/tmp --allow-read=/tmp --allow-run
 cache:
   directories:
-    - "node_modules"
-node_js:
-  - "12"
+    - '$HOME/.deno'
 notifications:
   email:
     on_success: never
