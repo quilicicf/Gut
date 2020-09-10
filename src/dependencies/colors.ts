@@ -1,3 +1,3 @@
-import { yellow, green } from 'https://deno.land/std@0.63.0/fmt/colors.ts';
+import { green, yellow, red, bold } from 'https://deno.land/std@0.63.0/fmt/colors.ts';
 
-export { yellow, green };
+export { green, yellow, red, bold };

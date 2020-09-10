@@ -1,7 +1,7 @@
-import { YargsType } from 'https://deno.land/x/yargs/types.ts';
+import { YargsType } from '../../dependencies/yargs.ts';
+import { exec, OutputMode } from '../../dependencies/exec.ts';
 
 import { moveUpTop } from '../../lib/git.ts';
-import { exec, OutputMode } from '../../dependencies/exec.ts';
 
 export default {
   command: 'pile',
