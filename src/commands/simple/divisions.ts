@@ -1,5 +1,4 @@
-import { YargsType } from 'https://deno.land/x/yargs/types.ts';
-
+import { YargsType } from '../../dependencies/yargs.ts';
 import { exec, OutputMode } from '../../dependencies/exec.ts';
 
 const REMOTES_SHORTCUTS: { [ id: string ]: string } = {

@@ -1,10 +1,10 @@
-import { YargsType } from 'https://deno.land/x/yargs/types.ts';
-
-import { getCommitsFromBaseBranch } from '../../lib/git.ts';
+import log from '../../dependencies/log.ts';
+import { YargsType } from '../../dependencies/yargs.ts';
+import { green, bold } from '../../dependencies/colors.ts';
 import { exec, OutputMode } from '../../dependencies/exec.ts';
 import { _isEmpty, _size } from '../../dependencies/lodash.ts';
 
-import log from '../../dependencies/log.ts';
+import { getCommitsFromBaseBranch } from '../../lib/git.ts';
 
 type LogFormatId =
   'pretty'
@@ -52,6 +52,17 @@ export default {
   command: 'history',
   aliases: [ 'h' ],
   describe: 'Displays the commit\'s history',
+  install: async () => {
+    await log(Deno.stdout, `Installing ${bold('history')} command by adding log formats in ~/.gitconfig `);
+    const installFormat = async (formatName: string, formatString: string) =>
+      await exec(`git config --global alias.gut-log-${formatName} "log --pretty=format:'${formatString}'"`);
+
+    await installFormat('pretty', `%C(red)%H%C(reset)\n\t%s %C(green)(%cr) %C(bold blue)<%an>%C(reset)\n\t%C(yellow)%d%C(reset)`);
+    await installFormat('simple', `%C(red)%h%C(reset) %s %C(bold blue)<%an>%C(reset)`);
+    await installFormat('json', `%H$%&%s$%&%an$%&%D`);
+    await installFormat('sha', `%H`);
+    await log(Deno.stdout, `${green('✔')}\n`);
+  },
   builder: (yargs: YargsType) => yargs.usage(`usage: gut history [options]`)
     .option('format', {
       alias: 'f',

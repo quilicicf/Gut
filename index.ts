@@ -1,11 +1,11 @@
-import yargs from 'https://deno.land/x/yargs/deno.ts';
-import { red } from 'https://deno.land/std/fmt/colors.ts';
+import log from './src/dependencies/log.ts';
+import { red } from './src/dependencies/colors.ts';
+import { yargs } from './src/dependencies/yargs.ts';
+import install from './src/commands/internals/install.ts';
 
 import pile from './src/commands/simple/pile.ts';
 import history from './src/commands/simple/history.ts';
 import divisions from './src/commands/simple/divisions.ts';
-
-import log from './src/dependencies/log.ts';
 
 // Install with: deno install --allow-run --allow-read="$FORGE" --name gd index.ts
 yargs()
@@ -15,6 +15,9 @@ yargs()
   .command(divisions)
   .command(history)
   .command(pile)
+
+  // Internals
+  .command(install)
 
   // To check that Gut is installed or just mess around
   .command('groot', 'Display a random sentence, in French', () => log(Deno.stdout, 'Je s\'appelle Groot\n'))
