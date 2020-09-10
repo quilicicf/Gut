@@ -9,6 +9,7 @@ import { getCommitsFromBaseBranch } from '../../lib/git.ts';
 type LogFormatId =
   'pretty'
   | 'simple'
+  | 'subject'
   | 'json'
   | 'sha'
 
@@ -23,18 +24,15 @@ interface Args {
   isTestRun: boolean
 }
 
-interface LogFormat {
-  formatString: string
-  postProcessor?: (wsv: string) => string
-}
+interface LogFormat {postProcessor?: (wsv: string) => string}
 
 const DEFAULT_FORMAT = 'pretty';
 const WEIRD_SEPARATOR = '$%&'; // FIXME: would've used ✂✌🔪 => but Deno seems to struggle with multi-bytes characters in stdout
 const LOG_FORMATS: { [ key: string ]: LogFormat } = {
-  pretty: { formatString: '%C(red)%H%C(reset)\n\t%s %C(green)(%cr) %C(bold blue)<%an>%C(reset)\n\t%C(yellow)%d%C(reset)' },
-  simple: { formatString: '%C(red)%h%C(reset) %s %C(bold blue)<%an>%C(reset)' },
+  pretty: {},
+  simple: {},
+  subject: {},
   json: {
-    formatString: `%H${WEIRD_SEPARATOR}%s${WEIRD_SEPARATOR}%an${WEIRD_SEPARATOR}%D`,
     postProcessor (wsv: string) {
       const logObject = wsv.split('\n')
         .map((wsvItem: string) => {
@@ -45,7 +43,7 @@ const LOG_FORMATS: { [ key: string ]: LogFormat } = {
       return JSON.stringify(logObject);
     },
   },
-  sha: { formatString: '%H' },
+  sha: {},
 };
 
 export default {
@@ -59,6 +57,7 @@ export default {
 
     await installFormat('pretty', `%C(red)%H%C(reset)\n\t%s %C(green)(%cr) %C(bold blue)<%an>%C(reset)\n\t%C(yellow)%d%C(reset)`);
     await installFormat('simple', `%C(red)%h%C(reset) %s %C(bold blue)<%an>%C(reset)`);
+    await installFormat('subject', `%s`);
     await installFormat('json', `%H$%&%s$%&%an$%&%D`);
     await installFormat('sha', `%H`);
     await log(Deno.stdout, `${green('✔')}\n`);
@@ -103,14 +102,16 @@ export default {
 
     const logFormat = LOG_FORMATS[ format || DEFAULT_FORMAT ];
     const reverseArgument = reverse ? '--reverse' : '';
-    const command = `git --no-pager gut-log-${format} --color=always --skip ${skip} -n ${commitsToInspect} ${reverseArgument}"`;
+    const skipArgument = skip ? `--skip ${skip}` : '';
+    const numberArgument = commitsToInspect ? `--max-count ${commitsToInspect}` : '';
+    const command = `git --no-pager gut-log-${format} --color=always ${skipArgument} ${numberArgument} ${reverseArgument}`;
 
     const outputMode = isTestRun || logFormat.postProcessor
       ? OutputMode.Capture
       : OutputMode.StdOut;
 
     const { output } = await exec(command, { output: outputMode });
-    await log(Deno.stdout, '\n'); // Log command does not end with a line break
+    if (!isTestRun) { await log(Deno.stdout, '\n'); } // Log command does not end with a line break
 
     if (outputMode === OutputMode.StdOut) { return ''; }
 

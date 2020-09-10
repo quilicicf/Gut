@@ -1,16 +1,17 @@
 import { resolve } from '../../../src/dependencies/path.ts';
 import { assertEquals } from '../../utils/assert.ts';
+import { bold } from '../../../src/dependencies/colors.ts';
 import { exec, execSequence, OutputMode } from '../../../src/dependencies/exec.ts';
 
 import divisionsCommand from '../../../src/commands/simple/divisions.ts';
 
-Deno.test('local divisions', async () => {
+Deno.test(`${bold('divisions')} local`, async () => {
   const testRepositoryPath = await Deno.makeTempDir({ prefix: 'gut_test_divisions_local' });
   Deno.chdir(testRepositoryPath);
   const tmpDir = resolve(testRepositoryPath, '..');
 
   await exec('git init', { output: OutputMode.None });
-  await Deno.writeTextFile('whatever', resolve(testRepositoryPath, 'aFile'));
+  await Deno.writeTextFile(resolve(testRepositoryPath, 'aFile'), 'whatever');
   await execSequence([
     'git add . -A',
     'git commit -m "Mkay"',
@@ -45,7 +46,7 @@ const initiateRemote = async (tmpDir: string, testRepositoryPath: string, origin
   return newRepositoryPath;
 };
 
-Deno.test('remote divisions', async () => {
+Deno.test(`${bold('divisions')} remote`, async () => {
   const testRepositoryPath = await Deno.makeTempDir({ prefix: 'gut_test_divisions_remote' });
   const tmpDir = resolve(testRepositoryPath, '..');
   Deno.chdir(testRepositoryPath);
