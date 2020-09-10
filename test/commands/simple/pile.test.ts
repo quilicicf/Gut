@@ -1,10 +1,11 @@
-import { assertEquals } from '../../utils/assert.ts';
+import { bold } from '../../../src/dependencies/colors.ts';
 import { resolve } from '../../../src/dependencies/path.ts';
 import { exec, execSequence, OutputMode } from '../../../src/dependencies/exec.ts';
 
+import { assertEquals } from '../../utils/assert.ts';
 import pileCommand from '../../../src/commands/simple/pile.ts';
 
-Deno.test('pile', async () => {
+Deno.test(bold('pile'), async () => {
   const testRepositoryPath = await Deno.makeTempDir({ prefix: 'gut_test_pile' });
   Deno.chdir(testRepositoryPath);
   const tmpDir = resolve(testRepositoryPath, '..');
