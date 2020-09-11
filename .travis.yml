@@ -3,9 +3,12 @@ sudo: false
 install:
   - curl -L https://deno.land/x/install/install.sh | bash
   - export PATH="$HOME/.deno/bin:$PATH"
+  - export DENO_DIR="$HOME/.deno"
 script:
   - deno --version
-  - deno test test/ --allow-write=/tmp --allow-read=/tmp --allow-run
+  - deno cache test/commands/simple/*.ts
+  - deno run --allow-run index.ts install
+  - deno test --allow-write=/tmp --allow-read=/tmp --allow-run --cached-only test/
 cache:
   directories:
     - '$HOME/.deno'
