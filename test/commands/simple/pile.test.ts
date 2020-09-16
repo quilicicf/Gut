@@ -5,7 +5,7 @@ import { exec, execSequence, OutputMode } from '../../../src/dependencies/exec.t
 import { assertEquals } from '../../utils/assert.ts';
 import pileCommand from '../../../src/commands/simple/pile.ts';
 
-Deno.test(bold('pile'), async () => {
+Deno.test(`command ${bold('pile')}`, async () => {
   const testRepositoryPath = await Deno.makeTempDir({ prefix: 'gut_test_pile' });
   Deno.chdir(testRepositoryPath);
   const tmpDir = resolve(testRepositoryPath, '..');

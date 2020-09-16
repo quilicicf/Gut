@@ -1,10 +1,10 @@
 import log from '../../dependencies/log.ts';
+import { _size } from '../../dependencies/lodash.ts';
 import { YargsType } from '../../dependencies/yargs.ts';
 import { green, bold } from '../../dependencies/colors.ts';
 import { exec, OutputMode } from '../../dependencies/exec.ts';
-import { _isEmpty, _size } from '../../dependencies/lodash.ts';
 
-import { getCommitsFromBaseBranch } from '../../lib/git.ts';
+import { getCommitsFromBaseBranch, getCommitsNumberFromBaseBranch, LOG_FORMATS } from '../../lib/git.ts';
 
 type LogFormatId =
   'pretty'
@@ -24,27 +24,7 @@ interface Args {
   isTestRun: boolean
 }
 
-interface LogFormat {postProcessor?: (wsv: string) => string}
-
 const DEFAULT_FORMAT = 'pretty';
-const WEIRD_SEPARATOR = '$%&'; // FIXME: would've used ✂✌🔪 => but Deno seems to struggle with multi-bytes characters in stdout
-const LOG_FORMATS: { [ key: string ]: LogFormat } = {
-  pretty: {},
-  simple: {},
-  subject: {},
-  json: {
-    postProcessor (wsv: string) {
-      const logObject = wsv.split('\n')
-        .map((wsvItem: string) => {
-          const [ sha, message, author, branchesAsString ] = wsvItem.split(WEIRD_SEPARATOR);
-          const branches = _isEmpty(branchesAsString) ? [] : branchesAsString.replace(/[()]/g, '').split(',');
-          return { sha, message, author, branches };
-        });
-      return JSON.stringify(logObject);
-    },
-  },
-  sha: {},
-};
 
 export default {
   command: 'history',
@@ -96,9 +76,7 @@ export default {
   handler: async (args: Args) => {
     const { format, skip, number, reverse, fromBaseBranch, isTestRun } = args;
 
-    const commitsToInspect = fromBaseBranch
-      ? _size(getCommitsFromBaseBranch())
-      : number;
+    const commitsToInspect = fromBaseBranch ? await getCommitsNumberFromBaseBranch() : number;
 
     const logFormat = LOG_FORMATS[ format || DEFAULT_FORMAT ];
     const reverseArgument = reverse ? '--reverse' : '';
