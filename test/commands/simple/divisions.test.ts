@@ -5,7 +5,7 @@ import { exec, execSequence, OutputMode } from '../../../src/dependencies/exec.t
 
 import divisionsCommand from '../../../src/commands/simple/divisions.ts';
 
-Deno.test(`${bold('divisions')} local`, async () => {
+Deno.test(`command ${bold('divisions')} local`, async () => {
   const testRepositoryPath = await Deno.makeTempDir({ prefix: 'gut_test_divisions_local' });
   Deno.chdir(testRepositoryPath);
   const tmpDir = resolve(testRepositoryPath, '..');
@@ -46,7 +46,7 @@ const initiateRemote = async (tmpDir: string, testRepositoryPath: string, origin
   return newRepositoryPath;
 };
 
-Deno.test(`${bold('divisions')} remote`, async () => {
+Deno.test(`command ${bold('divisions')} remote`, async () => {
   const testRepositoryPath = await Deno.makeTempDir({ prefix: 'gut_test_divisions_remote' });
   const tmpDir = resolve(testRepositoryPath, '..');
   Deno.chdir(testRepositoryPath);

@@ -10,7 +10,7 @@ const commitShit = async (testRepositoryPath: string, commitNumber: number) => {
   await execSequence([ 'git add . -A', `git commit -m "Commit #${commitNumber}"` ], { output: OutputMode.None });
 };
 
-Deno.test(`${bold('history')} formats`, async () => {
+Deno.test(`command ${bold('history')} formats`, async () => {
   const testRepositoryPath = await Deno.makeTempDir({ prefix: 'gut_test_history_formats' });
   Deno.chdir(testRepositoryPath);
   const tmpDir = resolve(testRepositoryPath, '..');
@@ -38,7 +38,7 @@ Deno.test(`${bold('history')} formats`, async () => {
   assertMatch(outputSha, /^[a-z0-9]{40}$/);
 });
 
-Deno.test(`${bold('history')} skip & number`, async () => {
+Deno.test(`command ${bold('history')} skip & number`, async () => {
   const testRepositoryPath = await Deno.makeTempDir({ prefix: 'gut_test_history_skip_number' });
   Deno.chdir(testRepositoryPath);
   const tmpDir = resolve(testRepositoryPath, '..');
@@ -59,7 +59,7 @@ Deno.test(`${bold('history')} skip & number`, async () => {
   assertEquals(output, 'Commit #3\nCommit #2');
 });
 
-Deno.test(`${bold('history')} reverse`, async () => {
+Deno.test(`command ${bold('history')} reverse`, async () => {
   const testRepositoryPath = await Deno.makeTempDir({ prefix: 'gut_test_history_reverse' });
   Deno.chdir(testRepositoryPath);
   const tmpDir = resolve(testRepositoryPath, '..');
@@ -77,22 +77,21 @@ Deno.test(`${bold('history')} reverse`, async () => {
   assertEquals(output, 'Commit #1\nCommit #2');
 });
 
-// TODO: uncomment when implemented
-// Deno.test(`${bold('history')} from base branch`, async () => {
-//   const testRepositoryPath = await Deno.makeTempDir({ prefix: 'gut_test_history_fromBaseBranch' });
-//   Deno.chdir(testRepositoryPath);
-//   const tmpDir = resolve(testRepositoryPath, '..');
-//
-//   await exec('git init', { output: OutputMode.None });
-//   await commitShit(testRepositoryPath, 1);
-//   await exec('git checkout -b anotherBranch', { output: OutputMode.None });
-//   await commitShit(testRepositoryPath, 2);
-//
-//   const { handler: history } = historyCommand;
-//   const output = await history({ isTestRun: true, format: 'subject', fromBaseBranch: true });
-//
-//   Deno.chdir(tmpDir); // Don't remove cwd, duh
-//   await Deno.remove(testRepositoryPath, { recursive: true });
-//
-//   assertEquals(output, 'Commit #2');
-// });
+Deno.test(`command ${bold('history')} from base branch`, async () => {
+  const testRepositoryPath = await Deno.makeTempDir({ prefix: 'gut_test_history_fromBaseBranch' });
+  Deno.chdir(testRepositoryPath);
+  const tmpDir = resolve(testRepositoryPath, '..');
+
+  await exec('git init', { output: OutputMode.None });
+  await commitShit(testRepositoryPath, 1);
+  await exec('git checkout -b master__anotherBranch', { output: OutputMode.None });
+  await commitShit(testRepositoryPath, 2);
+
+  const { handler: history } = historyCommand;
+  const output = await history({ isTestRun: true, format: 'subject', fromBaseBranch: true });
+
+  Deno.chdir(tmpDir); // Don't remove cwd, duh
+  await Deno.remove(testRepositoryPath, { recursive: true });
+
+  assertEquals(output, 'Commit #2');
+});

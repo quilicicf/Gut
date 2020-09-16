@@ -1,5 +1,7 @@
-import { parseBranchName, Branch, stringifyBranch, isPocBranch, getParent } from '../../src/lib/branch.ts';
+import { bold } from '../../src/dependencies/colors.ts';
+
 import { assertEquals, assertThrows } from '../utils/assert.ts';
+import { parseBranchName, Branch, stringifyBranch, isPocBranch, getParentBranch } from '../../src/lib/branch.ts';
 
 const BRANCHES: { [ key: string ]: { name: string, branch: Branch, parent?: string } } = {
   MASTER: {
@@ -55,32 +57,32 @@ const BRANCHES: { [ key: string ]: { name: string, branch: Branch, parent?: stri
   },
 };
 
-Deno.test('branch parsing', () => {
+Deno.test(`utils ${bold('branch')} parsing`, () => {
   Object.values(BRANCHES)
     .forEach(({ name, branch }) => {
       assertEquals(parseBranchName(name), branch);
     });
 });
 
-Deno.test('branch stringification', () => {
+Deno.test(`utils ${bold('branch')} stringification`, () => {
   Object.values(BRANCHES)
     .forEach(({ name, branch }) => {
       assertEquals(stringifyBranch(branch), name);
     });
 });
 
-Deno.test('branch PoC detection', () => {
+Deno.test(`utils ${bold('branch')} PoC detection`, () => {
   assertEquals(isPocBranch(BRANCHES.ONE_FRAGMENT.branch), false);
   assertEquals(isPocBranch(BRANCHES.ONE_FRAGMENT_POC.branch), true);
 });
 
-Deno.test('branch get parent', () => {
+Deno.test(`utils ${bold('branch')} get parent`, () => {
   Object.values(BRANCHES)
     .forEach(({ branch, parent }) => {
       if (!parent) {
-        assertThrows(() => getParent(branch), Error, 'This branch can\'t have a parent');
+        assertThrows(() => getParentBranch(branch), Error, 'This branch can\'t have a parent');
       } else {
-        const actualParent = getParent(branch);
+        const actualParent = getParentBranch(branch);
         assertEquals(stringifyBranch(actualParent), parent);
       }
     });

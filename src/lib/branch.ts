@@ -35,7 +35,7 @@ export function stringifyBranch (branch: Branch): string {
     .join('__');
 }
 
-export function getParent (branch: Branch): Branch {
+export function getParentBranch (branch: Branch): Branch {
   if (branch.fragments.length <= 1) {
     throw Error(`This branch can't have a parent, it has only ${branch.fragments.length} fragment`);
   }
