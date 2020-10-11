@@ -32,7 +32,7 @@
     "copy-paste-win32fix": "1.4.0",
     "fast-glob": "3.2.4",
     "inquirer": "7.3.3",
-    "inquirer-autocomplete-prompt": "1.1.0",
+    "inquirer-autocomplete-prompt": "1.2.0",
     "lodash": "4.17.20",
     "minimatch": "3.0.4",
     "utf8": "3.0.0",
