@@ -1,4 +1,3 @@
-import { YargsType } from '../../dependencies/yargs.ts';
 import { exec, OutputMode } from '../../dependencies/exec.ts';
 
 const REMOTES_SHORTCUTS: { [ id: string ]: string } = {
@@ -10,7 +9,7 @@ export default {
   command: 'divisions',
   aliases: [ 'd' ],
   describe: 'Displays the given remote\'s branches',
-  builder: (yargs: YargsType) =>
+  builder: (yargs: any) =>
     yargs.usage(`usage: gut divisions [options]`)
       .option('remote', {
         alias: 'r',
