@@ -2,26 +2,43 @@ import { _isEmpty } from '../dependencies/lodash.ts';
 import { exec, OutputMode } from '../dependencies/exec.ts';
 import { getParentBranch, parseBranchName, stringifyBranch } from './branch.ts';
 
-interface LogFormat {postProcessor?: (wsv: string) => string}
+export interface LogFormat {
+  format: string,
+  command: string,
+  postProcessor?: (input: string) => string
+}
 
-export const WEIRD_SEPARATOR = '$%&'; // FIXME: would've used ✂✌🔪 => but Deno seems to struggle with multi-bytes characters in stdout
 export const LOG_FORMATS: { [ key: string ]: LogFormat } = {
-  pretty: {},
-  simple: {},
-  subject: {},
+  pretty: {
+    format: `%C(red)%H%C(reset)\n\t%s %C(green)(%cr) %C(bold blue)<%an>%C(reset)\n\t%C(yellow)%d%C(reset)`,
+    command: 'gut-log-pretty',
+  },
+  simple: {
+    format: `%C(red)%h%C(reset) %s %C(bold blue)<%an>%C(reset)`,
+    command: 'gut-log-simple',
+  },
+  subject: {
+    format: `%s`,
+    command: 'gut-log-subject',
+  },
+  sha: {
+    format: `%H`,
+    command: 'gut-log-sha',
+  },
   json: {
-    postProcessor (wsv: string) {
-      const logObject = wsvToJson(wsv);
+    format: `%H|%s|%an|%D`,
+    command: 'gut-log-json',
+    postProcessor (psv: string) {
+      const logObject = psvToJs(psv);
       return JSON.stringify(logObject);
     },
   },
-  sha: {},
 };
 
-function wsvToJson (wsv: string): object[] {
-  return wsv.split('\n')
-    .map((wsvItem: string) => {
-      const [ sha, message, author, branchesAsString ] = wsvItem.split(WEIRD_SEPARATOR);
+function psvToJs (psv: string): object[] {
+  return psv.split('\n')
+    .map((psvItem: string) => {
+      const [ sha, message, author, branchesAsString ] = psvItem.split('|');
       const branches = _isEmpty(branchesAsString) ? [] : branchesAsString.replace(/[()]/g, '').split(',');
       return { sha, message, author, branches };
     });
@@ -59,6 +76,7 @@ export async function getCommitsNumberFromBaseBranch (): Promise<number> {
 
 export async function getCommitsFromBaseBranch (): Promise<object[]> {
   const mergeBase = await getMergeBaseFromParent();
-  const { output: commitsAsWsv } = await exec(`git --no-pager gut-log-json ${mergeBase}..HEAD`, { output: OutputMode.Capture });
-  return wsvToJson(commitsAsWsv);
+  const logCommand = LOG_FORMATS.json.command;
+  const { output: commitsAsWsv } = await exec(`git --no-pager ${logCommand} ${mergeBase}..HEAD`, { output: OutputMode.Capture });
+  return psvToJs(commitsAsWsv);
 }

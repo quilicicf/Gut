@@ -1,4 +1,3 @@
-import { YargsType } from '../../dependencies/yargs.ts';
 import { exec, OutputMode } from '../../dependencies/exec.ts';
 
 import { moveUpTop } from '../../lib/git.ts';
@@ -7,7 +6,7 @@ export default {
   command: 'pile',
   aliases: [ 'p' ],
   describe: 'Adds all changes in the repository',
-  builder: (yargs: YargsType) => yargs.usage(`usage: gut pile [options]`),
+  builder: (yargs: any) => yargs.usage(`usage: gut pile [options]`),
   handler: async ({ isTestRun }: { isTestRun: boolean }) => {
     await moveUpTop();
     await exec('git add . --all', { output: OutputMode.None });
