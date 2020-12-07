@@ -1,46 +1,48 @@
 import { _isEmpty } from '../dependencies/lodash.ts';
 import { exec, OutputMode } from '../dependencies/exec.ts';
 import { getParentBranch, parseBranchName, stringifyBranch } from './branch.ts';
+import {
+  __, applyStyle, theme,
+} from '../dependencies/colors.ts';
 
-export interface LogFormat {
-  format: string,
-  command: string,
-  postProcessor?: (input: string) => string
+export interface Commit {
+  sha: string,
+  subject: string,
+  author: string,
+  relativeDate: string,
+  branches: string[]
 }
 
+export type LogFormat = (commits: Commit[]) => string
+
 export const LOG_FORMATS: { [ key: string ]: LogFormat } = {
-  pretty: {
-    format: `%C(red)%H%C(reset)\n\t%s %C(green)(%cr) %C(bold blue)<%an>%C(reset)\n\t%C(yellow)%d%C(reset)`,
-    command: 'gut-log-pretty',
-  },
-  simple: {
-    format: `%C(red)%h%C(reset) %s %C(bold blue)<%an>%C(reset)`,
-    command: 'gut-log-simple',
-  },
-  subject: {
-    format: `%s`,
-    command: 'gut-log-subject',
-  },
-  sha: {
-    format: `%H`,
-    command: 'gut-log-sha',
-  },
-  json: {
-    format: `%H|%s|%an|%D`,
-    command: 'gut-log-json',
-    postProcessor (psv: string) {
-      const logObject = psvToJs(psv);
-      return JSON.stringify(logObject);
-    },
-  },
+  JSON: (commits: Commit[]): string => `${JSON.stringify(commits)}\n`,
+  SHA: (commits: Commit[]): string => `${commits.map(({ sha }) => sha).join('\n')}\n`,
+  SUBJECT: (commits: Commit[]): string => `${commits.map(({ subject }) => subject).join('\n')}\n`,
+  SIMPLE: (commits: Commit[]): string => commits
+    .map((commit: Commit) => applyStyle(
+      __`${commit.sha.substr(0, 7)} ${commit.subject} ${`<${commit.author}>`}\n`,
+      [ theme.sha, null, theme.author ],
+    ))
+    .join(''),
+  PRETTY: (commits: Commit[]): string => commits
+    .map((commit: Commit) => applyStyle(
+      __`${commit.sha}\n\t${commit.subject} ${`(${commit.relativeDate})`} ${`<${commit.author}>`}\n\t${`(${commit.branches.join(', ')})`}\n`,
+      [ theme.sha, null, theme.relativeDate, theme.author, theme.branches ],
+    ))
+    .join(''),
 };
 
-function psvToJs (psv: string): object[] {
+const PSV_FORMAT_ARGUMENT = '--pretty=format:%H|%s|%an|%cr|%D';
+
+export function psvToJs (psv: string): Commit[] {
   return psv.split('\n')
     .map((psvItem: string) => {
-      const [ sha, message, author, branchesAsString ] = psvItem.split('|');
+      const [ sha, subject, author, relativeDate, branchesAsString ] = psvItem.split('|');
       const branches = _isEmpty(branchesAsString) ? [] : branchesAsString.replace(/[()]/g, '').split(',');
-      return { sha, message, author, branches };
+      return {
+        sha, subject, author, relativeDate, branches,
+      };
     });
 }
 
@@ -59,7 +61,7 @@ export async function getCurrentBranchName (): Promise<string> {
   return currentBranchName;
 }
 
-async function getMergeBaseFromParent (): Promise<string> { // FIXME: can fail if branch is not parseable of has no parent
+async function getMergeBaseFromParent (): Promise<string> { // FIXME: can fail if branch is not parsable or is orphan
   const currentBranchName = await getCurrentBranchName();
   const currentBranch = parseBranchName(currentBranchName);
   const parentBranch = getParentBranch(currentBranch);
@@ -68,15 +70,30 @@ async function getMergeBaseFromParent (): Promise<string> { // FIXME: can fail i
   return mergeBase;
 }
 
-export async function getCommitsNumberFromBaseBranch (): Promise<number> {
-  const mergeBase = await getMergeBaseFromParent();
-  const { output: commitsNumberAsString } = await exec(`git rev-list --count ${mergeBase}..HEAD`, { output: OutputMode.Capture });
-  return parseInt(commitsNumberAsString);
+export async function getCommitsBetweenRefs (
+  baseRef: string,
+  targetRef: string,
+  shouldReverse: boolean,
+): Promise<Commit[]> {
+
+  const reverseArgument = shouldReverse ? '--reverse' : '';
+  const { output: commitsAsPsv } = await exec(
+    `git --no-pager log ${PSV_FORMAT_ARGUMENT} --color=never ${reverseArgument} ${baseRef}..${targetRef}`,
+    { output: OutputMode.Capture },
+  );
+  return psvToJs(commitsAsPsv);
 }
 
-export async function getCommitsFromBaseBranch (): Promise<object[]> {
+export async function getCommitsUpToMax (maxCommits: number, shouldReverse: boolean): Promise<Commit[]> {
+  const reverseArgument = shouldReverse ? '--reverse' : '';
+  const { output: commitsAsPsv } = await exec(
+    `git --no-pager log ${PSV_FORMAT_ARGUMENT} --color=never --max-count ${maxCommits} ${reverseArgument}`,
+    { output: OutputMode.Capture },
+  );
+  return psvToJs(commitsAsPsv);
+}
+
+export async function getCommitsFromBaseBranch (shouldReverse: boolean): Promise<Commit[]> {
   const mergeBase = await getMergeBaseFromParent();
-  const logCommand = LOG_FORMATS.json.command;
-  const { output: commitsAsWsv } = await exec(`git --no-pager ${logCommand} ${mergeBase}..HEAD`, { output: OutputMode.Capture });
-  return psvToJs(commitsAsWsv);
+  return getCommitsBetweenRefs(mergeBase, 'HEAD', shouldReverse);
 }

@@ -1,7 +1,7 @@
 import log from './src/dependencies/log.ts';
-import { red } from './src/dependencies/colors.ts';
 import { yargs } from './src/dependencies/yargs.ts';
 import install from './src/commands/internals/install.ts';
+import { __, applyStyle, theme } from './src/dependencies/colors.ts';
 
 import pile from './src/commands/simple/pile.ts';
 import history from './src/commands/simple/history.ts';
@@ -22,7 +22,7 @@ yargs()
   // To check that Gut is installed or just mess around
   .command('groot', 'Display a random sentence, in French', () => log(Deno.stdout, 'Je s\'appelle Groot\n'))
 
-  .demandCommand(1, red('Specify the command you want to run!'))
+  .demandCommand(1, applyStyle(__`Specify the command you want to run!`, [ theme.error ]))
   .strictCommands()
   .help()
   .version()
