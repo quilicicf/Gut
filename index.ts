@@ -5,6 +5,7 @@ import { applyStyle, theme } from './src/dependencies/colors.ts';
 
 import * as pile from './src/commands/simple/pile.ts';
 import * as audit from './src/commands/simple/audit.ts';
+import * as burgeon from './src/commands/simple/burgeon.ts';
 import * as history from './src/commands/simple/history.ts';
 import * as divisions from './src/commands/simple/divisions.ts';
 
@@ -14,6 +15,7 @@ yargs()
 
   // Public methods
   .command(audit)
+  .command(burgeon)
   .command(divisions)
   .command(history)
   .command(pile)

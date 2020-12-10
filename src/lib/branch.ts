@@ -1,11 +1,11 @@
-export interface Branch {
-  fragments: BranchFragment[]
+export interface BranchFragment {
+  isPoc?: boolean;
+  ticketId?: string;
+  description: string;
 }
 
-export interface BranchFragment {
-  isPoc?: boolean
-  ticketId?: string
-  description: string
+export interface Branch {
+  fragments: BranchFragment[]
 }
 
 const FRAGMENT_REGEX = /^(POC--)?(?:([^_]+)_)?(.*)/;
@@ -21,7 +21,7 @@ function parseBranchFragment (branchFragmentAsString: string): BranchFragment {
 
 export function parseBranchName (branchName: string): Branch {
   const fragmentsAsString = branchName.split(/__/g);
-  const fragments = fragmentsAsString.map(fragmentAsString => parseBranchFragment(fragmentAsString));
+  const fragments = fragmentsAsString.map((fragmentAsString) => parseBranchFragment(fragmentAsString));
   return { fragments };
 }
 
@@ -44,5 +44,5 @@ export function getParentBranch (branch: Branch): Branch {
 }
 
 export function isPocBranch (branch: Branch): boolean {
-  return branch.fragments.some(fragment => fragment.isPoc);
+  return branch.fragments.some((fragment) => fragment.isPoc);
 }
