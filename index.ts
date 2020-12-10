@@ -3,9 +3,9 @@ import { yargs } from './src/dependencies/yargs.ts';
 import install from './src/commands/internals/install.ts';
 import { applyStyle, theme } from './src/dependencies/colors.ts';
 
-import pile from './src/commands/simple/pile.ts';
+import * as pile from './src/commands/simple/pile.ts';
 import * as audit from './src/commands/simple/audit.ts';
-import history from './src/commands/simple/history.ts';
+import * as history from './src/commands/simple/history.ts';
 import * as divisions from './src/commands/simple/divisions.ts';
 
 // Install with: deno install --allow-run --allow-read="$FORGE" --name gd index.ts

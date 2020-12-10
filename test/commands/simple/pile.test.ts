@@ -3,7 +3,7 @@ import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
 import { exec, execSequence, OutputMode } from '../../../src/dependencies/exec.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
-import pileCommand from '../../../src/commands/simple/pile.ts';
+import { handler as pile } from '../../../src/commands/simple/pile.ts';
 
 const command = 'gut pile';
 Deno.test(applyStyle(__`@int ${command} should stage & add all changes in the repository`, [ theme.strong ]), async () => {
@@ -25,7 +25,6 @@ Deno.test(applyStyle(__`@int ${command} should stage & add all changes in the re
   await Deno.remove(resolve(testRepositoryPath, 'toRemove'));
   Deno.chdir(resolve(testRepositoryPath, 'nested'));
 
-  const { handler: pile } = pileCommand;
   const output = await pile({ isTestRun: true });
 
   Deno.chdir(tmpDir); // Don't remove cwd, duh

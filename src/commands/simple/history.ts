@@ -14,11 +14,13 @@ interface Args {
 
 const DEFAULT_FORMAT = 'pretty';
 
-export default {
-  command: 'history',
-  aliases: [ 'h' ],
-  describe: 'Displays the commit\'s history',
-  builder: (yargs: any) => yargs.usage('usage: gut history [options]')
+export const
+  command = 'history';
+export const aliases = [ 'h' ];
+export const describe = 'Displays the commit\'s history';
+
+export function builder (yargs: any) {
+  return yargs.usage('usage: gut history [options]')
     .option('format', {
       alias: 'f',
       describe: 'The format name. Defaults to pretty',
@@ -42,23 +44,24 @@ export default {
       alias: 'b',
       describe: 'Audit all commits on top of the base branch',
       type: 'boolean',
-    }),
-  handler: async (args: Args) => {
-    const {
-      format, number, reverse, fromBaseBranch, isTestRun,
-    } = args;
+    });
+}
 
-    const logFormat = LOG_FORMATS[ format.toUpperCase() ];
+export async function handler (args: Args) {
+  const {
+    format, number, reverse, fromBaseBranch, isTestRun,
+  } = args;
 
-    if (!logFormat) { throw Error(`Can't find log format ${format}`); } // Can't happen
+  const logFormat = LOG_FORMATS[ format.toUpperCase() ];
 
-    const commits = fromBaseBranch
-      ? await getCommitsFromBaseBranch(reverse)
-      : await getCommitsUpToMax(number, reverse);
+  if (!logFormat) { throw Error(`Can't find log format ${format}`); } // Can't happen
 
-    const output = logFormat(commits);
+  const commits = fromBaseBranch
+    ? await getCommitsFromBaseBranch(reverse)
+    : await getCommitsUpToMax(number, reverse);
 
-    if (!isTestRun) { await log(Deno.stdout, output.concat('\n')); }
-    return commits;
-  },
-};
+  const output = logFormat(commits);
+
+  if (!isTestRun) { await log(Deno.stdout, output.concat('\n')); }
+  return commits;
+}
