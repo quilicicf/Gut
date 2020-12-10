@@ -2,7 +2,7 @@ import { exec, OutputMode } from '../../../src/dependencies/exec.ts';
 import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
-import historyCommand from '../../../src/commands/simple/history.ts';
+import { handler as history } from '../../../src/commands/simple/history.ts';
 import { initializeRepository, commitShit, deleteRepositories } from '../../utils/setup.ts';
 
 const command = 'gut history';
@@ -12,7 +12,6 @@ Deno.test(applyStyle(__`@int ${command} should limit commits to max number`, [ t
   await commitShit(testRepositoryPath, 1);
   await commitShit(testRepositoryPath, 2);
 
-  const { handler: history } = historyCommand;
   const output = await history({
     isTestRun: true, format: 'subject', number: 2, reverse: false,
   });
@@ -27,7 +26,6 @@ Deno.test(applyStyle(__`@int ${command} should show commits in reverse order`, [
   await commitShit(testRepositoryPath, 1);
   await commitShit(testRepositoryPath, 2);
 
-  const { handler: history } = historyCommand;
   const output = await history({
     isTestRun: true, format: 'subject', number: 10, reverse: true,
   });
@@ -43,7 +41,6 @@ Deno.test(applyStyle(__`@int ${command} should show commits from base branch`, [
   await exec('git checkout -b master__anotherBranch', { output: OutputMode.None });
   await commitShit(testRepositoryPath, 2);
 
-  const { handler: history } = historyCommand;
   const output = await history({
     isTestRun: true, format: 'subject', number: 10, reverse: false, fromBaseBranch: true,
   });
