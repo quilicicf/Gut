@@ -5,6 +5,7 @@ import { applyStyle, theme } from './src/dependencies/colors.ts';
 
 import * as pile from './src/commands/simple/pile.ts';
 import * as audit from './src/commands/simple/audit.ts';
+import * as thrust from './src/commands/simple/thrust.ts';
 import * as burgeon from './src/commands/simple/burgeon.ts';
 import * as history from './src/commands/simple/history.ts';
 import * as divisions from './src/commands/simple/divisions.ts';
@@ -19,6 +20,7 @@ yargs()
   .command(divisions)
   .command(history)
   .command(pile)
+  .command(thrust)
 
   // Internals
   .command(install)
