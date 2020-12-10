@@ -44,7 +44,7 @@ export async function handler ({ ticketNumber, isTestRun, testDescription }: Arg
     .join('_');
   const currentBranchName = await getCurrentBranchName();
   const newBranchName = `${currentBranchName}__${fragment}`;
-  await exec(`git checkout -b ${newBranchName} --track`, { output: OutputMode.None });
+  await exec(`git checkout -b ${newBranchName}`, { output: OutputMode.None });
   return newBranchName;
 }
 

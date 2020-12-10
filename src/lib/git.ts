@@ -101,3 +101,8 @@ export async function getCommitsFromBaseBranch (shouldReverse: boolean): Promise
   const mergeBase = await getMergeBaseFromParent();
   return getCommitsBetweenRefs(mergeBase, 'HEAD', shouldReverse);
 }
+
+export async function getRemotes (): Promise<string[]> {
+  const { output } = await exec('git remote show', { output: OutputMode.Capture });
+  return output.split(/\s/);
+}
