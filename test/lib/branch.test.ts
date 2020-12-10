@@ -1,4 +1,4 @@
-import { __, applyStyle, bold } from '../../src/dependencies/colors.ts';
+import { __, applyStyle, theme } from '../../src/dependencies/colors.ts';
 
 import { assertEquals, assertThrows } from '../utils/assert.ts';
 import {
@@ -60,26 +60,26 @@ const BRANCHES: { [ key: string ]: { name: string, branch: Branch, parent?: stri
 };
 
 const testedUnit = 'utils/branch';
-Deno.test(applyStyle(__`@unit ${testedUnit} should parse branch`, [ bold ]), () => {
+Deno.test(applyStyle(__`@unit ${testedUnit} should parse branch`, [ theme.strong ]), () => {
   Object.values(BRANCHES)
     .forEach(({ name, branch }) => {
       assertEquals(parseBranchName(name), branch);
     });
 });
 
-Deno.test(applyStyle(__`@unit ${testedUnit} should stringify branch`, [ bold ]), () => {
+Deno.test(applyStyle(__`@unit ${testedUnit} should stringify branch`, [ theme.strong ]), () => {
   Object.values(BRANCHES)
     .forEach(({ name, branch }) => {
       assertEquals(stringifyBranch(branch), name);
     });
 });
 
-Deno.test(applyStyle(__`@unit ${testedUnit} should detect PoC branches`, [ bold ]), () => {
+Deno.test(applyStyle(__`@unit ${testedUnit} should detect PoC branches`, [ theme.strong ]), () => {
   assertEquals(isPocBranch(BRANCHES.ONE_FRAGMENT.branch), false);
   assertEquals(isPocBranch(BRANCHES.ONE_FRAGMENT_POC.branch), true);
 });
 
-Deno.test(applyStyle(__`@unit ${testedUnit} should get branch parent`, [ bold ]), () => {
+Deno.test(applyStyle(__`@unit ${testedUnit} should get branch parent`, [ theme.strong ]), () => {
   Object.values(BRANCHES)
     .forEach(({ branch, parent }) => {
       if (!parent) {

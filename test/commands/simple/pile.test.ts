@@ -1,12 +1,12 @@
 import { resolve } from '../../../src/dependencies/path.ts';
-import { __, applyStyle, bold } from '../../../src/dependencies/colors.ts';
+import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
 import { exec, execSequence, OutputMode } from '../../../src/dependencies/exec.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
 import pileCommand from '../../../src/commands/simple/pile.ts';
 
 const command = 'gut pile';
-Deno.test(applyStyle(__`@int ${command} should stage & add all changes in the repository`, [ bold ]), async () => {
+Deno.test(applyStyle(__`@int ${command} should stage & add all changes in the repository`, [ theme.strong ]), async () => {
   const testRepositoryPath = await Deno.makeTempDir({ prefix: 'gut_test_pile' });
   Deno.chdir(testRepositoryPath);
   const tmpDir = resolve(testRepositoryPath, '..');

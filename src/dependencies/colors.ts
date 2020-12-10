@@ -1,14 +1,14 @@
 /* eslint-disable lines-between-class-members */
 
 import {
-  parse, applyStyle,
+  parse, applyStyle, RESET_CODE,
   // FIXME: link?
-} from 'https://raw.githubusercontent.com/quilicicf/ColorMee/8fc5390ffcae98ad3f462d5d7343f476c73caff4/index.ts';
+} from 'https://raw.githubusercontent.com/quilicicf/ColorMee/ed17547550cf3ee4f1d099eedbd1bc649134a928/index.ts';
 import {
-  ForegroundRgbCode, StyleCode,
+  ForegroundCode, ForegroundRgbCode, StyleCode,
   createStyle,
   // FIXME: link?
-} from 'https://raw.githubusercontent.com/quilicicf/ColorMee/8fc5390ffcae98ad3f462d5d7343f476c73caff4/createStyle.ts';
+} from 'https://raw.githubusercontent.com/quilicicf/ColorMee/ed17547550cf3ee4f1d099eedbd1bc649134a928/createStyle.ts';
 
 interface Theme {
   color1: string;
@@ -19,8 +19,19 @@ interface Theme {
   color6: string;
 
   // Generic
+  dim: string;
+  strong: string;
+  emphasis: string;
   error: string;
   warning: string;
+  success: string;
+
+  // Audit
+  important: string;
+  fileName: string;
+  lineNumber: string;
+  added: string;
+  removed: string;
 
   // Commit
   sha: string;
@@ -38,8 +49,19 @@ class DefaultTheme implements Theme { // monokai
   color6: string;
 
   // Generic
+  dim: string;
+  strong: string;
+  emphasis: string;
   error: string;
   warning: string;
+  success: string;
+
+  // Audit
+  important: string;
+  fileName: string;
+  lineNumber: string;
+  added: string;
+  removed: string;
 
   // Commit
   sha: string;
@@ -62,8 +84,18 @@ class DefaultTheme implements Theme { // monokai
     this.color5 = createStyle({ foreground: purpleCode });
     this.color6 = createStyle({ foreground: pinkCode });
 
-    this.error = this.color3;
-    this.warning = this.color4;
+    this.dim = createStyle({ style: StyleCode.Dim });
+    this.strong = createStyle({ style: StyleCode.Bold });
+    this.emphasis = createStyle({ style: StyleCode.Italic });
+    this.error = createStyle({ foreground: ForegroundCode.Red });
+    this.warning = createStyle({ foreground: ForegroundCode.Yellow });
+    this.success = createStyle({ foreground: ForegroundCode.Green });
+
+    this.important = this.color1;
+    this.fileName = this.color4;
+    this.lineNumber = this.color5;
+    this.added = this.success;
+    this.removed = this.error;
 
     this.sha = this.color3;
     this.author = createStyle({ foreground: cyanCode, style: StyleCode.Bold });
@@ -73,12 +105,10 @@ class DefaultTheme implements Theme { // monokai
 }
 
 const defaultTheme = new DefaultTheme();
-const bold = createStyle({ style: StyleCode.Bold });
 
 export {
+  RESET_CODE,
   parse as __,
   applyStyle,
   defaultTheme as theme,
-
-  bold,
 };

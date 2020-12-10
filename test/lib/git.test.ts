@@ -1,4 +1,4 @@
-import { __, applyStyle, bold } from '../../src/dependencies/colors.ts';
+import { __, applyStyle, theme } from '../../src/dependencies/colors.ts';
 
 import { fail, assertEquals } from '../utils/assert.ts';
 import { Commit, LOG_FORMATS } from '../../src/lib/git.ts';
@@ -15,8 +15,7 @@ const testCommit: Commit = {
 };
 const testedUnit = 'utils/git';
 
-
-Deno.test(applyStyle(__`@unit ${testedUnit} should color commits with formats`, [ bold ]), () => {
+Deno.test(applyStyle(__`@unit ${testedUnit} should color commits with formats`, [ theme.strong ]), () => {
   const expected: { [ key: string ]: string } = {
     JSON: `${JSON.stringify([ testCommit ])}\n`,
     SHA: `${testCommit.sha}\n`,
