@@ -1,4 +1,4 @@
-import { _isEmpty } from '../dependencies/lodash.ts';
+import { isEmpty } from '../dependencies/ramda.ts';
 import { exec, OutputMode } from '../dependencies/exec.ts';
 import { getParentBranch, parseBranchName, stringifyBranch } from './branch.ts';
 import {
@@ -39,7 +39,7 @@ export function psvToJs (psv: string): Commit[] {
   return psv.split('\n')
     .map((psvItem: string) => {
       const [ sha, subject, author, relativeDate, branchesAsString ] = psvItem.split('|');
-      const branches = _isEmpty(branchesAsString) ? [] : branchesAsString.replace(/[()]/g, '').split(',');
+      const branches = isEmpty(branchesAsString) ? [] : branchesAsString.replace(/[()]/g, '').split(',');
       return {
         sha, subject, author, relativeDate, branches,
       };
