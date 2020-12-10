@@ -4,8 +4,10 @@ import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
 import { execSequence, OutputMode } from '../../../src/dependencies/exec.ts';
 import { initializeRepository, deleteRepositories, initializeRemote } from '../../utils/setup.ts';
 
-import { handler as divisions } from '../../../src/commands/simple/divisions.ts';
+import { GIT_CURRENT_BRANCH_CODE, GIT_REMOTE_BRANCH_CODE, GIT_RESET_CODE } from '../../../src/lib/git.ts';
+import { test } from '../../../src/commands/simple/divisions.ts';
 
+const { printDivisions } = test;
 const command = 'gut divisions';
 Deno.test(applyStyle(__`@int ${command} should show local branches`, [ theme.strong ]), async () => {
   const { tmpDir, testRepositoryPath } = await initializeRepository('gut_test_divisions_local');
@@ -19,15 +21,16 @@ Deno.test(applyStyle(__`@int ${command} should show local branches`, [ theme.str
     'git checkout -b toto',
   ], { output: OutputMode.None });
 
-  const output = await divisions({ isTestRun: true });
+  const output = await printDivisions(undefined);
 
   await deleteRepositories(tmpDir, testRepositoryPath);
 
-  assertEquals(output, `\
-master
-  tata
-  titi
-* toto`);
+  const expected = `\
+  master${GIT_RESET_CODE}
+  tata${GIT_RESET_CODE}
+  titi${GIT_RESET_CODE}
+* ${GIT_CURRENT_BRANCH_CODE}toto${GIT_RESET_CODE}\n`;
+  assertEquals(output, expected);
 });
 
 Deno.test(applyStyle(__`@int ${command} should show remote branches`, [ theme.strong ]), async () => {
@@ -41,15 +44,15 @@ Deno.test(applyStyle(__`@int ${command} should show remote branches`, [ theme.st
   const originRepositoryPath = await initializeRemote(tmpDir, testRepositoryPath, 'origin');
   const upstreamRepositoryPath = await initializeRemote(tmpDir, testRepositoryPath, 'upstream');
 
-  const outputO = await divisions({ remote: 'o', isTestRun: true });
-  const outputOrigin = await divisions({ remote: 'origin', isTestRun: true });
-  const outputU = await divisions({ remote: 'u', isTestRun: true });
-  const outputUpstream = await divisions({ remote: 'upstream', isTestRun: true });
+  const outputO = await printDivisions('o');
+  const outputOrigin = await printDivisions('origin');
+  const outputU = await printDivisions('u');
+  const outputUpstream = await printDivisions('upstream');
 
   await deleteRepositories(tmpDir, testRepositoryPath, originRepositoryPath, upstreamRepositoryPath);
 
-  assertEquals(outputO, 'origin/master');
-  assertEquals(outputOrigin, 'origin/master');
-  assertEquals(outputU, 'upstream/master');
-  assertEquals(outputUpstream, 'upstream/master');
+  assertEquals(outputO, `  ${GIT_REMOTE_BRANCH_CODE}origin/master${GIT_RESET_CODE}\n`);
+  assertEquals(outputOrigin, `  ${GIT_REMOTE_BRANCH_CODE}origin/master${GIT_RESET_CODE}\n`);
+  assertEquals(outputU, `  ${GIT_REMOTE_BRANCH_CODE}upstream/master${GIT_RESET_CODE}\n`);
+  assertEquals(outputUpstream, `  ${GIT_REMOTE_BRANCH_CODE}upstream/master${GIT_RESET_CODE}\n`);
 });

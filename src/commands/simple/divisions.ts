@@ -1,8 +1,20 @@
+import log from '../../dependencies/log.ts';
 import { exec, OutputMode } from '../../dependencies/exec.ts';
 
 const REMOTES_SHORTCUTS: { [ id: string ]: string } = {
   o: 'origin',
   u: 'upstream',
+};
+
+const printDivisions = async (remote: string | undefined): Promise<string> => {
+  if (remote) {
+    const filter = `--list "${REMOTES_SHORTCUTS[ remote ] || remote}/*"`;
+    const { output } = await exec(`git branch --color --remotes --column=always ${filter}`, { output: OutputMode.Capture });
+    return `  ${output}\n`;
+  }
+
+  const { output } = await exec('git branch --color', { output: OutputMode.Capture });
+  return `  ${output}\n`;
 };
 
 export const command = 'divisions';
@@ -20,16 +32,11 @@ export function builder (yargs: any) {
 }
 
 export async function handler ({ remote, isTestRun }: { remote?: string, isTestRun: boolean }) {
-  if (remote) {
-    const filter = `--list "${REMOTES_SHORTCUTS[ remote ] || remote}/*"`;
-    const { output } = isTestRun
-      ? await exec(`git -c color.branch=never branch --remotes --column=always ${filter}`, { output: OutputMode.Capture })
-      : await exec(`git --remotes --column=always ${filter}`, { output: OutputMode.StdOut });
-    return output;
-  }
+  const divisions = await printDivisions(remote);
 
-  const { output } = isTestRun
-    ? await exec('git -c color.branch=never branch', { output: OutputMode.Capture })
-    : await exec('git branch --color', { output: OutputMode.StdOut });
-  return output;
+  if (isTestRun) { return divisions; }
+  await log(Deno.stdout, divisions);
+  return divisions;
 }
+
+export const test = { printDivisions };

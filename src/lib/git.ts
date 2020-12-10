@@ -15,6 +15,10 @@ export interface Commit {
 
 export type LogFormat = (commits: Commit[]) => string
 
+export const GIT_RESET_CODE = '\x1b[m';
+export const GIT_CURRENT_BRANCH_CODE = '\x1b[32m';
+export const GIT_REMOTE_BRANCH_CODE = '\x1b[31m';
+
 export const LOG_FORMATS: { [ key: string ]: LogFormat } = {
   JSON: (commits: Commit[]): string => `${JSON.stringify(commits)}\n`,
   SHA: (commits: Commit[]): string => `${commits.map(({ sha }) => sha).join('\n')}\n`,
