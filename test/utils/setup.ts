@@ -1,4 +1,4 @@
-import { resolve } from '../../src/dependencies/path.ts';
+import { basename, resolve } from '../../src/dependencies/path.ts';
 import { exec, execSequence, OutputMode } from '../../src/dependencies/exec.ts';
 
 export async function initializeRepository (repositoryNamePrefix: string) {
@@ -22,18 +22,21 @@ export async function deleteRepositories (tmpDir: string, ...testRepositoryPaths
 
 export async function commitShit (testRepositoryPath: string, commitNumber: number) {
   await Deno.writeTextFile(resolve(testRepositoryPath, `commit_${commitNumber}.txt`), `commit ${commitNumber}`);
-  await execSequence([ 'git add . -A', `git commit -m "Commit #${commitNumber}"` ], { output: OutputMode.None });
+  const commitSubject = `Commit #${commitNumber}`;
+  await execSequence([ 'git add . -A', `git commit -m "${commitSubject}"` ], { output: OutputMode.None });
+  return commitSubject;
 }
 
 export async function initializeRemote (tmpDir: string, testRepositoryPath: string, originName: string) {
   Deno.chdir(tmpDir);
-  const newRepositoryName: string = `gut_test_divisions_${originName}`;
+  const testRepositoryName: string = basename(testRepositoryPath);
+  const newRepositoryName: string = `${testRepositoryName}_${originName}`;
   const newRepositoryPath = resolve(tmpDir, newRepositoryName);
   await exec(`git init --bare ${newRepositoryName}`, { output: OutputMode.None });
   Deno.chdir(testRepositoryPath);
   await execSequence([
     `git remote add ${originName} ${newRepositoryPath}`,
-    `git push ${originName} master`,
+    `git push --set-upstream ${originName} master`,
   ], { output: OutputMode.None });
   return newRepositoryPath;
 }

@@ -1,7 +1,6 @@
-import log from '../../dependencies/log.ts';
 import { exec, OutputMode } from '../../dependencies/exec.ts';
 import { getCurrentBranchName } from '../../lib/git.ts';
-import { StringOptions, promptString } from '../../dependencies/cliffy.ts';
+import { promptString } from '../../dependencies/cliffy.ts';
 
 interface Args {
   ticketNumber?: string,
