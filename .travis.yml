@@ -6,9 +6,9 @@ install:
   - export DENO_DIR="$HOME/.deno"
 script:
   - deno --version
-  - deno cache test/commands/simple/*.ts
-  - deno run --allow-run index.ts install
-  - deno test --allow-write=/tmp --allow-read=/tmp --allow-run --cached-only test/
+  - deno cache --unstable test/commands/simple/*.ts
+  - deno run --unstable --allow-run index.ts install
+  - deno test --unstable --allow-write=/tmp --allow-read=/tmp --allow-run --cached-only test/
 cache:
   directories:
     - '$HOME/.deno'
