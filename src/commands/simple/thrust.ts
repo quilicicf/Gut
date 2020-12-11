@@ -27,8 +27,8 @@ export async function handler ({ force, isTestRun }: Args) {
   const remote = remotes[ 0 ]; // TODO: prompt user when there are multiple remotes
 
   const forceArg = force ? '--force' : '';
-  const outputMode = isTestRun ? OutputMode.None : OutputMode.StdOut;
-  await exec(`git push ${forceArg} --set-upstream-to=${remote}${currentBranchName}`, { output: outputMode });
+  const outputMode = isTestRun ? OutputMode.Capture : OutputMode.StdOut;
+  return exec(`git push ${forceArg} --set-upstream ${remote} ${currentBranchName}`, { output: outputMode });
 }
 
 export const test = {};
