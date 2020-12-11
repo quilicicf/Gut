@@ -3,7 +3,6 @@ import {
   assertEquals,
   assertMatch,
   assertThrows,
-  assertObjectMatch,
 } from 'https://deno.land/std/testing/asserts.ts';
 
 export {
@@ -11,5 +10,4 @@ export {
   assertEquals,
   assertMatch,
   assertThrows,
-  assertObjectMatch,
 };

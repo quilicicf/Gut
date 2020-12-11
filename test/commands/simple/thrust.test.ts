@@ -39,14 +39,14 @@ Deno.test(applyStyle(__`@int ${command} should push to a branch`, [ theme.strong
 
 Deno.test(applyStyle(__`@int ${command} should force-push to a branch`, [ theme.strong ]), async () => {
   const localRepositoryName = 'gut_test_thrust_force';
-  const { tmpDir, testRepositoryPath, testRepositoryName } = await initializeRepository(localRepositoryName);
+  const { tmpDir, testRepositoryPath } = await initializeRepository(localRepositoryName);
   await Deno.writeTextFile('aFile', 'whatever');
   await execSequence([
     'git add . -A',
     'git commit -m "Initialize repository"',
   ], { output: OutputMode.None });
 
-  const originRepositoryPath = await initializeRemote(tmpDir, testRepositoryName, testRepositoryPath, remoteName);
+  const originRepositoryPath = await initializeRemote(tmpDir, testRepositoryPath, remoteName);
 
   const theFilePath = 'theFile';
   const commitSubject = 'Commit that will be re-done';
