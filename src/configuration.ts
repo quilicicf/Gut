@@ -22,10 +22,12 @@ export interface GlobalGutConfiguration {
   tools: { [ key: string ]: Tool },
   preferredGitServer: string, // A key to a tool with server facet
   repositoriesPath: string,
+  editor: string,
 }
 
 export interface RepositoryGutConfiguration {
   reviewTool: string, // A key to a tool with review facet in global configuration
+  shouldUseEmojis: boolean,
 }
 
 export interface FullGutConfiguration {
@@ -34,7 +36,7 @@ export interface FullGutConfiguration {
 }
 
 export const CONFIGURATION_FILE_NAME = '.gut-config.json';
-export const FORGE_PATH = '/home/cyp/talend/forge';
+export const FORGE_PATH = '/home/cyp/Restlet/forge';
 
 export async function getConfiguration (): Promise<FullGutConfiguration> {
   const globalConfigurationPath = resolve(FORGE_PATH, CONFIGURATION_FILE_NAME);

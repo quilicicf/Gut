@@ -9,6 +9,7 @@ import * as pile from './src/commands/simple/pile.ts';
 import * as audit from './src/commands/simple/audit.ts';
 import * as thrust from './src/commands/simple/thrust.ts';
 import * as burgeon from './src/commands/simple/burgeon.ts';
+import * as execute from './src/commands/simple/execute.ts';
 import * as history from './src/commands/simple/history.ts';
 import * as replicate from './src/commands/simple/replicate.ts';
 import * as divisions from './src/commands/simple/divisions.ts';
@@ -31,6 +32,7 @@ const main = async () => {
     .command(audit)
     .command(burgeon)
     .command(divisions)
+    .command(execute)
     .command(history)
     .command(pile)
     .command(replicate)
