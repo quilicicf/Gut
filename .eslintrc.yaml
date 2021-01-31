@@ -1,4 +1,9 @@
 extends: '@talend/eslint-config/api-packaging.yaml'
 globals:
   Deno: false
+rules:
+  import/no-unresolved:
+    - error
+    - ignore:
+        - ^http
 root: true
