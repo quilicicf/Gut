@@ -108,7 +108,7 @@ export async function handler (args: Args) {
   }
 
   const editor = configuration?.global?.editor;
-  const forge = configuration?.global?.repositoriesPath;
+  const forge = configuration?.global?.forgePath;
   const filePath = resolve(forge, '.commit-message.md');
   await editFile(editor, filePath);
   return commitFromFile(filePath, isTestRun);

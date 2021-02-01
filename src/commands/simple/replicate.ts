@@ -1,4 +1,4 @@
-import { FORGE_PATH, FullGutConfiguration } from '../../configuration.ts';
+import { FullGutConfiguration } from '../../configuration.ts';
 
 import log from '../../dependencies/log.ts';
 import { path } from '../../dependencies/ramda.ts';
@@ -97,9 +97,9 @@ export async function builder (yargs: any) {
 }
 
 export async function handler (args: Args) {
-  const { isTestRun } = args;
+  const { configuration, isTestRun } = args;
   const { server, owner, repository, sshUrl } = buildGitSshUrl(args);
-  const repositoryPath = resolve(FORGE_PATH, server, owner, repository);
+  const repositoryPath = resolve(configuration.global.forgePath, server, owner, repository);
 
   if (!isTestRun) {
     await log(Deno.stdout, `Cloning ${sshUrl} into ${repositoryPath}\n`);

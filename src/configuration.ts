@@ -1,6 +1,7 @@
 import { getTopLevel } from './lib/git.ts';
 import { resolve } from './dependencies/path.ts';
 import { exists } from './dependencies/fs.ts';
+import { exec, OutputMode } from './dependencies/exec.ts';
 
 export interface Account {
   username: string,
@@ -21,7 +22,7 @@ export interface Tool {
 export interface GlobalGutConfiguration {
   tools: { [ key: string ]: Tool },
   preferredGitServer: string, // A key to a tool with server facet
-  repositoriesPath: string,
+  forgePath: string,
   editor: string,
 }
 
@@ -36,10 +37,10 @@ export interface FullGutConfiguration {
 }
 
 export const CONFIGURATION_FILE_NAME = '.gut-config.json';
-export const FORGE_PATH = '/home/cyp/Restlet/forge';
 
 export async function getConfiguration (): Promise<FullGutConfiguration> {
-  const globalConfigurationPath = resolve(FORGE_PATH, CONFIGURATION_FILE_NAME);
+  const { output: user } = await exec('whoami', { output: OutputMode.Capture });
+  const globalConfigurationPath = resolve('/home', user, '.config', 'gut', CONFIGURATION_FILE_NAME);
   const globalConfigurationAsJson = await Deno.readTextFile(globalConfigurationPath); // TODO: handle no configuration file
   const globalConfiguration = JSON.parse(globalConfigurationAsJson) as GlobalGutConfiguration;
 
