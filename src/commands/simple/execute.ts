@@ -38,7 +38,8 @@ interface Args {
   configuration: FullGutConfiguration,
 
   // Test thingies
-  isTestRun: boolean
+  isTestRun: boolean,
+  testEmoji?: string,
 }
 
 const commitWithMessage = async (isTestRun: boolean, message: string) => {
@@ -49,9 +50,8 @@ const commitWithMessage = async (isTestRun: boolean, message: string) => {
 };
 
 const commit = async (isTestRun: boolean, forgePath: string, emoji: string, suffix: string) => {
-
   return isTestRun
-    ? exec(`git commit --message '${emoji} ${DUMMY_COMMIT_MESSAGE} ${suffix}'`, { output: OutputMode.Capture })
+    ? exec(`git commit --message "${emoji} ${DUMMY_COMMIT_MESSAGE} ${suffix}"`, { output: OutputMode.Capture })
     : exec('git commit', { output: OutputMode.StdOut });
 };
 
@@ -61,6 +61,11 @@ const promptForEmoji = async () => {
     options: EMOJIS,
     search: true,
   });
+};
+
+const computeEmoji = async (shouldUseEmojis: boolean, isTestRun: boolean, testEmoji: string = '') => {
+  if (!shouldUseEmojis) { return ''; }
+  return isTestRun ? testEmoji : promptForEmoji();
 };
 
 export const command = 'execute';
@@ -108,7 +113,9 @@ export async function handler (args: Args) {
     configuration,
     codeReview,
     wip,
+
     isTestRun,
+    testEmoji,
   } = args;
 
   const shouldUseEmojis = configuration?.repository?.shouldUseEmojis || false;
@@ -127,10 +134,7 @@ export async function handler (args: Args) {
     return commitWithMessage(isTestRun, fullMessage);
   }
 
-  const emoji = shouldUseEmojis
-    ? await promptForEmoji()
-    : '';
-
+  const emoji = await computeEmoji(shouldUseEmojis, isTestRun, testEmoji);
   const forgePath = configuration?.global?.forgePath;
   return commit(isTestRun, forgePath, emoji, suffix);
 }
