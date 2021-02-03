@@ -23,12 +23,12 @@ export interface GlobalGutConfiguration {
   tools: { [ key: string ]: Tool },
   preferredGitServer: string, // A key to a tool with server facet
   forgePath: string,
-  editor: string,
 }
 
 export interface RepositoryGutConfiguration {
   reviewTool: string, // A key to a tool with review facet in global configuration
   shouldUseEmojis: boolean,
+  shouldUseIssueNumbers: boolean,
 }
 
 export interface FullGutConfiguration {

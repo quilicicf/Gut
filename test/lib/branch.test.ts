@@ -31,7 +31,7 @@ const BRANCHES: { [ key: string ]: { name: string, branch: Branch, parent?: stri
     branch: {
       fragments: [
         { description: 'master' },
-        { description: 'oneThingy', ticketId: 'TAD-315' },
+        { description: 'oneThingy', issueId: 'TAD-315' },
       ],
     },
     parent: 'master',
@@ -41,8 +41,8 @@ const BRANCHES: { [ key: string ]: { name: string, branch: Branch, parent?: stri
     branch: {
       fragments: [
         { description: 'master' },
-        { description: 'oneThingy', ticketId: 'TAD-315' },
-        { description: 'subTask', ticketId: 'TAD-316' },
+        { description: 'oneThingy', issueId: 'TAD-315' },
+        { description: 'subTask', issueId: 'TAD-316' },
       ],
     },
     parent: 'master__TAD-315_oneThingy',
@@ -52,7 +52,7 @@ const BRANCHES: { [ key: string ]: { name: string, branch: Branch, parent?: stri
     branch: {
       fragments: [
         { description: 'master' },
-        { description: 'oneThingy', ticketId: 'TAD-315', isPoc: true },
+        { description: 'oneThingy', issueId: 'TAD-315', isPoc: true },
       ],
     },
     parent: 'master',

@@ -1,11 +1,14 @@
-import { editFile } from '../../lib/editor.ts';
 import { FullGutConfiguration } from '../../configuration.ts';
 
 import {
   __, applyStyle, theme,
 } from '../../dependencies/colors.ts';
-import { resolve } from '../../dependencies/path.ts';
 import { exec, OutputMode } from '../../dependencies/exec.ts';
+import { promptSelect } from '../../dependencies/cliffy.ts';
+
+import { EMOJIS } from '../../lib/emojis.ts';
+import { getIssueIdOrEmpty } from '../../lib/branch.ts';
+import { getCurrentBranchName } from '../../lib/git.ts';
 
 class CommitMessage {
   message: string;
@@ -26,6 +29,7 @@ class CommitMessage {
 
 const CODE_REVIEW_MESSAGE = new CommitMessage('Code review', ':eyes:');
 const WIP_MESSAGE = new CommitMessage('WIP', ':construction:');
+const DUMMY_COMMIT_MESSAGE = 'Dummy commit message';
 
 interface Args {
   codeReview?: boolean,
@@ -37,14 +41,26 @@ interface Args {
   isTestRun: boolean
 }
 
-const commit = async (message: string, isTestRun: boolean) => {
+const commitWithMessage = async (isTestRun: boolean, message: string) => {
   const output = isTestRun ? OutputMode.Capture : OutputMode.StdOut;
-  return exec(`git commit --message '${message}'`, { output });
+  return message
+    ? exec(`git commit --message '${message}'`, { output })
+    : exec('git commit', { output });
 };
 
-const commitFromFile = async (filePath: string, isTestRun: boolean) => {
-  const output = isTestRun ? OutputMode.Capture : OutputMode.StdOut;
-  return exec(`git commit --file ${filePath}`, { output });
+const commit = async (isTestRun: boolean, forgePath: string, emoji: string, suffix: string) => {
+
+  return isTestRun
+    ? exec(`git commit --message '${emoji} ${DUMMY_COMMIT_MESSAGE} ${suffix}'`, { output: OutputMode.Capture })
+    : exec('git commit', { output: OutputMode.StdOut });
+};
+
+const promptForEmoji = async () => {
+  return promptSelect({
+    message: 'Choose your emoji: ',
+    options: EMOJIS,
+    search: true,
+  });
 };
 
 export const command = 'execute';
@@ -96,22 +112,29 @@ export async function handler (args: Args) {
   } = args;
 
   const shouldUseEmojis = configuration?.repository?.shouldUseEmojis || false;
+  const shouldUseIssueNumbers = configuration?.repository?.shouldUseIssueNumbers || false;
+
+  const issueId = shouldUseIssueNumbers ? getIssueIdOrEmpty(await getCurrentBranchName()) : '';
+  const suffix = issueId ? `(${issueId})` : '';
 
   if (wip) {
-    const fullMessage = WIP_MESSAGE.getFullMessage(shouldUseEmojis, '');
-    return commit(fullMessage, isTestRun);
+    const fullMessage = WIP_MESSAGE.getFullMessage(shouldUseEmojis, suffix);
+    return commitWithMessage(isTestRun, fullMessage);
   }
 
   if (codeReview) {
-    const fullMessage = CODE_REVIEW_MESSAGE.getFullMessage(shouldUseEmojis, '');
-    return commit(fullMessage, isTestRun);
+    const fullMessage = CODE_REVIEW_MESSAGE.getFullMessage(shouldUseEmojis, suffix);
+    return commitWithMessage(isTestRun, fullMessage);
   }
 
-  const editor = configuration?.global?.editor;
-  const forge = configuration?.global?.forgePath;
-  const filePath = resolve(forge, '.commit-message.md');
-  await editFile(editor, filePath);
-  return commitFromFile(filePath, isTestRun);
+  const emoji = shouldUseEmojis
+    ? await promptForEmoji()
+    : '';
+
+  const forgePath = configuration?.global?.forgePath;
+  return commit(isTestRun, forgePath, emoji, suffix);
 }
 
-export const test = {};
+export const test = {
+  DUMMY_COMMIT_MESSAGE,
+};

@@ -1,6 +1,6 @@
 export interface BranchFragment {
   isPoc?: boolean;
-  ticketId?: string;
+  issueId?: string;
   description: string;
 }
 
@@ -11,10 +11,10 @@ export interface Branch {
 const FRAGMENT_REGEX = /^(POC--)?(?:([^_]+)_)?(.*)/;
 
 function parseBranchFragment (branchFragmentAsString: string): BranchFragment {
-  const [ , pocTag, ticketId, description ] = FRAGMENT_REGEX.exec(branchFragmentAsString) || [];
+  const [ , pocTag, issueId, description ] = FRAGMENT_REGEX.exec(branchFragmentAsString) || [];
   return {
     ...(pocTag ? { isPoc: true } : {}),
-    ...(ticketId ? { ticketId } : {}),
+    ...(issueId ? { issueId } : {}),
     description,
   };
 }
@@ -25,12 +25,19 @@ export function parseBranchName (branchName: string): Branch {
   return { fragments };
 }
 
+export function getIssueIdOrEmpty (branchName: string): string {
+  const { fragments } = parseBranchName(branchName);
+  return fragments.reverse()
+    .map(fragment => fragment.issueId)
+    .find(Boolean) || '';
+}
+
 export function stringifyBranch (branch: Branch): string {
   return branch.fragments
-    .map(({ isPoc, ticketId, description }) => {
+    .map(({ isPoc, issueId, description }) => {
       const pocPart = isPoc ? 'POC--' : '';
-      const ticketIdPart = ticketId ? `${ticketId}_` : '';
-      return `${pocPart}${ticketIdPart}${description}`;
+      const issueIdPart = issueId ? `${issueId}_` : '';
+      return `${pocPart}${issueIdPart}${description}`;
     })
     .join('__');
 }

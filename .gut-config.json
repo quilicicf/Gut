@@ -10,6 +10,8 @@
       }
     }
   },
+  "shouldUseEmojis": true,
+  "shouldUseIssueNumbers": true,
   "commitMessageSuffixTemplate": "#$ticketNumber",
   "reviewTool": "github"
 }
