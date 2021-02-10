@@ -1,5 +1,5 @@
-import { Input, InputOptions } from 'https://deno.land/x/cliffy@v0.17.0/prompt/input.ts';
-import { Select, SelectOptions, SelectOption as _SelectOption } from 'https://deno.land/x/cliffy@v0.17.0/prompt/select.ts';
+import { Input, InputOptions } from 'https://deno.land/x/cliffy@v0.17.2/prompt/input.ts';
+import { Select, SelectOptions, SelectOption as _SelectOption } from 'https://deno.land/x/cliffy@v0.17.2/prompt/select.ts';
 
 export type StringOptions = InputOptions;
 

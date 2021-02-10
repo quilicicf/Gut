@@ -1,14 +1,9 @@
-import set from 'https://raw.githubusercontent.com/ramda/ramda/81368c9ddcd02fc8c74c46af2da021a0a90c36f8/source/set.js';
-import path from 'https://raw.githubusercontent.com/ramda/ramda/81368c9ddcd02fc8c74c46af2da021a0a90c36f8/source/path.js';
-import isNil from 'https://raw.githubusercontent.com/ramda/ramda/81368c9ddcd02fc8c74c46af2da021a0a90c36f8/source/isNil.js';
-import isEmpty from 'https://raw.githubusercontent.com/ramda/ramda/81368c9ddcd02fc8c74c46af2da021a0a90c36f8/source/isEmpty.js';
-import lensPath from 'https://raw.githubusercontent.com/ramda/ramda/81368c9ddcd02fc8c74c46af2da021a0a90c36f8/source/lensPath.js';
-import mergeDeepRight from 'https://raw.githubusercontent.com/ramda/ramda/81368c9ddcd02fc8c74c46af2da021a0a90c36f8/source/mergeDeepRight.js';
-// import set from 'https://deno.land/x/ramda/set.js';
-// import path from 'https://deno.land/x/ramda/path.js';
-// import isNil from 'https://deno.land/x/ramda/isNil.js';
-// import isEmpty from 'https://deno.land/x/ramda/isEmpty.js';
-// import lensPath from 'https://deno.land/x/ramda/lensPath.js';
+import set from 'https://deno.land/x/ramda@v0.27.2/source/set.js';
+import path from 'https://deno.land/x/ramda@v0.27.2/source/path.js';
+import isNil from 'https://deno.land/x/ramda@v0.27.2/source/isNil.js';
+import isEmpty from 'https://deno.land/x/ramda@v0.27.2/source/isEmpty.js';
+import lensPath from 'https://deno.land/x/ramda@v0.27.2/source/lensPath.js';
+
 // import mergeDeepRight from 'https://deno.land/x/ramda/mergeDeepRight.js';
 
 /**
@@ -28,8 +23,8 @@ function isNilOrEmpty (input: any | any[] | string): boolean {
   return isNil(input) || isEmpty(input);
 }
 
-function setPath (input: any, path: any[], value: any) {
-  const lens = lensPath(path);
+function setPath (input: any, _path: any[], value: any) {
+  const lens = lensPath(_path);
   return set(lens, value, input);
 }
 

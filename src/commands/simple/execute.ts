@@ -3,12 +3,13 @@ import { FullGutConfiguration } from '../../configuration.ts';
 import {
   __, applyStyle, theme,
 } from '../../dependencies/colors.ts';
+import log from '../../dependencies/log.ts';
 import { exec, OutputMode } from '../../dependencies/exec.ts';
 import { promptSelect } from '../../dependencies/cliffy.ts';
 
 import { EMOJIS } from '../../lib/emojis.ts';
 import { getIssueIdOrEmpty } from '../../lib/branch.ts';
-import { getCurrentBranchName } from '../../lib/git.ts';
+import { getCommitsUpToMax, getCurrentBranchName } from '../../lib/git.ts';
 
 class CommitMessage {
   message: string;
@@ -49,19 +50,15 @@ const commitWithMessage = async (isTestRun: boolean, message: string) => {
     : exec('git commit', { output });
 };
 
-const commit = async (isTestRun: boolean, forgePath: string, emoji: string, suffix: string) => {
-  return isTestRun
-    ? exec(`git commit --message "${emoji} ${DUMMY_COMMIT_MESSAGE} ${suffix}"`, { output: OutputMode.Capture })
-    : exec('git commit', { output: OutputMode.StdOut });
-};
+const commit = async (isTestRun: boolean, forgePath: string, emoji: string, suffix: string) => (isTestRun
+  ? exec(`git commit --message "${emoji} ${DUMMY_COMMIT_MESSAGE} ${suffix}"`, { output: OutputMode.Capture })
+  : exec('git commit', { output: OutputMode.StdOut }));
 
-const promptForEmoji = async () => {
-  return promptSelect({
-    message: 'Choose your emoji: ',
-    options: EMOJIS,
-    search: true,
-  });
-};
+const promptForEmoji = async () => promptSelect({
+  message: 'Choose your emoji: ',
+  options: EMOJIS,
+  search: true,
+});
 
 const computeEmoji = async (shouldUseEmojis: boolean, isTestRun: boolean, testEmoji: string = '') => {
   if (!shouldUseEmojis) { return ''; }
@@ -112,6 +109,7 @@ export async function handler (args: Args) {
   const {
     configuration,
     codeReview,
+    squashOn,
     wip,
 
     isTestRun,
@@ -132,6 +130,25 @@ export async function handler (args: Args) {
   if (codeReview) {
     const fullMessage = CODE_REVIEW_MESSAGE.getFullMessage(shouldUseEmojis, suffix);
     return commitWithMessage(isTestRun, fullMessage);
+  }
+
+  if (squashOn) {
+    const lastCommits = await getCommitsUpToMax(30, false);
+    const shaToSquashOn = await promptSelect({
+      message: 'Which commit should I squash on',
+      options: lastCommits.map(({ subject, sha }) => ({ name: subject, value: sha })),
+      search: true,
+    });
+    await log(Deno.stdout, `Commit to squash on: ${shaToSquashOn}\n`);
+    await exec(`git commit --fixup ${shaToSquashOn}`);
+    await Deno.run({
+      cmd: [ 'git', 'rebase', '--interactive', '--autosquash', `${shaToSquashOn}~1` ],
+      env: { GIT_SEQUENCE_EDITOR: ':' },
+    }).status();
+    return '';
+
+    // execution.execute(`git commit --fixup ${commitToSquashOn.sha}`);
+    // execSync(`git rebase --interactive --autosquash ${commitToSquashOn.sha}~1`, { env: { GIT_SEQUENCE_EDITOR: ':' } });
   }
 
   const emoji = await computeEmoji(shouldUseEmojis, isTestRun, testEmoji);

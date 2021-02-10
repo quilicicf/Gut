@@ -28,7 +28,7 @@ export function parseBranchName (branchName: string): Branch {
 export function getIssueIdOrEmpty (branchName: string): string {
   const { fragments } = parseBranchName(branchName);
   return fragments.reverse()
-    .map(fragment => fragment.issueId)
+    .map((fragment) => fragment.issueId)
     .find(Boolean) || '';
 }
 
