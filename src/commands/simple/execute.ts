@@ -146,9 +146,6 @@ export async function handler (args: Args) {
       env: { GIT_SEQUENCE_EDITOR: ':' },
     }).status();
     return '';
-
-    // execution.execute(`git commit --fixup ${commitToSquashOn.sha}`);
-    // execSync(`git rebase --interactive --autosquash ${commitToSquashOn.sha}~1`, { env: { GIT_SEQUENCE_EDITOR: ':' } });
   }
 
   const emoji = await computeEmoji(shouldUseEmojis, isTestRun, testEmoji);

@@ -2,7 +2,6 @@ import { __, theme, applyStyle } from '../dependencies/colors.ts';
 import { SelectOption } from '../dependencies/cliffy.ts';
 
 export const EMOJIS: SelectOption[] = [
-  { value: ':new:', name: `${':new:'.bold} when adding a feature` },
   { value: ':new:', name: applyStyle(__`${':new:'} when adding a feature`, [ theme.strong ]) },
   { value: ':up:', name: applyStyle(__`${':up:'} when improving a feature`, [ theme.strong ]) },
   { value: ':memo:', name: applyStyle(__`${':memo:'} when writing docs`, [ theme.strong ]) },
