@@ -32,6 +32,7 @@ class CommitMessage {
 const CODE_REVIEW_MESSAGE = new CommitMessage('Code review', ':eyes:');
 const WIP_MESSAGE = new CommitMessage('WIP', ':construction:');
 const DUMMY_COMMIT_MESSAGE = 'Dummy commit message';
+const COMMIT_MESSAGE_FILE_NAME = '.gut-commit-message.md';
 
 interface Args {
   codeReview?: boolean,
@@ -56,15 +57,19 @@ const commit = async (isTestRun: boolean, forgePath: string, emoji: string, suff
     return exec(`git commit --message "${emoji} ${DUMMY_COMMIT_MESSAGE} ${suffix}"`, { output: OutputMode.Capture });
   }
 
-  const commitMessageFilePath = resolve(forgePath, '.commit-message');
-  await Deno.writeTextFile(commitMessageFilePath, `${emoji}  ${suffix}`);
+  const commitMessageFilePath = resolve(forgePath, COMMIT_MESSAGE_FILE_NAME);
+  const paddedEmoji = emoji ? `${emoji} ` : '';
+  const paddedSuffix = suffix ? ` ${suffix}` : '';
+  await Deno.writeTextFile(commitMessageFilePath, `${paddedEmoji}${paddedSuffix}\n`);
   const message = await Deno.run({
     cmd: [ 'micro', commitMessageFilePath ],
     stdin: 'piped',
     stdout: 'piped',
     stderr: 'null',
   }).output();
-  await Deno.writeTextFile(commitMessageFilePath, new TextDecoder().decode(message));
+  const messageAsText = new TextDecoder().decode(message);
+  const messageWithFinalLineBreak = messageAsText.endsWith('\n') ? messageAsText : `${messageAsText}\n`;
+  await Deno.writeTextFile(commitMessageFilePath, messageWithFinalLineBreak);
   return exec(`git commit -F ${commitMessageFilePath}`);
 };
 
