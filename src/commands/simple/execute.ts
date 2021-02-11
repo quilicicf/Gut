@@ -4,6 +4,7 @@ import {
   __, applyStyle, theme,
 } from '../../dependencies/colors.ts';
 import log from '../../dependencies/log.ts';
+import { resolve } from '../../dependencies/path.ts';
 import { exec, OutputMode } from '../../dependencies/exec.ts';
 import { promptSelect } from '../../dependencies/cliffy.ts';
 
@@ -50,9 +51,22 @@ const commitWithMessage = async (isTestRun: boolean, message: string) => {
     : exec('git commit', { output });
 };
 
-const commit = async (isTestRun: boolean, forgePath: string, emoji: string, suffix: string) => (isTestRun
-  ? exec(`git commit --message "${emoji} ${DUMMY_COMMIT_MESSAGE} ${suffix}"`, { output: OutputMode.Capture })
-  : exec('git commit', { output: OutputMode.StdOut }));
+const commit = async (isTestRun: boolean, forgePath: string, emoji: string, suffix: string) => {
+  if (isTestRun) {
+    return exec(`git commit --message "${emoji} ${DUMMY_COMMIT_MESSAGE} ${suffix}"`, { output: OutputMode.Capture });
+  }
+
+  const commitMessageFilePath = resolve(forgePath, '.commit-message');
+  await Deno.writeTextFile(commitMessageFilePath, `${emoji}  ${suffix}`);
+  const message = await Deno.run({
+    cmd: [ 'micro', commitMessageFilePath ],
+    stdin: 'piped',
+    stdout: 'piped',
+    stderr: 'null',
+  }).output();
+  await Deno.writeTextFile(commitMessageFilePath, new TextDecoder().decode(message));
+  return exec(`git commit -F ${commitMessageFilePath}`);
+};
 
 const promptForEmoji = async () => promptSelect({
   message: 'Choose your emoji: ',

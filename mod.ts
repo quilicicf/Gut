@@ -15,7 +15,10 @@ import * as replicate from './src/commands/simple/replicate.ts';
 import * as divisions from './src/commands/simple/divisions.ts';
 
 // Install with:
-// deno install --unstable --allow-read="/home/cyp/work/forge/,/home/cyp/.config/gut/" --allow-run --name gd -f mod.ts
+// deno install --unstable \
+//   --allow-read="/home/cyp/work/forge/,/home/cyp/.config/gut/" \
+//   --allow-write="/home/cyp/work/forge/,/home/cyp/.config/gut/" \
+//   --allow-run --name gd -f mod.ts
 const main = async () => {
   const yargsInstance: any = yargs();
   const configuration = await getConfiguration();
