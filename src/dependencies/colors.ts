@@ -38,6 +38,11 @@ interface Theme {
   author: string;
   branches: string;
   relativeDate: string;
+
+  // Remotes
+  local: string,
+  origin: string,
+  upstream: string,
 }
 
 class DefaultTheme implements Theme { // monokai
@@ -68,6 +73,11 @@ class DefaultTheme implements Theme { // monokai
   author: string;
   branches: string;
   relativeDate: string;
+
+  // Remotes
+  local: string;
+  origin: string;
+  upstream: string;
 
   constructor () {
     const cyanCode = new ForegroundRgbCode(102, 217, 239);
@@ -101,6 +111,10 @@ class DefaultTheme implements Theme { // monokai
     this.author = createStyle({ foreground: cyanCode, style: StyleCode.Bold });
     this.branches = this.color4;
     this.relativeDate = this.color2;
+
+    this.local = this.color2;
+    this.origin = this.color1;
+    this.upstream = this.color3;
   }
 }
 
