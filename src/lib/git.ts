@@ -106,3 +106,8 @@ export async function getRemotes (): Promise<string[]> {
   const { output } = await exec('git remote show', { output: OutputMode.Capture });
   return output.split(/\s/);
 }
+
+export async function isDirty () {
+  const { status } = await exec('git diff --no-ext-diff --quiet --exit-code', { output: OutputMode.None });
+  return status.code !== 0;
+}
