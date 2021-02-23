@@ -54,7 +54,10 @@ export async function handler (args: Args) {
   if (noPull) { return; }
 
   if (force) {
-    const shouldForcePull = await promptConfirm({});
+    const shouldForcePull = await promptConfirm({
+      message: 'Do you want to overwrite your local branch ?',
+      default: false,
+    });
 
     if (!shouldForcePull) {
       await log(Deno.stdout, 'Operation aborted');
