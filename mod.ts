@@ -10,6 +10,7 @@ import * as undo from './src/commands/simple/undo.ts';
 import * as audit from './src/commands/simple/audit.ts';
 import * as yield_ from './src/commands/simple/yield.ts';
 import * as thrust from './src/commands/simple/thrust.ts';
+import * as switchy from './src/commands/simple/switch.ts';
 import * as burgeon from './src/commands/simple/burgeon.ts';
 import * as execute from './src/commands/simple/execute.ts';
 import * as history from './src/commands/simple/history.ts';
@@ -42,6 +43,7 @@ const main = async () => {
     .command(history)
     .command(pile)
     .command(replicate)
+    .command(switchy)
     .command(thrust)
     .command(undo)
     .command(yield_)

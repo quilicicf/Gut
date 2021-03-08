@@ -1,9 +1,10 @@
 import { isEmpty } from '../dependencies/ramda.ts';
 import { exec, OutputMode } from '../dependencies/exec.ts';
-import { getParentBranch, parseBranchName, stringifyBranch } from './branch.ts';
+import { __, applyStyle, theme } from '../dependencies/colors.ts';
+
 import {
-  __, applyStyle, theme,
-} from '../dependencies/colors.ts';
+  Branch, getParentBranch, parseBranchName, stringifyBranch,
+} from './branch.ts';
 
 export interface Commit {
   sha: string,
@@ -65,6 +66,11 @@ export async function getCurrentBranchName (): Promise<string> {
   return currentBranchName;
 }
 
+export async function getCurrentBranch (): Promise<Branch> {
+  const currentBranchName = await getCurrentBranchName();
+  return parseBranchName(currentBranchName);
+}
+
 async function getMergeBaseFromParent (): Promise<string> { // FIXME: can fail if branch is not parsable or is orphan
   const currentBranchName = await getCurrentBranchName();
   const currentBranch = parseBranchName(currentBranchName);
@@ -106,6 +112,103 @@ export async function getRemotes (): Promise<string[]> {
   const { output } = await exec('git remote show', { output: OutputMode.Capture });
   return output.split(/\s/);
 }
+
+interface RefType {
+  regex: RegExp,
+  detect: (ref: string) => boolean,
+  extractName: (ref: string) => string,
+}
+
+const REF_TYPES: { [ key: string ]: RefType } = {
+  TAG: {
+    regex: /^refs\/tags\/(.*)/,
+    detect (ref: string) { return this.regex.test(ref); },
+    extractName (ref: string) {
+      // @ts-ignore
+      return this.regex.exec(ref)[ 1 ];
+    },
+  },
+  STASH: {
+    regex: /^refs\/stash$/,
+    detect (ref: string) { return this.regex.test(ref); },
+    extractName (): string {
+      throw Error('Can\'t extract ref name on stash ref.');
+    },
+  },
+  HEADS: {
+    regex: /^refs\/heads\/(.*)/,
+    detect (ref: string) { return this.regex.test(ref); },
+    extractName (ref: string) {
+      // @ts-ignore
+      return this.regex.exec(ref)[ 1 ];
+    },
+  },
+  REMOTE: {
+    regex: /^refs\/remotes\/([^/]+)\/(.*)/,
+    detect (ref: string) { return this.regex.test(ref); },
+    extractName (ref: string) {
+      // @ts-ignore
+      return this.regex.exec(ref)[ 2 ];
+    },
+  },
+};
+
+type Refs = {
+  branches: string[],
+  tags: string[],
+}
+
+export async function getAllRefs (filterText: string = ''): Promise<Refs> {
+  const { output: allRefsAsString } = await exec('git show-ref', { output: OutputMode.Capture });
+
+  const accumulator: Refs = { branches: [], tags: [] };
+  const { branches, tags } = allRefsAsString
+    .split('\n')
+    .map((refAsString) => refAsString.split(' ')[ 1 ])
+    .filter((refName) => !REF_TYPES.STASH.detect(refName))
+    .reduce(
+      (seed, ref) => {
+        if (REF_TYPES.HEADS.detect(ref)) {
+          seed.branches.push(REF_TYPES.HEADS.extractName(ref));
+          return seed;
+        }
+
+        if (REF_TYPES.REMOTE.detect(ref)) {
+          seed.branches.push(REF_TYPES.REMOTE.extractName(ref));
+          return seed;
+        }
+
+        if (REF_TYPES.TAG.detect(ref)) {
+          seed.tags.push(REF_TYPES.TAG.extractName(ref));
+          return seed;
+        }
+
+        throw Error(`Unknown ref type for: ${ref}`);
+      },
+      accumulator,
+    );
+
+  const lowerFilterText = filterText.toLocaleLowerCase();
+  const filter = lowerFilterText
+    ? (ref: string) => ref.toLocaleLowerCase().includes(lowerFilterText) && ref !== 'HEAD'
+    : (ref: string) => ref !== 'HEAD';
+
+  function onlyUnique (value: string, index: number, self: string[]) {
+    return self.indexOf(value) === index;
+  }
+
+  return {
+    branches: branches
+      .filter(filter)
+      .filter(onlyUnique)
+      .sort(),
+    tags: tags
+      .filter(filter)
+      .filter(onlyUnique)
+      .sort(),
+  };
+}
+
 
 export async function isDirty () {
   const { status } = await exec('git diff --no-ext-diff --quiet --exit-code', { output: OutputMode.None });
