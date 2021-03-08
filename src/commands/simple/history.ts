@@ -1,6 +1,6 @@
 import log from '../../dependencies/log.ts';
 
-import { LOG_FORMATS, getCommitsFromBaseBranch, getCommitsUpToMax } from '../../lib/git.ts';
+import { LOG_FORMATS, getCommitsFromParentBranch, getCommitsUpToMax } from '../../lib/git.ts';
 
 interface Args {
   format: string,
@@ -57,7 +57,7 @@ export async function handler (args: Args) {
   if (!logFormat) { throw Error(`Can't find log format ${format}`); } // Can't happen
 
   const commits = fromBaseBranch
-    ? await getCommitsFromBaseBranch(reverse)
+    ? await getCommitsFromParentBranch(reverse)
     : await getCommitsUpToMax(number, reverse);
 
   const output = logFormat(commits);

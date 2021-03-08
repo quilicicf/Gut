@@ -25,41 +25,7 @@ interface Theme {
   error: string;
   warning: string;
   success: string;
-
-  // Audit
-  important: string;
-  fileName: string;
-  lineNumber: string;
-  added: string;
-  removed: string;
-
-  // Commit
-  sha: string;
-  author: string;
-  branches: string;
-  relativeDate: string;
-
-  // Remotes
-  local: string,
-  origin: string,
-  upstream: string,
-}
-
-class DefaultTheme implements Theme { // monokai
-  color1: string;
-  color2: string;
-  color3: string;
-  color4: string;
-  color5: string;
-  color6: string;
-
-  // Generic
-  dim: string;
-  strong: string;
-  emphasis: string;
-  error: string;
-  warning: string;
-  success: string;
+  link: string;
 
   // Audit
   important: string;
@@ -78,6 +44,48 @@ class DefaultTheme implements Theme { // monokai
   local: string;
   origin: string;
   upstream: string;
+
+  // PR
+  commitsNumber: string;
+}
+
+class DefaultTheme implements Theme { // monokai
+  color1: string;
+  color2: string;
+  color3: string;
+  color4: string;
+  color5: string;
+  color6: string;
+
+  // Generic
+  dim: string;
+  strong: string;
+  emphasis: string;
+  error: string;
+  warning: string;
+  success: string;
+  link: string;
+
+  // Audit
+  important: string;
+  fileName: string;
+  lineNumber: string;
+  added: string;
+  removed: string;
+
+  // Commit
+  sha: string;
+  author: string;
+  branches: string;
+  relativeDate: string;
+
+  // Remotes
+  local: string;
+  origin: string;
+  upstream: string;
+
+  // PRs
+  commitsNumber: string;
 
   constructor () {
     const cyanCode = new ForegroundRgbCode(102, 217, 239);
@@ -100,6 +108,7 @@ class DefaultTheme implements Theme { // monokai
     this.error = createStyle({ foreground: ForegroundCode.Red });
     this.warning = createStyle({ foreground: ForegroundCode.Yellow });
     this.success = createStyle({ foreground: ForegroundCode.Green });
+    this.link = createStyle({ foreground: ForegroundCode.Blue, style: StyleCode.Underline });
 
     this.important = this.color1;
     this.fileName = this.color4;
@@ -115,6 +124,8 @@ class DefaultTheme implements Theme { // monokai
     this.local = this.color2;
     this.origin = this.color1;
     this.upstream = this.color3;
+
+    this.commitsNumber = createStyle({ foreground: cyanCode, style: StyleCode.Bold });
   }
 }
 

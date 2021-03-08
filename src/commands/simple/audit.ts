@@ -1,4 +1,4 @@
-import { getCommitsFromBaseBranch } from '../../lib/git.ts';
+import { getCommitsFromParentBranch } from '../../lib/git.ts';
 
 import log from '../../dependencies/log.ts';
 import { exec, OutputMode } from '../../dependencies/exec.ts';
@@ -182,9 +182,9 @@ async function generateDiff (args: Args): Promise<string> {
   }
 
   if (fromBaseBranch) {
-    const branchOnlyCommits = await getCommitsFromBaseBranch(false);
+    const branchOnlyCommits = await getCommitsFromParentBranch(false);
     const numberOfCommits = branchOnlyCommits.length;
-    await log(Deno.stdout, applyStyle(__`Number of commits for the current PR: ${String(numberOfCommits)}`, [ theme.emphasis ]));
+    await log(Deno.stdout, applyStyle(__`The current PR had ${String(numberOfCommits)} commit(s)\n`, [ theme.commitsNumber ]));
 
     if (numberOfCommits < 1) { return ''; }
     const { output: diff } = await exec(`git --no-pager diff -U0 --no-color HEAD~${numberOfCommits}..HEAD`, { output: OutputMode.Capture });
@@ -265,6 +265,18 @@ function printOddities (parsedDiff: ParsingState): string {
   );
 }
 
+async function displayDiff (parsedDiff: ParsingState) {
+  await log(Deno.stdout, printFileDiff(parsedDiff));
+  await log(Deno.stdout, printLineDiff(parsedDiff));
+  await log(Deno.stdout, printOddities(parsedDiff));
+}
+
+export async function parseDiffAndDisplay (diff: string) {
+  const eol = detectEol(diff) || '\n';
+  const parsedDiff = parseDiff(diff, eol);
+  await displayDiff(parsedDiff);
+}
+
 export const command = 'audit';
 export const aliases = [ 'a' ];
 export const describe = 'Audits a given diff';
@@ -304,12 +316,8 @@ export async function handler (args: Args) {
   const parsedDiff = parseDiff(diff, eol);
 
   if (!isTestRun) {
-    await log(Deno.stdout, printFileDiff(parsedDiff));
-    await log(Deno.stdout, printLineDiff(parsedDiff));
-    await log(Deno.stdout, printOddities(parsedDiff));
+    await displayDiff(parsedDiff);
   }
-
-  return isTestRun;
 }
 
 export const test = {

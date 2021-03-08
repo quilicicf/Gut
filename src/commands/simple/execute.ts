@@ -11,6 +11,7 @@ import { promptSelect } from '../../dependencies/cliffy.ts';
 import { EMOJIS } from '../../lib/emojis.ts';
 import { getIssueIdOrEmpty } from '../../lib/branch.ts';
 import { getCommitsUpToMax, getCurrentBranchName } from '../../lib/git.ts';
+import { editText } from '../../lib/editText.ts';
 
 class CommitMessage {
   message: string;
@@ -48,7 +49,7 @@ interface Args {
 const commitWithMessage = async (isTestRun: boolean, message: string) => {
   const output = isTestRun ? OutputMode.Capture : OutputMode.StdOut;
   return message
-    ? exec(`git commit --message '${message}'`, { output })
+    ? exec(`git commit --message "${message}"`, { output })
     : exec('git commit', { output });
 };
 
@@ -60,16 +61,14 @@ const commit = async (isTestRun: boolean, forgePath: string, emoji: string, suff
   const commitMessageFilePath = resolve(forgePath, COMMIT_MESSAGE_FILE_NAME);
   const paddedEmoji = emoji ? `${emoji} ` : '';
   const paddedSuffix = suffix ? ` ${suffix}` : '';
-  await Deno.writeTextFile(commitMessageFilePath, `${paddedEmoji}${paddedSuffix}\n`);
-  const message = await Deno.run({
-    cmd: [ 'micro', commitMessageFilePath ],
-    stdin: 'piped',
-    stdout: 'piped',
-    stderr: 'null',
-  }).output();
-  const messageAsText = new TextDecoder().decode(message);
-  const messageWithFinalLineBreak = messageAsText.endsWith('\n') ? messageAsText : `${messageAsText}\n`;
-  await Deno.writeTextFile(commitMessageFilePath, messageWithFinalLineBreak);
+  await editText({
+    fileType: 'markdown',
+    startTemplate: `${paddedEmoji}${paddedSuffix}\n`,
+    outputFilePath: commitMessageFilePath,
+    startIndex: {
+      column: paddedEmoji.length + 1,
+    },
+  });
   return exec(`git commit -F ${commitMessageFilePath}`);
 };
 
@@ -143,12 +142,14 @@ export async function handler (args: Args) {
 
   if (wip) {
     const fullMessage = WIP_MESSAGE.getFullMessage(shouldUseEmojis, suffix);
-    return commitWithMessage(isTestRun, fullMessage);
+    await commitWithMessage(isTestRun, fullMessage);
+    return;
   }
 
   if (codeReview) {
     const fullMessage = CODE_REVIEW_MESSAGE.getFullMessage(shouldUseEmojis, suffix);
-    return commitWithMessage(isTestRun, fullMessage);
+    await commitWithMessage(isTestRun, fullMessage);
+    return;
   }
 
   if (squashOn) {
@@ -164,12 +165,12 @@ export async function handler (args: Args) {
       cmd: [ 'git', 'rebase', '--interactive', '--autosquash', `${shaToSquashOn}~1` ],
       env: { GIT_SEQUENCE_EDITOR: ':' },
     }).status();
-    return '';
+    return;
   }
 
   const emoji = await computeEmoji(shouldUseEmojis, isTestRun, testEmoji);
   const forgePath = configuration?.global?.forgePath;
-  return commit(isTestRun, forgePath, emoji, suffix);
+  await commit(isTestRun, forgePath, emoji, suffix);
 }
 
 export const test = {

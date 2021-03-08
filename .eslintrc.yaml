@@ -1,6 +1,11 @@
 extends: '@talend/eslint-config/api-packaging.yaml'
 globals:
   Deno: false
+
+  # HTTP things
+  fetch: false
+  Request: false
+  Response: false
 rules:
   import/no-unresolved:
     - error

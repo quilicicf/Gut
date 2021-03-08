@@ -2,6 +2,8 @@ import { isEmpty } from '../dependencies/ramda.ts';
 import { exec, OutputMode } from '../dependencies/exec.ts';
 import { __, applyStyle, theme } from '../dependencies/colors.ts';
 
+import { getTopLevel } from './git/getTopLevel.ts';
+
 import {
   Branch, getParentBranch, parseBranchName, stringifyBranch,
 } from './branch.ts';
@@ -42,6 +44,7 @@ const PSV_FORMAT_ARGUMENT = '--pretty=format:%H|%s|%an|%cr|%D';
 
 export function psvToJs (psv: string): Commit[] {
   return psv.split('\n')
+    .filter(Boolean)
     .map((psvItem: string) => {
       const [ sha, subject, author, relativeDate, branchesAsString ] = psvItem.split('|');
       const branches = isEmpty(branchesAsString) ? [] : branchesAsString.replace(/[()]/g, '').split(',');
@@ -49,11 +52,6 @@ export function psvToJs (psv: string): Commit[] {
         sha, subject, author, relativeDate, branches,
       };
     });
-}
-
-export async function getTopLevel (): Promise<string> {
-  const { output } = await exec('git rev-parse --show-toplevel', { output: OutputMode.Capture });
-  return output;
 }
 
 export async function moveUpTop (): Promise<void> {
@@ -80,6 +78,14 @@ async function getMergeBaseFromParent (): Promise<string> { // FIXME: can fail i
   return mergeBase;
 }
 
+export async function getDiffBetweenRefs (baseRef: string, targetRef: string): Promise<string> {
+  const { output: diff } = await exec(
+    `git --no-pager diff -U0 --no-color ${baseRef}..${targetRef}`,
+    { output: OutputMode.Capture },
+  );
+  return diff;
+}
+
 export async function getCommitsBetweenRefs (
   baseRef: string,
   targetRef: string,
@@ -103,7 +109,7 @@ export async function getCommitsUpToMax (maxCommits: number, shouldReverse: bool
   return psvToJs(commitsAsPsv);
 }
 
-export async function getCommitsFromBaseBranch (shouldReverse: boolean): Promise<Commit[]> {
+export async function getCommitsFromParentBranch (shouldReverse: boolean): Promise<Commit[]> {
   const mergeBase = await getMergeBaseFromParent();
   return getCommitsBetweenRefs(mergeBase, 'HEAD', shouldReverse);
 }
@@ -208,7 +214,6 @@ export async function getAllRefs (filterText: string = ''): Promise<Refs> {
       .sort(),
   };
 }
-
 
 export async function isDirty () {
   const { status } = await exec('git diff --no-ext-diff --quiet --exit-code', { output: OutputMode.None });
