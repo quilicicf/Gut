@@ -1,9 +1,10 @@
-import { getCommitsUpToMax, getTopLevel, isDirty } from '../../lib/git.ts';
-
 import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
 import { applyStyle, theme } from '../../dependencies/colors.ts';
 import { exec, execSequence, OutputMode } from '../../dependencies/exec.ts';
+
+import { getTopLevel } from '../../lib/git/getTopLevel.ts';
+import { getCommitsUpToMax, isDirty } from '../../lib/git.ts';
 
 interface Args {
   commitsNumber: number,

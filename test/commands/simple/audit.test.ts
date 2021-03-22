@@ -1,13 +1,14 @@
+import { resolve } from '../../../src/dependencies/path.ts';
 import { detect as detectEol } from '../../../src/dependencies/fs.ts';
-import { initializeRepository, deleteRepositories } from '../../utils/setup.ts';
+import { exec, execSequence, OutputMode } from '../../../src/dependencies/exec.ts';
 import {
   RESET_CODE, __, applyStyle, theme,
 } from '../../../src/dependencies/colors.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
+import { initializeRepository, deleteRepositories } from '../../utils/setup.ts';
+
 import { ParsingState, test } from '../../../src/commands/simple/audit.ts';
-import { resolve } from '../../../src/dependencies/path.ts';
-import { exec, execSequence, OutputMode } from '../../../src/dependencies/exec.ts';
 
 const {
   generateDiff, parseDiff,

@@ -1,7 +1,8 @@
-import { getTopLevel } from './lib/git.ts';
 import { resolve } from './dependencies/path.ts';
 import { exists } from './dependencies/fs.ts';
 import { exec, OutputMode } from './dependencies/exec.ts';
+
+import { getTopLevel } from './lib/git/getTopLevel.ts';
 
 export interface Account {
   username: string,
@@ -14,9 +15,6 @@ export interface Account {
 
 export interface Tool {
   account: Account,
-  server?: {}, // TODO: implement
-  ci?: {}, // TODO: implement
-  messaging?: {}, // TODO: implement
 }
 
 export interface GlobalGutConfiguration {

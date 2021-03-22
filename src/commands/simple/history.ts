@@ -1,12 +1,12 @@
 import log from '../../dependencies/log.ts';
 
-import { LOG_FORMATS, getCommitsFromBaseBranch, getCommitsUpToMax } from '../../lib/git.ts';
+import { LOG_FORMATS, getCommitsFromParentBranch, getCommitsUpToMax } from '../../lib/git.ts';
 
 interface Args {
   format: string,
   number: number,
   reverse: boolean,
-  fromBaseBranch?: boolean,
+  fromParentBranch?: boolean,
 
   // Test thingies
   isTestRun: boolean
@@ -40,24 +40,24 @@ export function builder (yargs: any) {
       type: 'boolean',
       default: false,
     })
-    .option('from-base-branch', {
-      alias: 'b',
-      describe: 'Audit all commits on top of the base branch',
+    .option('from-parent-branch', {
+      alias: 'p',
+      describe: 'Audit all commits on top of the parent branch',
       type: 'boolean',
     });
 }
 
 export async function handler (args: Args) {
   const {
-    format, number, reverse, fromBaseBranch, isTestRun,
+    format, number, reverse, fromParentBranch, isTestRun,
   } = args;
 
   const logFormat = LOG_FORMATS[ format.toUpperCase() ];
 
   if (!logFormat) { throw Error(`Can't find log format ${format}`); } // Can't happen
 
-  const commits = fromBaseBranch
-    ? await getCommitsFromBaseBranch(reverse)
+  const commits = fromParentBranch
+    ? await getCommitsFromParentBranch(reverse)
     : await getCommitsUpToMax(number, reverse);
 
   const output = logFormat(commits);

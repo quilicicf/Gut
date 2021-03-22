@@ -17,11 +17,17 @@ import * as history from './src/commands/simple/history.ts';
 import * as replicate from './src/commands/simple/replicate.ts';
 import * as divisions from './src/commands/simple/divisions.ts';
 
+import * as pr from './src/commands/advanced/pr/pr.ts';
+
 // Install with:
 // deno install --unstable \
+//   --allow-net=api.github.com \
 //   --allow-read="/home/cyp/work/forge/,/home/cyp/.config/gut/" \
 //   --allow-write="/home/cyp/work/forge/,/home/cyp/.config/gut/" \
-//   --allow-run --name gd -f mod.ts
+//   --allow-run \
+//   --name gd \
+//   --no-check \
+//   --force mod.ts
 const main = async () => {
   const yargsInstance: any = yargs();
   const configuration = await getConfiguration();
@@ -35,7 +41,7 @@ const main = async () => {
       hidden: true,
     })
 
-    // Public methods
+    // Public commands
     .command(audit)
     .command(burgeon)
     .command(divisions)
@@ -47,6 +53,9 @@ const main = async () => {
     .command(thrust)
     .command(undo)
     .command(yield_)
+
+    // Advanced commands
+    .command(pr)
 
     // Internals
     .command(install)

@@ -1,4 +1,4 @@
-import { getCommitsFromBaseBranch } from '../../lib/git.ts';
+import { getCommitsFromParentBranch } from '../../lib/git.ts';
 
 import log from '../../dependencies/log.ts';
 import { exec, OutputMode } from '../../dependencies/exec.ts';
@@ -48,7 +48,7 @@ interface Args {
   commitsNumber?: number,
   from?: string,
   to?: string,
-  fromBaseBranch?: boolean,
+  fromParentBranch?: boolean,
 
   // Test thingies
   isTestRun: boolean
@@ -172,7 +172,7 @@ function parseDiff (diff: string, eol: string): ParsingState {
 
 async function generateDiff (args: Args): Promise<string> {
   const {
-    fromBaseBranch, commitsNumber,
+    fromParentBranch, commitsNumber,
     from, to, // TODO: should be a default but yargs fails on conflicts rule if set
   } = args;
 
@@ -181,10 +181,10 @@ async function generateDiff (args: Args): Promise<string> {
     return diff;
   }
 
-  if (fromBaseBranch) {
-    const branchOnlyCommits = await getCommitsFromBaseBranch(false);
+  if (fromParentBranch) {
+    const branchOnlyCommits = await getCommitsFromParentBranch(false);
     const numberOfCommits = branchOnlyCommits.length;
-    await log(Deno.stdout, applyStyle(__`Number of commits for the current PR: ${String(numberOfCommits)}`, [ theme.emphasis ]));
+    await log(Deno.stdout, applyStyle(__`The current PR had ${String(numberOfCommits)} commit(s)\n`, [ theme.commitsNumber ]));
 
     if (numberOfCommits < 1) { return ''; }
     const { output: diff } = await exec(`git --no-pager diff -U0 --no-color HEAD~${numberOfCommits}..HEAD`, { output: OutputMode.Capture });
@@ -265,6 +265,18 @@ function printOddities (parsedDiff: ParsingState): string {
   );
 }
 
+async function displayDiff (parsedDiff: ParsingState) {
+  await log(Deno.stdout, printFileDiff(parsedDiff));
+  await log(Deno.stdout, printLineDiff(parsedDiff));
+  await log(Deno.stdout, printOddities(parsedDiff));
+}
+
+export async function parseDiffAndDisplay (diff: string) {
+  const eol = detectEol(diff) || '\n';
+  const parsedDiff = parseDiff(diff, eol);
+  await displayDiff(parsedDiff);
+}
+
 export const command = 'audit';
 export const aliases = [ 'a' ];
 export const describe = 'Audits a given diff';
@@ -277,22 +289,22 @@ export function builder (yargs: any) {
       type: 'integer',
       conflicts: [ 'from', 'to' ],
     })
-    .option('from-base-branch', {
-      alias: 'b',
-      describe: 'Audit all commits on top of the base branch',
+    .option('from-parent-branch', {
+      alias: 'p',
+      describe: 'Audit all commits on top of the parent branch',
       type: 'boolean',
     })
     .option('from', {
       alias: 'f',
       describe: 'The sha of the commit from which the diff starts',
       type: 'string',
-      conflicts: [ 'commits-number', 'from-base-branch' ],
+      conflicts: [ 'commits-number', 'from-parent-branch' ],
     })
     .option('to', {
       alias: 't',
       describe: 'The sha of the commit where the diff ends',
       type: 'string',
-      conflicts: [ 'commits-number', 'from-base-branch' ],
+      conflicts: [ 'commits-number', 'from-parent-branch' ],
     });
 }
 
@@ -304,12 +316,8 @@ export async function handler (args: Args) {
   const parsedDiff = parseDiff(diff, eol);
 
   if (!isTestRun) {
-    await log(Deno.stdout, printFileDiff(parsedDiff));
-    await log(Deno.stdout, printLineDiff(parsedDiff));
-    await log(Deno.stdout, printOddities(parsedDiff));
+    await displayDiff(parsedDiff);
   }
-
-  return isTestRun;
 }
 
 export const test = {

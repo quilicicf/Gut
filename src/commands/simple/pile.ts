@@ -21,6 +21,6 @@ export async function handler ({ isTestRun }: { isTestRun: boolean }) {
   }
 
   const { output } = await exec('git -c color.status=always status --short --branch', { output: OutputMode.Capture });
-  await log(Deno.stdout, output);
+  await log(Deno.stdout, `${output}\n`);
   return output;
 }

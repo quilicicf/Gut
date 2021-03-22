@@ -42,7 +42,7 @@ Deno.test(applyStyle(__`@int ${command} should show commits from base branch`, [
   await commitShit(testRepositoryPath, 2);
 
   const output = await history({
-    isTestRun: true, format: 'subject', number: 10, reverse: false, fromBaseBranch: true,
+    isTestRun: true, format: 'subject', number: 10, reverse: false, fromParentBranch: true,
   });
 
   await deleteRepositories(tmpDir, testRepositoryPath);
