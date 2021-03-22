@@ -29,7 +29,7 @@ export async function handler ({ force, isTestRun }: Args) {
   const remote = remotes[ 0 ]; // TODO: prompt user when there are multiple remotes
 
   const forceArg = force ? '--force-with-lease' : '';
-  const setUpstreamArg = remoteOfTrackedBranch ? '' : `--set-upstream ${remote}`;
+  const setUpstreamArg = remoteOfTrackedBranch ? '' : '--set-upstream';
   const targetRemote = remoteOfTrackedBranch || remote;
   const outputMode = isTestRun ? OutputMode.Capture : OutputMode.StdOut;
 

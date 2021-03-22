@@ -16,6 +16,7 @@ import * as execute from './src/commands/simple/execute.ts';
 import * as history from './src/commands/simple/history.ts';
 import * as replicate from './src/commands/simple/replicate.ts';
 import * as divisions from './src/commands/simple/divisions.ts';
+import * as obliterate from './src/commands/simple/obliterate.ts';
 
 import * as pr from './src/commands/advanced/pr/pr.ts';
 
@@ -47,6 +48,7 @@ const main = async () => {
     .command(divisions)
     .command(execute)
     .command(history)
+    .command(obliterate)
     .command(pile)
     .command(replicate)
     .command(switchy)
