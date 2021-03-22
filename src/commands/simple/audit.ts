@@ -48,7 +48,7 @@ interface Args {
   commitsNumber?: number,
   from?: string,
   to?: string,
-  fromBaseBranch?: boolean,
+  fromParentBranch?: boolean,
 
   // Test thingies
   isTestRun: boolean
@@ -172,7 +172,7 @@ function parseDiff (diff: string, eol: string): ParsingState {
 
 async function generateDiff (args: Args): Promise<string> {
   const {
-    fromBaseBranch, commitsNumber,
+    fromParentBranch, commitsNumber,
     from, to, // TODO: should be a default but yargs fails on conflicts rule if set
   } = args;
 
@@ -181,7 +181,7 @@ async function generateDiff (args: Args): Promise<string> {
     return diff;
   }
 
-  if (fromBaseBranch) {
+  if (fromParentBranch) {
     const branchOnlyCommits = await getCommitsFromParentBranch(false);
     const numberOfCommits = branchOnlyCommits.length;
     await log(Deno.stdout, applyStyle(__`The current PR had ${String(numberOfCommits)} commit(s)\n`, [ theme.commitsNumber ]));
@@ -289,22 +289,22 @@ export function builder (yargs: any) {
       type: 'integer',
       conflicts: [ 'from', 'to' ],
     })
-    .option('from-base-branch', {
-      alias: 'b',
-      describe: 'Audit all commits on top of the base branch',
+    .option('from-parent-branch', {
+      alias: 'p',
+      describe: 'Audit all commits on top of the parent branch',
       type: 'boolean',
     })
     .option('from', {
       alias: 'f',
       describe: 'The sha of the commit from which the diff starts',
       type: 'string',
-      conflicts: [ 'commits-number', 'from-base-branch' ],
+      conflicts: [ 'commits-number', 'from-parent-branch' ],
     })
     .option('to', {
       alias: 't',
       describe: 'The sha of the commit where the diff ends',
       type: 'string',
-      conflicts: [ 'commits-number', 'from-base-branch' ],
+      conflicts: [ 'commits-number', 'from-parent-branch' ],
     });
 }
 

@@ -102,7 +102,7 @@ export async function builder (yargs: any) {
     })
     .option('base-branch', {
       alias: 'b',
-      describe: 'Define the base branch on which the PR will be created manually',
+      describe: 'Define the base branch on which the PR will be created manually. Defaults to the parent branch',
       type: 'string',
     })
     .option('remote', {
