@@ -1,5 +1,6 @@
 import { getCurrentBranchName, getRemotes } from '../../lib/git.ts';
 import { exec, OutputMode } from '../../dependencies/exec.ts';
+import { getBranchRemote } from '../../lib/git/getBranchRemote.ts';
 
 interface Args {
   force: boolean,
@@ -23,12 +24,14 @@ export async function builder (yargs: any) {
 
 export async function handler ({ force, isTestRun }: Args) {
   const remotes = await getRemotes();
+  const remoteOfTrackedBranch = await getBranchRemote();
   const currentBranchName = await getCurrentBranchName();
   const remote = remotes[ 0 ]; // TODO: prompt user when there are multiple remotes
 
   const forceArg = force ? '--force-with-lease' : '';
+  const setUpstreamArg = remoteOfTrackedBranch ? `--set-upstream ${remote}` : '';
   const outputMode = isTestRun ? OutputMode.Capture : OutputMode.StdOut;
-  return exec(`git push ${forceArg} --set-upstream ${remote} ${currentBranchName}`, { output: outputMode });
+  return exec(`git push ${forceArg} ${setUpstreamArg} ${currentBranchName}`, { output: outputMode });
 }
 
 export const test = {};
