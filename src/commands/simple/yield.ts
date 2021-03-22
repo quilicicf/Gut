@@ -48,7 +48,7 @@ export async function handler (args: Args) {
   const currentBranchName = await getCurrentBranchName();
   const remote = remotes[ 0 ]; // TODO: prompt user when there are multiple remotes
 
-  await log(Deno.stdout, `Fetching ${remote}`);
+  await log(Deno.stdout, `Fetching ${remote}\n`);
   await exec(`git fetch ${remote}`, { output: OutputMode.StdOut });
 
   if (noPull) { return; }
@@ -63,11 +63,11 @@ export async function handler (args: Args) {
       await log(Deno.stdout, 'Operation aborted');
       return;
     }
-    await exec(`git reset --hard "${remote}/${currentBranchName}"`);
+    await exec(`git reset --hard "${remote}/${currentBranchName}"`, { output: OutputMode.StdOut });
     return;
   }
 
-  await exec(`git rebase "${remote}/${currentBranchName}"`);
+  await exec(`git rebase "${remote}/${currentBranchName}"`, { output: OutputMode.StdOut });
 }
 
 export const test = {};
