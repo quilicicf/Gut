@@ -48,7 +48,7 @@ const setAssigneeIfApplicable = async (
   try {
     await fetch(
       // https://docs.github.com/en/rest/reference/issues#add-assignees-to-an-issue
-      `${BASE_URL}/${repositoryOwner}/${repositoryName}/issues/${number}/assignees`,
+      `${BASE_URL}/repos/${repositoryOwner}/${repositoryName}/issues/${number}/assignees`,
       {
         method: 'POST',
         headers: {
