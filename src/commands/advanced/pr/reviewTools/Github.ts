@@ -107,7 +107,7 @@ export const github: ReviewTool = {
         const { html_url: prUrl } = pullRequest;
         await log(Deno.stdout, applyStyle(__`Your PR is available at ${prUrl} 🎉\n`, [ theme.link ]));
         await setAssigneeIfApplicable(pullRequestCreation, pullRequest, token);
-        return pullRequest;
+        return { url: prUrl, number: pullRequest.number };
       }
 
       return handleResponseError<PullRequest>(response);
