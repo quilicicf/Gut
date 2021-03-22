@@ -30,8 +30,10 @@ export async function handler ({ force, isTestRun }: Args) {
 
   const forceArg = force ? '--force-with-lease' : '';
   const setUpstreamArg = remoteOfTrackedBranch ? '' : `--set-upstream ${remote}`;
+  const targetRemote = remoteOfTrackedBranch || remote;
   const outputMode = isTestRun ? OutputMode.Capture : OutputMode.StdOut;
-  return exec(`git push ${forceArg} ${setUpstreamArg} ${currentBranchName}`, { output: outputMode });
+
+  return exec(`git push ${forceArg} ${setUpstreamArg} ${targetRemote} ${currentBranchName}`, { output: outputMode });
 }
 
 export const test = {};
