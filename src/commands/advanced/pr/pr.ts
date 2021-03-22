@@ -3,19 +3,22 @@ import { isEmpty, size } from '../../../dependencies/ramda.ts';
 import { __, applyStyle, theme } from '../../../dependencies/colors.ts';
 import { promptConfirm, promptSelect, promptString } from '../../../dependencies/cliffy.ts';
 
+import { editText } from '../../../lib/editText.ts';
+import { writeToClipboard } from '../../../lib/clipboard.ts';
+import { openInDefaultApplication } from '../../../lib/open.ts';
+import { getBranchRemote } from '../../../lib/git/getBranchRemote.ts';
+import { getRepositoryFomRemote } from '../../../lib/git/getRepositoryFromRemote.ts';
 import { getParentBranch, parseBranchName, stringifyBranch } from '../../../lib/branch.ts';
 import {
   getCommitsBetweenRefs, getCommitsUpToMax, getCurrentBranchName, getDiffBetweenRefs,
 } from '../../../lib/git.ts';
 
-import { parseDiffAndDisplay } from '../../simple/audit.ts';
-import { PullRequestCreation, ReviewTool } from './ReviewTool.ts';
 import { github } from './reviewTools/Github.ts';
-import { editText } from '../../../lib/editText.ts';
-import { getRepositoryFomRemote } from '../../../lib/git/getRepositoryFromRemote.ts';
+import { PullRequestCreation, ReviewTool } from './ReviewTool.ts';
+
+import { thrust } from '../../simple/thrust.ts';
+import { parseDiffAndDisplay } from '../../simple/audit.ts';
 import { FullGutConfiguration } from '../../../configuration.ts';
-import { writeToClipboard } from '../../../lib/clipboard.ts';
-import { openInDefaultApplication } from '../../../lib/open.ts';
 
 async function promptForPrTitle (commitsNumber: number): Promise<string> {
   const tenLastCommits = await getCommitsUpToMax(commitsNumber, false);
@@ -154,6 +157,11 @@ export async function handler (args: Args) {
 
   const descriptionTemplate = await reviewTool.retrievePullRequestTemplate();
   const description = await promptForPrDescription(descriptionTemplate);
+
+  if (!await getBranchRemote()) {
+    await log(Deno.stdout, applyStyle('The branch was never pushed, pushing it now\n', [ theme.strong ]));
+    await thrust(false, false);
+  }
 
   const { owner: originOwner } = await getRepositoryFomRemote();
   const { owner: repositoryOwner, name: repositoryName } = await getRepositoryFomRemote(remote);
