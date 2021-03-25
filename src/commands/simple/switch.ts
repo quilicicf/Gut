@@ -2,10 +2,13 @@ import { exec, OutputMode } from '../../dependencies/exec.ts';
 import { getParentBranch, stringifyBranch } from '../../lib/branch.ts';
 import { getAllRefs, getCurrentBranch } from '../../lib/git.ts';
 import { promptSelect } from '../../dependencies/cliffy.ts';
+import log from '../../dependencies/log.ts';
+import { applyStyle, theme } from '../../dependencies/colors.ts';
 
 interface Args {
   master?: boolean,
   parent?: boolean,
+  defaultBranch?: string,
   last?: boolean,
   branchesOnly?: boolean,
   tagsOnly?: boolean,
@@ -50,6 +53,18 @@ export async function builder (yargs: any) {
       describe: 'Switch to parent branch',
       type: 'boolean',
     })
+    .option('default-branch', {
+      alias: 'd',
+      describe: 'Switch to the default branch on the provided remote. Defaults to origin',
+      type: 'string',
+      coerce (input: string) {
+        const remoteRegex = /^[^a-z0-9A-Z_]+$/;
+        if (!remoteRegex.test(input)) {
+          throw Error(applyStyle(`Remote names must match ${remoteRegex}`, [ theme.error ]));
+        }
+        return input;
+      },
+    })
     .option('last', {
       alias: 'l',
       describe: 'Switch to last branch',
@@ -73,7 +88,7 @@ export async function builder (yargs: any) {
 
 export async function handler (args: Args) {
   const {
-    master, parent, last,
+    master, parent, defaultBranch, last,
     branchesOnly, tagsOnly,
     search,
     isTestRun,
@@ -81,6 +96,13 @@ export async function handler (args: Args) {
 
   if (master) { return switchToBranch('master', isTestRun); }
   if (last) { return switchToBranch('-', isTestRun); }
+
+  if (defaultBranch !== undefined) {
+    const remote = defaultBranch || 'origin';
+    const { output } = await exec(`git remote set-head ${remote} --auto`, { output: OutputMode.Capture });
+    const defaultBranchName = output.split(' ').pop();
+    return switchToBranch(defaultBranchName, isTestRun);
+  }
 
   if (parent) {
     const currentBranch = await getCurrentBranch();
