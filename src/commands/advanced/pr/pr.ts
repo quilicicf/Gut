@@ -144,7 +144,7 @@ export async function handler (args: Args) {
 
   const shouldGoOn = await promptConfirm({
     message: 'Do you want to create a PR for this branch ?',
-    default: false,
+    default: true,
   });
 
   if (!shouldGoOn) {
