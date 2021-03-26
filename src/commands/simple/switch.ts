@@ -1,9 +1,10 @@
-import { exec, OutputMode } from '../../dependencies/exec.ts';
-import { getParentBranch, stringifyBranch } from '../../lib/branch.ts';
-import { getAllRefs, getCurrentBranch } from '../../lib/git.ts';
 import { promptSelect } from '../../dependencies/cliffy.ts';
-import log from '../../dependencies/log.ts';
+import { exec, OutputMode } from '../../dependencies/exec.ts';
 import { applyStyle, theme } from '../../dependencies/colors.ts';
+
+import { getAllRefs, getCurrentBranch } from '../../lib/git.ts';
+import { getParentBranch, stringifyBranch } from '../../lib/branch.ts';
+import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 
 interface Args {
   master?: boolean,
@@ -13,9 +14,6 @@ interface Args {
   branchesOnly?: boolean,
   tagsOnly?: boolean,
   search?: string,
-
-  // Test thingies
-  isTestRun: boolean,
 }
 
 const simpleCommand = 'switch';
@@ -23,14 +21,13 @@ export const command = `${simpleCommand} [search]`;
 export const aliases = [ 's' ];
 export const describe = 'Checks out a branch';
 
-const switchToBranch = async (branch: string, isTestRun: boolean) => {
-  const { output } = await exec(`git checkout ${branch}`, { output: isTestRun ? OutputMode.Capture : OutputMode.Tee });
-  return output;
+const switchToBranch = async (branch: string) => {
+  await executeProcessCriticalTask([ 'git', 'checkout', branch ]);
 };
 
-const selectRefAndSwitch = async (options: string[], isTestRun: boolean) => {
+const selectRefAndSwitch = async (options: string[]) => {
   if (options.length === 0) { throw Error('No ref matches your search!'); }
-  if (options.length === 1) { return switchToBranch(options[ 0 ], isTestRun); }
+  if (options.length === 1) { return switchToBranch(options[ 0 ]); }
 
   const ref = await promptSelect({
     message: 'Choose the ref to switch to',
@@ -38,7 +35,7 @@ const selectRefAndSwitch = async (options: string[], isTestRun: boolean) => {
     search: true,
   });
 
-  return switchToBranch(ref, isTestRun);
+  return switchToBranch(ref);
 };
 
 export async function builder (yargs: any) {
@@ -91,35 +88,30 @@ export async function handler (args: Args) {
     master, parent, defaultBranch, last,
     branchesOnly, tagsOnly,
     search,
-    isTestRun,
   } = args;
 
-  if (master) { return switchToBranch('master', isTestRun); }
-  if (last) { return switchToBranch('-', isTestRun); }
+  if (master) { return switchToBranch('master'); }
+  if (last) { return switchToBranch('-'); }
 
   if (defaultBranch !== undefined) {
     const remote = defaultBranch || 'origin';
     const { output } = await exec(`git remote set-head ${remote} --auto`, { output: OutputMode.Capture });
     const defaultBranchName = output.split(' ').pop();
-    return switchToBranch(defaultBranchName, isTestRun);
+    return switchToBranch(defaultBranchName);
   }
 
   if (parent) {
     const currentBranch = await getCurrentBranch();
     const parentBranch = getParentBranch(currentBranch);
     const parentBranchAsString = stringifyBranch(parentBranch);
-    return switchToBranch(parentBranchAsString, isTestRun);
+    return switchToBranch(parentBranchAsString);
   }
 
   const { branches, tags } = await getAllRefs(search);
-  if (branchesOnly) {
-    return selectRefAndSwitch(branches, isTestRun);
-  }
-  if (tagsOnly) {
-    return selectRefAndSwitch(tags, isTestRun);
-  }
+  if (branchesOnly) { return selectRefAndSwitch(branches); }
+  if (tagsOnly) { return selectRefAndSwitch(tags); }
 
-  return selectRefAndSwitch([ ...branches, ...tags ], isTestRun);
+  return selectRefAndSwitch([ ...branches, ...tags ]);
 }
 
 export const test = {};
