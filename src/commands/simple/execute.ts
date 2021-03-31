@@ -39,6 +39,7 @@ interface Args {
   codeReview?: boolean,
   wip?: boolean,
   squashOn?: boolean,
+  squashOnLast?: boolean,
   configuration: FullGutConfiguration,
 
   // Test thingies
@@ -72,6 +73,15 @@ const commit = async (isTestRun: boolean, forgePath: string, emoji: string, suff
   return exec(`git commit -F ${commitMessageFilePath}`);
 };
 
+const squashCommit = async (shaToSquashOn: string) => {
+  await log(Deno.stdout, `Commit to squash on: ${shaToSquashOn}\n`);
+  await exec(`git commit --fixup ${shaToSquashOn}`);
+  await Deno.run({
+    cmd: [ 'git', 'rebase', '--interactive', '--autosquash', `${shaToSquashOn}~1` ],
+    env: { GIT_SEQUENCE_EDITOR: ':' },
+  }).status();
+};
+
 const promptForEmoji = async () => promptSelect({
   message: 'Choose your emoji: ',
   options: EMOJIS,
@@ -87,37 +97,55 @@ export const command = 'execute';
 export const aliases = [ 'e' ];
 export const describe = 'Commits the staged changes';
 
+const ARG_CODE_REVIEW = 'code-review';
+const ARG_WIP = 'wip';
+const ARG_SQUASH_ON = 'squash-on';
+const ARG_SQUASH_ON_LAST = 'squash-on-last';
+
+const mutuallyExclusiveBooleanArguments = [
+  ARG_CODE_REVIEW, ARG_WIP, ARG_SQUASH_ON, ARG_SQUASH_ON_LAST,
+];
+
 export function builder (yargs: any) {
   return yargs.usage('usage: gut execute [options]')
-    .option('code-review', {
+    .option(ARG_CODE_REVIEW, {
       alias: 'c',
       describe: `Auto set the message to: ${CODE_REVIEW_MESSAGE.emoji} ${CODE_REVIEW_MESSAGE.message} (if emoji is activated)`,
       type: 'boolean',
     })
-    .option('wip', {
+    .option(ARG_WIP, {
       alias: 'w',
       describe: `Auto set the message to: ${WIP_MESSAGE.emoji} ${WIP_MESSAGE.message} (if emoji is activated)`,
       type: 'boolean',
     })
-    .option('squash-on', {
+    .option(ARG_SQUASH_ON, {
       alias: 's',
       describe: 'Choose a commit in history and squash the staged changes in it',
       type: 'boolean',
     })
+    .option(ARG_SQUASH_ON_LAST, {
+      alias: 'l',
+      describe: 'Squash the changes on the last commit in history',
+      type: 'boolean',
+    })
     .check((currentArguments: Args) => {
-      if (currentArguments.squashOn && currentArguments.codeReview) {
-        throw Error(applyStyle(
-          __`Arguments ${'squash-on'} and ${'code-review'} are incompatible`,
+      const errorMessage = mutuallyExclusiveBooleanArguments
+        .filter((argumentName) => (
+          // @ts-ignore
+          currentArguments[ argumentName ]
+        ))
+        .flatMap((argumentName, index, argumentNames) => (
+          argumentNames
+            .slice(index + 1)
+            .map((otherName) => ([ argumentName, otherName ]))
+        ))
+        .map(([ firstArgumentName, secondArgumentName ]) => applyStyle(
+          __`Arguments ${firstArgumentName} and ${secondArgumentName} are mutually exclusive`,
           [ theme.strong, theme.strong ],
-        ));
-      }
+        ))
+        .join('\n');
 
-      if (currentArguments.squashOn && currentArguments.wip) {
-        throw Error(applyStyle(
-          __`Arguments ${'squash-on'} and ${'wip'} are incompatible`,
-          [ theme.strong, theme.strong ],
-        ));
-      }
+      if (errorMessage) { throw Error(errorMessage); }
 
       return true;
     });
@@ -128,6 +156,7 @@ export async function handler (args: Args) {
     configuration,
     codeReview,
     squashOn,
+    squashOnLast,
     wip,
 
     isTestRun,
@@ -152,6 +181,12 @@ export async function handler (args: Args) {
     return;
   }
 
+  if (squashOnLast) {
+    const [ lastCommit ] = await getCommitsUpToMax(1, false);
+    await squashCommit(lastCommit.sha);
+    return;
+  }
+
   if (squashOn) {
     const lastCommits = await getCommitsUpToMax(30, false);
     const shaToSquashOn = await promptSelect({
@@ -159,12 +194,7 @@ export async function handler (args: Args) {
       options: lastCommits.map(({ subject, sha }) => ({ name: subject, value: sha })),
       search: true,
     });
-    await log(Deno.stdout, `Commit to squash on: ${shaToSquashOn}\n`);
-    await exec(`git commit --fixup ${shaToSquashOn}`);
-    await Deno.run({
-      cmd: [ 'git', 'rebase', '--interactive', '--autosquash', `${shaToSquashOn}~1` ],
-      env: { GIT_SEQUENCE_EDITOR: ':' },
-    }).status();
+    await squashCommit(shaToSquashOn);
     return;
   }
 
