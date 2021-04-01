@@ -13,4 +13,6 @@ rules:
         - ^http
   import/prefer-default-export:
     - off
+  import/extensions:
+    - off
 root: true

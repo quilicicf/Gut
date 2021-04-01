@@ -2,7 +2,7 @@ import { getCurrentBranchName, getRemotes } from '../../lib/git.ts';
 
 import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
-import { exec, OutputMode } from '../../dependencies/exec.ts';
+import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 
 interface Args {
   noPull: boolean,
@@ -49,7 +49,7 @@ export async function handler (args: Args) {
   const remote = remotes[ 0 ]; // TODO: prompt user when there are multiple remotes
 
   await log(Deno.stdout, `Fetching ${remote}\n`);
-  await exec(`git fetch ${remote}`, { output: OutputMode.StdOut });
+  await executeProcessCriticalTask([ 'git', 'fetch', remote ]);
 
   if (noPull) { return; }
 
@@ -63,11 +63,11 @@ export async function handler (args: Args) {
       await log(Deno.stdout, 'Operation aborted');
       return;
     }
-    await exec(`git reset --hard "${remote}/${currentBranchName}"`, { output: OutputMode.StdOut });
+    await executeProcessCriticalTask([ 'git', 'reset', '--hard', `${remote}/${currentBranchName}` ]);
     return;
   }
 
-  await exec(`git rebase "${remote}/${currentBranchName}"`, { output: OutputMode.StdOut });
+  await executeProcessCriticalTask([ 'git', 'rebase', `${remote}/${currentBranchName}` ]);
 }
 
 export const test = {};

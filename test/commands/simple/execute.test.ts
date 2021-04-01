@@ -1,50 +1,40 @@
 import { resolve } from '../../../src/dependencies/path.ts';
-import { exec, OutputMode } from '../../../src/dependencies/exec.ts';
 import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
-import { commitShit, deleteRepositories, initializeRepository } from '../../utils/setup.ts';
+import {
+  commitShit, deleteRepositories, endTestLogs, initializeRepository, startTestLogs,
+} from '../../utils/setup.ts';
 
 import { Branch, stringifyBranch } from '../../../src/lib/branch.ts';
+import { executeAndGetStdout } from '../../../src/lib/exec/executeAndGetStdout.ts';
+import { executeProcessCriticalTask } from '../../../src/lib/exec/executeProcessCriticalTask.ts';
 
-import { handler as execute, test } from '../../../src/commands/simple/execute.ts';
-import { FullGutConfiguration } from '../../../src/configuration.ts';
+import { test } from '../../../src/commands/simple/execute.ts';
 
-const { DUMMY_COMMIT_MESSAGE } = test;
+const { commitWithMessage } = test;
 const command = 'gut execute';
 
-const CONFIGURATION: FullGutConfiguration = {
-  global: {
-    tools: {},
-    preferredGitServer: 'github',
-    forgePath: '/tmp',
-  },
-  repository: {
-    reviewTool: 'github',
-    shouldUseEmojis: true,
-    shouldUseIssueNumbers: true,
-  },
-};
-
-Deno.test(applyStyle(__`@int ${command} should commit with emoji & issue number`, [ theme.strong ]), async () => {
-  const { tmpDir, testRepositoryPath } = await initializeRepository('gut_test_execute');
+Deno.test(applyStyle(__`@int ${command} should commit with message`, [ theme.strong ]), async () => {
+  await startTestLogs();
+  const { tmpDir, testRepositoryPath } = await initializeRepository('gut_test_execute_message');
   await commitShit(testRepositoryPath, 1);
 
-  const testEmoji = ':new:';
-  const issueId = 'TEST-123';
   const branch: Branch = {
-    fragments: [ { description: 'test', issueId } ],
+    fragments: [ { description: 'test', issueId: 'TEST-123' } ],
   };
   const branchName = stringifyBranch(branch);
 
-  await exec(`git checkout -b ${branchName}`, { output: OutputMode.None });
+  await executeProcessCriticalTask([ 'git', 'checkout', '-b', branchName ]);
   await Deno.writeTextFile(resolve(testRepositoryPath, 'aFile'), 'whatever');
-  await exec('git add . -A', { output: OutputMode.None });
+  await executeProcessCriticalTask([ 'git', 'add', '.', '--all' ]);
 
-  await execute({ isTestRun: true, configuration: CONFIGURATION, testEmoji });
-  const { output: commitMessage } = await exec('git log --max-count=1 --pretty=format:%s', { output: OutputMode.Capture });
+  const expectedCommitMessage = ':construction: Test commit';
+  await commitWithMessage(expectedCommitMessage);
+  const actualCommitMessage = await executeAndGetStdout([ 'git', 'log', '--max-count=1', '--pretty=format:%s' ]);
 
   await deleteRepositories(tmpDir, testRepositoryPath);
 
-  assertEquals(commitMessage, `${testEmoji} ${DUMMY_COMMIT_MESSAGE} (${issueId})`);
+  await endTestLogs();
+  assertEquals(actualCommitMessage, expectedCommitMessage);
 });

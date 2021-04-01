@@ -76,7 +76,8 @@ Deno.test(applyStyle(__`@unit ${command} should fail with unknown server`, [ the
       applyStyle(
         __`Server ${'unknown'} not configured. Please make sure it is not being implemented and create an issue.`,
         [ theme.strong ],
-      ));
+      ),
+    );
   }
 });
 

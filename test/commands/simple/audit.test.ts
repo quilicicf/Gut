@@ -1,14 +1,15 @@
 import { resolve } from '../../../src/dependencies/path.ts';
 import { detect as detectEol } from '../../../src/dependencies/fs.ts';
-import { exec, execSequence, OutputMode } from '../../../src/dependencies/exec.ts';
 import {
   RESET_CODE, __, applyStyle, theme,
 } from '../../../src/dependencies/colors.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
-import { initializeRepository, deleteRepositories } from '../../utils/setup.ts';
+import { initializeRepository, deleteRepositories, startTestLogs, endTestLogs } from '../../utils/setup.ts';
 
 import { ParsingState, test } from '../../../src/commands/simple/audit.ts';
+import { executeProcessCriticalTasks } from '../../../src/lib/exec/executeProcessCriticalTasks.ts';
+import { executeProcessCriticalTask } from '../../../src/lib/exec/executeProcessCriticalTask.ts';
 
 const {
   generateDiff, parseDiff,
@@ -164,19 +165,22 @@ console.log('Updated :wink:');
 `;
 
 Deno.test(applyStyle(__`@int ${command} should print oddities`, [ theme.strong ]), async () => {
+  await startTestLogs();
   const { tmpDir, testRepositoryPath } = await initializeRepository('gut_test_audit');
   await Deno.writeTextFile(resolve(testRepositoryPath, 'index.ts'), firstFileVersion);
-  await execSequence([
-    'git add . -A',
-    'git commit -m "Mkay"',
-  ], { output: OutputMode.None });
+  await executeProcessCriticalTasks([
+    [ 'git', 'add', '.', '--all' ],
+    [ 'git', 'commit', '--message', 'Mkay' ],
+  ]);
   await Deno.writeTextFile(resolve(testRepositoryPath, 'index.ts'), secondFileVersion);
-  await exec('git add . -A', { output: OutputMode.None });
+  await executeProcessCriticalTask([ 'git', 'add', '.', '--all' ]);
 
-  const output = await generateDiff({ isTestRun: true });
+  const output = await generateDiff({});
 
   await deleteRepositories(tmpDir, testRepositoryPath);
 
   const removeSha = (input: string): string => input.replace(/[a-f0-9]+\.\.[a-f0-9]+/g, '');
+
+  await endTestLogs();
   assertEquals(removeSha(output), removeSha(diff));
 });

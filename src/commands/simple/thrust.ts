@@ -1,30 +1,28 @@
-import { getCurrentBranchName, getRemotes } from '../../lib/git.ts';
-import { exec, OutputMode } from '../../dependencies/exec.ts';
 import { getBranchRemote } from '../../lib/git/getBranchRemote.ts';
+import { getCurrentBranchName, getRemotes } from '../../lib/git.ts';
+import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 
 interface Args {
   force: boolean,
-
-  // Test thingies
-  isTestRun: boolean,
 }
 
 export const command = 'thrust';
 export const aliases = [ 't' ];
 export const describe = 'Pushes local changes to a remote';
 
-export async function thrust (force: boolean, isTestRun: boolean) {
+export async function thrust (force: boolean) {
   const remotes = await getRemotes();
   const remoteOfTrackedBranch = await getBranchRemote();
   const currentBranchName = await getCurrentBranchName();
   const remote = remotes[ 0 ]; // TODO: prompt user when there are multiple remotes
 
-  const forceArg = force ? '--force-with-lease' : '';
-  const setUpstreamArg = remoteOfTrackedBranch ? '' : '--set-upstream';
+  const forceArg = force ? [ '--force-with-lease' ] : [];
+  const setUpstreamArg = remoteOfTrackedBranch ? [] : [ '--set-upstream' ];
   const targetRemote = remoteOfTrackedBranch || remote;
-  const outputMode = isTestRun ? OutputMode.Capture : OutputMode.StdOut;
 
-  return exec(`git push ${forceArg} ${setUpstreamArg} ${targetRemote} ${currentBranchName}`, { output: outputMode });
+  return executeProcessCriticalTask([
+    'git', 'push', ...forceArg, ...setUpstreamArg, targetRemote, currentBranchName,
+  ]);
 }
 
 export async function builder (yargs: any) {
@@ -36,8 +34,8 @@ export async function builder (yargs: any) {
     });
 }
 
-export async function handler ({ force, isTestRun }: Args) {
-  return thrust(force, isTestRun);
+export async function handler ({ force }: Args) {
+  return thrust(force);
 }
 
 export const test = {};

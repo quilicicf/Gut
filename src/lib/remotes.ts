@@ -1,19 +1,19 @@
 /* eslint-disable indent */
 import { applyStyle, theme } from '../dependencies/colors.ts';
-import { exec, OutputMode } from '../dependencies/exec.ts';
+import { executeProcessCriticalTask } from './exec/executeProcessCriticalTask.ts';
 
 class Remote {
   name: string;
 
   argumentMatcher: (argument: string) => boolean;
 
-  deleteBranchCommand: (branchToDelete: string) => Promise<string>;
+  deleteBranchCommand: (branchToDelete: string) => Promise<void>;
 
-  deleteTagCommand: (tagToDelete: string) => Promise<string>;
+  deleteTagCommand: (tagToDelete: string) => Promise<void>;
 
   constructor (name: string, argumentMatcher: (argument: string) => boolean,
-               deleteBranchCommand: (branchToDelete: string) => Promise<string>,
-               deleteTagCommand: (tagToDelete: string) => Promise<string>) {
+               deleteBranchCommand: (branchToDelete: string) => Promise<void>,
+               deleteTagCommand: (tagToDelete: string) => Promise<void>) {
     this.name = name;
     this.argumentMatcher = argumentMatcher;
     this.deleteBranchCommand = deleteBranchCommand;
@@ -26,36 +26,30 @@ const REMOTES: Remote[] = [
     applyStyle('local', [ theme.local ]),
     (argument) => !argument || argument === 'l' || argument === 'local',
     async (branchToDelete) => {
-      const { output } = await exec(`git branch -D ${branchToDelete}`, { output: OutputMode.Capture });
-      return output;
+      await executeProcessCriticalTask([ 'git', 'branch', '--delete', '--force', branchToDelete ]);
     },
     async (tagToDelete) => {
-      const { output } = await exec(`git tag -d ${tagToDelete}`, { output: OutputMode.Capture });
-      return output;
+      await executeProcessCriticalTask([ 'git', 'tag', '--delete', tagToDelete ]);
     },
   ),
   new Remote(
     applyStyle('origin', [ theme.origin ]),
     (argument) => !argument || argument === 'o' || argument === 'origin',
     async (branchToDelete) => {
-      const { output } = await exec(`git push origin --delete ${branchToDelete}`, { output: OutputMode.Capture });
-      return output;
+      await executeProcessCriticalTask([ 'git', 'push', 'origin', '--delete', branchToDelete ]);
     },
     async (tagToDelete) => {
-      const { output } = await exec(`git push origin --delete ${tagToDelete}`, { output: OutputMode.Capture });
-      return output;
+      await executeProcessCriticalTask([ 'git', 'push', 'origin', '--delete', tagToDelete ]);
     },
   ),
   new Remote(
     applyStyle('upstream', [ theme.upstream ]),
     (argument) => !argument || argument === 'u' || argument === 'upstream',
     async (branchToDelete) => {
-      const { output } = await exec(`git push upstream --delete ${branchToDelete}`, { output: OutputMode.Capture });
-      return output;
+      await executeProcessCriticalTask([ 'git', 'push', 'upstream', '--delete', branchToDelete ]);
     },
     async (tagToDelete) => {
-      const { output } = await exec(`git push upstream --delete ${tagToDelete}`, { output: OutputMode.Capture });
-      return output;
+      await executeProcessCriticalTask([ 'git', 'push', 'upstream', '--delete', tagToDelete ]);
     },
   ),
 ];

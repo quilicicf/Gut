@@ -5,13 +5,14 @@ import {
 } from '../../dependencies/colors.ts';
 import log from '../../dependencies/log.ts';
 import { resolve } from '../../dependencies/path.ts';
-import { exec, OutputMode } from '../../dependencies/exec.ts';
 import { promptSelect } from '../../dependencies/cliffy.ts';
 
 import { EMOJIS } from '../../lib/emojis.ts';
+import { editText } from '../../lib/editText.ts';
 import { getIssueIdOrEmpty } from '../../lib/branch.ts';
 import { getCommitsUpToMax, getCurrentBranchName } from '../../lib/git.ts';
-import { editText } from '../../lib/editText.ts';
+import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
+import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 
 class CommitMessage {
   message: string;
@@ -32,7 +33,6 @@ class CommitMessage {
 
 const CODE_REVIEW_MESSAGE = new CommitMessage('Code review', ':eyes:');
 const WIP_MESSAGE = new CommitMessage('WIP', ':construction:');
-const DUMMY_COMMIT_MESSAGE = 'Dummy commit message';
 const COMMIT_MESSAGE_FILE_NAME = '.gut-commit-message.md';
 
 interface Args {
@@ -41,24 +41,17 @@ interface Args {
   squashOn?: boolean,
   squashOnLast?: boolean,
   configuration: FullGutConfiguration,
-
-  // Test thingies
-  isTestRun: boolean,
-  testEmoji?: string,
 }
 
-const commitWithMessage = async (isTestRun: boolean, message: string) => {
-  const output = isTestRun ? OutputMode.Capture : OutputMode.StdOut;
-  return message
-    ? exec(`git commit --message "${message}"`, { output })
-    : exec('git commit', { output });
-};
+const commitWithMessage = async (message?: string) => (
+  message
+    ? executeProcessCriticalTask([ 'git', 'commit', '--message', message ])
+    : executeProcessCriticalTask([ 'git', 'commit' ])
+);
 
-const commit = async (isTestRun: boolean, forgePath: string, emoji: string, suffix: string) => {
-  if (isTestRun) {
-    return exec(`git commit --message "${emoji} ${DUMMY_COMMIT_MESSAGE} ${suffix}"`, { output: OutputMode.Capture });
-  }
+const commitWithFile = async (filePath: string) => executeAndGetStdout([ 'git', 'commit', '--file', filePath ]);
 
+const commit = async (forgePath: string, emoji: string, suffix: string) => {
   const commitMessageFilePath = resolve(forgePath, COMMIT_MESSAGE_FILE_NAME);
   const paddedEmoji = emoji ? `${emoji} ` : '';
   const paddedSuffix = suffix ? ` ${suffix}` : '';
@@ -70,16 +63,16 @@ const commit = async (isTestRun: boolean, forgePath: string, emoji: string, suff
       column: paddedEmoji.length + 1,
     },
   });
-  return exec(`git commit -F ${commitMessageFilePath}`);
+
+  return commitWithFile(commitMessageFilePath);
 };
 
 const squashCommit = async (shaToSquashOn: string) => {
   await log(Deno.stdout, `Commit to squash on: ${shaToSquashOn}\n`);
-  await exec(`git commit --fixup ${shaToSquashOn}`);
-  await Deno.run({
-    cmd: [ 'git', 'rebase', '--interactive', '--autosquash', `${shaToSquashOn}~1` ],
-    env: { GIT_SEQUENCE_EDITOR: ':' },
-  }).status();
+  await executeProcessCriticalTask([ 'git', 'commit', '--fixup', shaToSquashOn ]);
+  await executeProcessCriticalTask([
+    'git', 'rebase', '--interactive', '--autosquash', `${shaToSquashOn}~1`,
+  ], { env: { GIT_SEQUENCE_EDITOR: ':' } });
 };
 
 const promptForEmoji = async () => promptSelect({
@@ -87,11 +80,6 @@ const promptForEmoji = async () => promptSelect({
   options: EMOJIS,
   search: true,
 });
-
-const computeEmoji = async (shouldUseEmojis: boolean, isTestRun: boolean, testEmoji: string = '') => {
-  if (!shouldUseEmojis) { return ''; }
-  return isTestRun ? testEmoji : promptForEmoji();
-};
 
 export const command = 'execute';
 export const aliases = [ 'e' ];
@@ -158,9 +146,6 @@ export async function handler (args: Args) {
     squashOn,
     squashOnLast,
     wip,
-
-    isTestRun,
-    testEmoji,
   } = args;
 
   const shouldUseEmojis = configuration?.repository?.shouldUseEmojis || false;
@@ -171,13 +156,13 @@ export async function handler (args: Args) {
 
   if (wip) {
     const fullMessage = WIP_MESSAGE.getFullMessage(shouldUseEmojis, suffix);
-    await commitWithMessage(isTestRun, fullMessage);
+    await commitWithMessage(fullMessage);
     return;
   }
 
   if (codeReview) {
     const fullMessage = CODE_REVIEW_MESSAGE.getFullMessage(shouldUseEmojis, suffix);
-    await commitWithMessage(isTestRun, fullMessage);
+    await commitWithMessage(fullMessage);
     return;
   }
 
@@ -198,11 +183,12 @@ export async function handler (args: Args) {
     return;
   }
 
-  const emoji = await computeEmoji(shouldUseEmojis, isTestRun, testEmoji);
+  const emoji = shouldUseEmojis ? await promptForEmoji() : '';
   const forgePath = configuration?.global?.forgePath;
-  await commit(isTestRun, forgePath, emoji, suffix);
+  await commit(forgePath, emoji, suffix);
 }
 
 export const test = {
-  DUMMY_COMMIT_MESSAGE,
+  commitWithFile,
+  commitWithMessage,
 };

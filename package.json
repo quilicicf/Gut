@@ -7,7 +7,7 @@
     "gut": "index.js"
   },
   "scripts": {
-    "lint": "eslint '**/*.js'",
+    "lint": "eslint '**/*.js' '**/*.ts'",
     "test": "node test/cleanup.js; npm run lint; jest",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"

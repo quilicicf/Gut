@@ -1,9 +1,9 @@
 import { promptSelect } from '../../dependencies/cliffy.ts';
-import { exec, OutputMode } from '../../dependencies/exec.ts';
 import { applyStyle, theme } from '../../dependencies/colors.ts';
 
 import { getAllRefs, getCurrentBranch } from '../../lib/git.ts';
 import { getParentBranch, stringifyBranch } from '../../lib/branch.ts';
+import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 
 interface Args {
@@ -56,7 +56,7 @@ export async function builder (yargs: any) {
       type: 'string',
       coerce (input: string) {
         const remoteRegex = /^[^a-z0-9A-Z_]+$/;
-        if (!remoteRegex.test(input)) {
+        if (input !== '' && !remoteRegex.test(input)) {
           throw Error(applyStyle(`Remote names must match ${remoteRegex}`, [ theme.error ]));
         }
         return input;
@@ -95,8 +95,13 @@ export async function handler (args: Args) {
 
   if (defaultBranch !== undefined) {
     const remote = defaultBranch || 'origin';
-    const { output } = await exec(`git remote set-head ${remote} --auto`, { output: OutputMode.Capture });
+    const output = await executeAndGetStdout([ 'git', 'remote', 'set-head', remote, '--auto' ]);
     const defaultBranchName = output.split(' ').pop();
+
+    if (!defaultBranchName) {
+      throw Error(`Could not find default branch, git remote set-head returned: ${output}`);
+    }
+
     return switchToBranch(defaultBranchName);
   }
 

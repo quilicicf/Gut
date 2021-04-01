@@ -1,10 +1,13 @@
 export async function getRepositoryFomRemote (remote: string = 'origin') {
-  const remoteDescription = await Deno.run({
+  const process = Deno.run({
     cmd: [ 'git', 'remote', 'show', '-n', remote ],
     stdin: 'null',
     stdout: 'piped',
     stderr: 'null',
-  }).output();
+  });
+
+  const remoteDescription = await process.output();
+  process.close();
 
   const remoteDescriptionAsString = new TextDecoder().decode(remoteDescription);
   const regex = /^[ ]+Fetch URL: git@[^:]+:([^/]+)\/(.*?)\.git$/m;

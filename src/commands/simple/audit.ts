@@ -1,7 +1,4 @@
-import { getCommitsFromParentBranch } from '../../lib/git.ts';
-
 import log from '../../dependencies/log.ts';
-import { exec, OutputMode } from '../../dependencies/exec.ts';
 import { detect as detectEol } from '../../dependencies/fs.ts';
 import {
   isEmpty, pad, padLeft, padRight, set, size,
@@ -9,6 +6,9 @@ import {
 import {
   __, applyStyle, theme,
 } from '../../dependencies/colors.ts';
+
+import { getCommitsFromParentBranch } from '../../lib/git.ts';
+import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
 
 const REGEX_LINE_ADDED = /^\+/;
 const REGEX_LINE_REMOVED = /^-/;
@@ -49,9 +49,6 @@ interface Args {
   from?: string,
   to?: string,
   fromParentBranch?: boolean,
-
-  // Test thingies
-  isTestRun: boolean
 }
 
 interface Oddity {
@@ -176,9 +173,10 @@ async function generateDiff (args: Args): Promise<string> {
     from, to, // TODO: should be a default but yargs fails on conflicts rule if set
   } = args;
 
+  const commandWithoutRefs = [ 'git', '--no-pager', 'diff', '-U0', '--no-color' ];
+
   if (commitsNumber) {
-    const { output: diff } = await exec(`git --no-pager diff -U0 --no-color HEAD~${commitsNumber}..HEAD`, { output: OutputMode.Capture });
-    return diff;
+    return executeAndGetStdout([ ...commandWithoutRefs, `HEAD~${commitsNumber}..HEAD` ], true);
   }
 
   if (fromParentBranch) {
@@ -187,14 +185,12 @@ async function generateDiff (args: Args): Promise<string> {
     await log(Deno.stdout, applyStyle(__`The current PR had ${String(numberOfCommits)} commit(s)\n`, [ theme.commitsNumber ]));
 
     if (numberOfCommits < 1) { return ''; }
-    const { output: diff } = await exec(`git --no-pager diff -U0 --no-color HEAD~${numberOfCommits}..HEAD`, { output: OutputMode.Capture });
-    return diff;
+    return executeAndGetStdout([ ...commandWithoutRefs, `HEAD~${numberOfCommits}..HEAD` ], true);
   }
 
-  const { output: diff } = from
-    ? await exec(`git --no-pager diff -U0 --no-color ${from}..${to}`, { output: OutputMode.Capture })
-    : await exec('git --no-pager diff HEAD -U0 --no-color', { output: OutputMode.Capture });
-  return diff;
+  return from
+    ? executeAndGetStdout([ ...commandWithoutRefs, `${from}..${to}` ], true)
+    : executeAndGetStdout([ ...commandWithoutRefs, 'HEAD' ], true);
 }
 
 function printFileDiff (parsedDiff: ParsingState): string {
@@ -309,15 +305,10 @@ export function builder (yargs: any) {
 }
 
 export async function handler (args: Args) {
-  const { isTestRun } = args;
-
   const diff = await generateDiff(args);
   const eol = detectEol(diff) || '\n';
   const parsedDiff = parseDiff(diff, eol);
-
-  if (!isTestRun) {
-    await displayDiff(parsedDiff);
-  }
+  await displayDiff(parsedDiff);
 }
 
 export const test = {
