@@ -3,3 +3,8 @@ env:
   jest/globals: true
 plugins:
   - jest
+rules:
+  import/no-unresolved:
+    - error
+    - ignore:
+        - ^http

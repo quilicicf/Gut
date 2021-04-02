@@ -1,8 +1,8 @@
 import { resolve } from './dependencies/path.ts';
 import { exists } from './dependencies/fs.ts';
-import { exec, OutputMode } from './dependencies/exec.ts';
 
 import { getTopLevel } from './lib/git/getTopLevel.ts';
+import { executeAndGetStdout } from './lib/exec/executeAndGetStdout.ts';
 
 export interface Account {
   username: string,
@@ -37,10 +37,10 @@ export interface FullGutConfiguration {
 export const CONFIGURATION_FILE_NAME = '.gut-config.json';
 
 export async function getConfiguration (): Promise<FullGutConfiguration> {
-  const { output: user } = await exec('whoami', { output: OutputMode.Capture });
+  const user = await executeAndGetStdout([ 'whoami' ], true);
   const globalConfigurationPath = resolve('/home', user, '.config', 'gut', CONFIGURATION_FILE_NAME);
-  const globalConfigurationAsJson = await Deno.readTextFile(globalConfigurationPath); // TODO: handle no configuration file
-  const globalConfiguration = JSON.parse(globalConfigurationAsJson) as GlobalGutConfiguration;
+  const globalConfigurationAsJson = await Deno.readTextFile(globalConfigurationPath); // TODO: no configuration file?
+  const globalConfiguration: GlobalGutConfiguration = JSON.parse(globalConfigurationAsJson);
 
   const currentRepositoryTopLevel = await getTopLevel();
   if (!currentRepositoryTopLevel) { return { global: globalConfiguration }; }
@@ -48,7 +48,7 @@ export async function getConfiguration (): Promise<FullGutConfiguration> {
 
   if (await exists(repositoryConfigurationPath)) {
     const repositoryConfigurationAsJson = await Deno.readTextFile(repositoryConfigurationPath);
-    const repositoryConfiguration = JSON.parse(repositoryConfigurationAsJson) as RepositoryGutConfiguration;
+    const repositoryConfiguration: RepositoryGutConfiguration = JSON.parse(repositoryConfigurationAsJson);
 
     return {
       global: globalConfiguration,

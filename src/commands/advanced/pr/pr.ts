@@ -160,7 +160,7 @@ export async function handler (args: Args) {
 
   if (!await getBranchRemote()) {
     await log(Deno.stdout, applyStyle('The branch was never pushed, pushing it now\n', [ theme.strong ]));
-    await thrust(false, false);
+    await thrust(false);
   }
 
   const { owner: originOwner } = await getRepositoryFomRemote();

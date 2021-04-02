@@ -1,10 +1,11 @@
 import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
 import { applyStyle, theme } from '../../dependencies/colors.ts';
-import { exec, execSequence, OutputMode } from '../../dependencies/exec.ts';
 
 import { getTopLevel } from '../../lib/git/getTopLevel.ts';
 import { getCommitsUpToMax, isDirty } from '../../lib/git.ts';
+import { executeProcessCriticalTasks } from '../../lib/exec/executeProcessCriticalTasks.ts';
+import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 
 interface Args {
   commitsNumber: number,
@@ -75,15 +76,19 @@ export async function handler (args: Args) {
     Deno.exit(1);
   }
 
-  const resetCommand = `git reset "HEAD~${commitsNumber}"`;
+  const resetCommand = [ 'git', 'reset', `HEAD~${commitsNumber}` ];
   const topLevel = await getTopLevel();
-  const addAllCommand = `git add ${topLevel} -A`;
+  const addAllCommand = [ 'git', 'add', topLevel, '--all' ];
 
   if (stashChanges) {
     const stashCommand = description
-      ? `git stash save "${description}"`
-      : 'git stash';
-    await execSequence([ resetCommand, addAllCommand, stashCommand ], { output: OutputMode.StdOut });
+      ? [ 'git', 'stash', 'save', description ]
+      : [ 'git', 'stash' ];
+    await executeProcessCriticalTasks([
+      resetCommand,
+      addAllCommand,
+      stashCommand,
+    ]);
     return;
   }
 
@@ -100,11 +105,15 @@ export async function handler (args: Args) {
       await log(Deno.stdout, 'Operation aborted!');
       return;
     }
-    await execSequence([ resetCommand, addAllCommand, 'git reset --hard' ], { output: OutputMode.StdOut });
+    await executeProcessCriticalTasks([
+      resetCommand,
+      addAllCommand,
+      [ 'git', 'reset', '--hard' ],
+    ]);
     return;
   }
 
-  await exec(resetCommand, { output: OutputMode.StdOut });
+  await executeProcessCriticalTask(resetCommand);
 }
 
 export const test = {};

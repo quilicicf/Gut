@@ -3,8 +3,8 @@ import { FullGutConfiguration } from '../../configuration.ts';
 import log from '../../dependencies/log.ts';
 import { path } from '../../dependencies/ramda.ts';
 import { resolve } from '../../dependencies/path.ts';
-import { exec, OutputMode } from '../../dependencies/exec.ts';
 import { __, applyStyle, theme } from '../../dependencies/colors.ts';
+import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 
 interface Args {
   configuration: FullGutConfiguration,
@@ -98,15 +98,16 @@ export async function builder (yargs: any) {
 
 export async function handler (args: Args) {
   const { configuration, isTestRun } = args;
-  const { server, owner, repository, sshUrl } = buildGitSshUrl(args);
+  const {
+    server, owner, repository, sshUrl,
+  } = buildGitSshUrl(args);
   const repositoryPath = resolve(configuration.global.forgePath, server, owner, repository);
 
   if (!isTestRun) {
     await log(Deno.stdout, `Cloning ${sshUrl} into ${repositoryPath}\n`);
   }
 
-  const outputMode = isTestRun ? OutputMode.None : OutputMode.StdOut;
-  exec(`git clone ${sshUrl} ${repositoryPath}`, { output: outputMode });
+  await executeProcessCriticalTask([ 'git', 'clone', sshUrl, repositoryPath ]);
 }
 
 export const test = { buildGitSshUrl };

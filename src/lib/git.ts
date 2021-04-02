@@ -1,5 +1,4 @@
 import { isEmpty } from '../dependencies/ramda.ts';
-import { exec, OutputMode } from '../dependencies/exec.ts';
 import { __, applyStyle, theme } from '../dependencies/colors.ts';
 
 import { getTopLevel } from './git/getTopLevel.ts';
@@ -7,6 +6,8 @@ import { getTopLevel } from './git/getTopLevel.ts';
 import {
   Branch, getParentBranch, parseBranchName, stringifyBranch,
 } from './branch.ts';
+import { executeAndGetStdout } from './exec/executeAndGetStdout.ts';
+import { executeAndReturnStatus } from './exec/executeAndReturnStatus.ts';
 
 export interface Commit {
   sha: string,
@@ -60,8 +61,8 @@ export async function moveUpTop (): Promise<void> {
 }
 
 export async function getCurrentBranchName (): Promise<string> {
-  const { output: currentBranchName } = await exec('git rev-parse --abbrev-ref HEAD', { output: OutputMode.Capture });
-  return currentBranchName;
+  return executeAndGetStdout([ 'git', 'rev-parse', '--abbrev-ref', 'HEAD' ], true);
+  // return executeAndGetStdout([ 'git', 'branch', '--show-current' ], true); // TODO: upgrade git in travis?
 }
 
 export async function getCurrentBranch (): Promise<Branch> {
@@ -74,16 +75,13 @@ async function getMergeBaseFromParent (): Promise<string> { // FIXME: can fail i
   const currentBranch = parseBranchName(currentBranchName);
   const parentBranch = getParentBranch(currentBranch);
   const parentBranchName = stringifyBranch(parentBranch);
-  const { output: mergeBase } = await exec(`git merge-base ${parentBranchName} ${currentBranchName}`, { output: OutputMode.Capture });
-  return mergeBase;
+  return executeAndGetStdout([ 'git', 'merge-base', parentBranchName, currentBranchName ], true);
 }
 
 export async function getDiffBetweenRefs (baseRef: string, targetRef: string): Promise<string> {
-  const { output: diff } = await exec(
-    `git --no-pager diff -U0 --no-color ${baseRef}..${targetRef}`,
-    { output: OutputMode.Capture },
+  return executeAndGetStdout(
+    [ 'git', '--no-pager', 'diff', '-U0', '--no-color', `${baseRef}..${targetRef}` ],
   );
-  return diff;
 }
 
 export async function getCommitsBetweenRefs (
@@ -92,30 +90,29 @@ export async function getCommitsBetweenRefs (
   shouldReverse: boolean,
 ): Promise<Commit[]> {
 
-  const reverseArgument = shouldReverse ? '--reverse' : '';
-  const { output: commitsAsPsv } = await exec(
-    `git --no-pager log ${PSV_FORMAT_ARGUMENT} --color=never ${reverseArgument} ${baseRef}..${targetRef}`,
-    { output: OutputMode.Capture },
+  const reverseArgument = shouldReverse ? [ '--reverse' ] : [];
+  const commitsAsPsv = await executeAndGetStdout(
+    [ 'git', '--no-pager', 'log', PSV_FORMAT_ARGUMENT, '--color=never', ...reverseArgument, `${baseRef}..${targetRef}` ],
   );
   return psvToJs(commitsAsPsv);
 }
 
 export async function getCommitsUpToMax (maxCommits: number, shouldReverse: boolean): Promise<Commit[]> {
-  const reverseArgument = shouldReverse ? '--reverse' : '';
-  const { output: commitsAsPsv } = await exec(
-    `git --no-pager log ${PSV_FORMAT_ARGUMENT} --color=never --max-count ${maxCommits} ${reverseArgument}`,
-    { output: OutputMode.Capture },
+  const reverseArgument = shouldReverse ? [ '--reverse' ] : [];
+  const commitsAsPsv = await executeAndGetStdout(
+    [ 'git', '--no-pager', 'log', PSV_FORMAT_ARGUMENT, '--color=never', '--max-count', maxCommits.toString(), ...reverseArgument ],
   );
   return psvToJs(commitsAsPsv);
 }
 
 export async function getCommitsFromParentBranch (shouldReverse: boolean): Promise<Commit[]> {
   const mergeBase = await getMergeBaseFromParent();
+  console.log(`merge-base: ${mergeBase}`);
   return getCommitsBetweenRefs(mergeBase, 'HEAD', shouldReverse);
 }
 
 export async function getRemotes (): Promise<string[]> {
-  const { output } = await exec('git remote show', { output: OutputMode.Capture });
+  const output = await executeAndGetStdout([ 'git', 'remote', 'show' ]);
   return output.split(/\s/);
 }
 
@@ -165,7 +162,7 @@ type Refs = {
 }
 
 export async function getAllRefs (filterText: string = ''): Promise<Refs> {
-  const { output: allRefsAsString } = await exec('git show-ref', { output: OutputMode.Capture });
+  const allRefsAsString = await executeAndGetStdout([ 'git', 'show-ref' ]);
 
   const accumulator: Refs = { branches: [], tags: [] };
   const { branches, tags } = allRefsAsString
@@ -215,7 +212,6 @@ export async function getAllRefs (filterText: string = ''): Promise<Refs> {
   };
 }
 
-export async function isDirty () {
-  const { status } = await exec('git diff --no-ext-diff --quiet --exit-code', { output: OutputMode.None });
-  return status.code !== 0;
+export async function isDirty (): Promise<boolean> {
+  return executeAndReturnStatus([ 'git', 'diff', '--quiet', '--exit-code' ]);
 }

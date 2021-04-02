@@ -1,7 +1,8 @@
 import log from '../../dependencies/log.ts';
-import { exec, OutputMode } from '../../dependencies/exec.ts';
 
 import { moveUpTop } from '../../lib/git.ts';
+import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
+import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
 
 export const command = 'pile';
 export const aliases = [ 'p' ];
@@ -11,16 +12,15 @@ export function builder (yargs: any) {
   return yargs.usage('usage: gut pile [options]');
 }
 
-export async function handler ({ isTestRun }: { isTestRun: boolean }) {
+export async function handler () {
   await moveUpTop();
-  await exec('git add . --all', { output: OutputMode.None });
+  await executeProcessCriticalTask([ 'git', 'add', '.', '--all' ]);
 
-  if (isTestRun) {
-    const { output } = await exec('git -c color.status=never status --short --branch', { output: OutputMode.Capture });
-    return output;
-  }
+  const output = await executeAndGetStdout([
+    'git', '-c', 'color.status=always', 'status', '--short', '--branch',
+  ]);
 
-  const { output } = await exec('git -c color.status=always status --short --branch', { output: OutputMode.Capture });
   await log(Deno.stdout, `${output}\n`);
+
   return output;
 }

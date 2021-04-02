@@ -1,14 +1,12 @@
+import { executeAndGetStdout } from '../exec/executeAndGetStdout.ts';
+
 export async function getBranchRemote (): Promise<string | undefined> {
   try {
-    const output = await Deno.run({
-      cmd: [ 'git', 'rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}' ],
-      stdin: 'null',
-      stdout: 'piped',
-      stderr: 'null',
-    }).output();
+    const output = await executeAndGetStdout([
+      'git', 'rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}',
+    ], true);
 
-    const fullBranchName = new TextDecoder().decode(output);
-    return fullBranchName.split('/')?.[ 0 ];
+    return output.split('/')?.[ 0 ];
   } catch (error) {
     return undefined;
   }

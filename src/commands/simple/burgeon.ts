@@ -1,6 +1,7 @@
-import { exec, OutputMode } from '../../dependencies/exec.ts';
-import { getCurrentBranchName } from '../../lib/git.ts';
 import { promptString } from '../../dependencies/cliffy.ts';
+
+import { getCurrentBranchName } from '../../lib/git.ts';
+import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 
 interface Args {
   ticketNumber?: string,
@@ -43,7 +44,7 @@ export async function handler ({ ticketNumber, isTestRun, testDescription }: Arg
     .join('_');
   const currentBranchName = await getCurrentBranchName();
   const newBranchName = `${currentBranchName}__${fragment}`;
-  await exec(`git checkout -b ${newBranchName}`, { output: OutputMode.None });
+  await executeProcessCriticalTask([ 'git', 'checkout', '-b', newBranchName ]);
   return newBranchName;
 }
 

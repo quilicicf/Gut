@@ -1,5 +1,6 @@
 import log from '../../dependencies/log.ts';
-import { exec, OutputMode } from '../../dependencies/exec.ts';
+
+import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
 
 const REMOTES_SHORTCUTS: { [ id: string ]: string } = {
   o: 'origin',
@@ -7,14 +8,12 @@ const REMOTES_SHORTCUTS: { [ id: string ]: string } = {
 };
 
 const printDivisions = async (remote: string | undefined): Promise<string> => {
-  if (remote) {
-    const filter = `--list "${REMOTES_SHORTCUTS[ remote ] || remote}/*"`;
-    const { output } = await exec(`git branch --color --remotes --column=always ${filter}`, { output: OutputMode.Capture });
-    return `  ${output}\n`;
-  }
-
-  const { output } = await exec('git branch --color', { output: OutputMode.Capture });
-  return `  ${output}\n`;
+  const baseCommand = [ 'git', 'branch', '--color' ];
+  return executeAndGetStdout(
+    remote
+      ? [ ...baseCommand, '--remotes', '--list', `${REMOTES_SHORTCUTS[ remote ] || remote}/*` ]
+      : baseCommand,
+  );
 };
 
 export const command = 'divisions';

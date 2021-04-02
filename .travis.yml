@@ -7,8 +7,8 @@ install:
 script:
   - deno --version
   - deno cache --unstable test/commands/simple/*.ts
-  - deno run --unstable --allow-run index.ts install
-  - deno test --unstable --allow-write=/tmp --allow-read=/tmp --allow-run --cached-only test/
+  - deno run --unstable --allow-run mod.ts install
+  - deno test --unstable --allow-write=/tmp --allow-read=~/.config/gut,/tmp --allow-run --cached-only test/
 cache:
   directories:
     - '$HOME/.deno'

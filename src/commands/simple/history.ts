@@ -7,9 +7,6 @@ interface Args {
   number: number,
   reverse: boolean,
   fromParentBranch?: boolean,
-
-  // Test thingies
-  isTestRun: boolean
 }
 
 const DEFAULT_FORMAT = 'pretty';
@@ -49,7 +46,7 @@ export function builder (yargs: any) {
 
 export async function handler (args: Args) {
   const {
-    format, number, reverse, fromParentBranch, isTestRun,
+    format, number, reverse, fromParentBranch,
   } = args;
 
   const logFormat = LOG_FORMATS[ format.toUpperCase() ];
@@ -62,6 +59,6 @@ export async function handler (args: Args) {
 
   const output = logFormat(commits);
 
-  if (!isTestRun) { await log(Deno.stdout, output.concat('\n')); }
+  await log(Deno.stdout, output.concat('\n'));
   return commits;
 }
