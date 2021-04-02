@@ -61,7 +61,8 @@ export async function moveUpTop (): Promise<void> {
 }
 
 export async function getCurrentBranchName (): Promise<string> {
-  return executeAndGetStdout([ 'git', 'branch', '--show-current' ], true);
+  return executeAndGetStdout([ 'git', 'rev-parse', '--abbrev-ref', 'HEAD' ], true);
+  // return executeAndGetStdout([ 'git', 'branch', '--show-current' ], true); // TODO: upgrade git in travis?
 }
 
 export async function getCurrentBranch (): Promise<Branch> {
@@ -106,6 +107,7 @@ export async function getCommitsUpToMax (maxCommits: number, shouldReverse: bool
 
 export async function getCommitsFromParentBranch (shouldReverse: boolean): Promise<Commit[]> {
   const mergeBase = await getMergeBaseFromParent();
+  console.log(`merge-base: ${mergeBase}`);
   return getCommitsBetweenRefs(mergeBase, 'HEAD', shouldReverse);
 }
 
