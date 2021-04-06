@@ -2,8 +2,9 @@ import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
 import { applyStyle, theme } from '../../dependencies/colors.ts';
 
+import { isDirty } from '../../lib/git/isDirty.ts';
 import { getTopLevel } from '../../lib/git/getTopLevel.ts';
-import { getCommitsUpToMax, isDirty } from '../../lib/git.ts';
+import { getCommitsUpToMax } from '../../lib/git/getCommitsUpToMax.ts';
 import { executeProcessCriticalTasks } from '../../lib/exec/executeProcessCriticalTasks.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 

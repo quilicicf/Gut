@@ -8,7 +8,7 @@ import {
 
 import { test } from '../../../src/commands/simple/divisions.ts';
 import { executeProcessCriticalTasks } from '../../../src/lib/exec/executeProcessCriticalTasks.ts';
-import { GIT_CURRENT_BRANCH_CODE, GIT_REMOTE_BRANCH_CODE, GIT_RESET_CODE } from '../../../src/lib/git.ts';
+import { GIT_CURRENT_BRANCH_CODE, GIT_REMOTE_BRANCH_CODE, GIT_RESET_CODE } from '../../../src/lib/git/colorCodes.ts';
 
 const { printDivisions } = test;
 const command = 'gut divisions';

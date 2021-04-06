@@ -1,6 +1,8 @@
 import log from '../../dependencies/log.ts';
 
-import { LOG_FORMATS, getCommitsFromParentBranch, getCommitsUpToMax } from '../../lib/git.ts';
+import { LOG_FORMATS } from '../../lib/git/logFormats.ts';
+import { getCommitsUpToMax } from '../../lib/git/getCommitsUpToMax.ts';
+import { getCommitsFromParentBranch } from '../../lib/git/getCommitsFromParentBranch.ts';
 
 interface Args {
   format: string,

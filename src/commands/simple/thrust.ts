@@ -1,5 +1,6 @@
 import { getBranchRemote } from '../../lib/git/getBranchRemote.ts';
-import { getCurrentBranchName, getRemotes } from '../../lib/git.ts';
+import { getRemotes } from '../../lib/git/getRemotes.ts';
+import { getCurrentBranchName } from '../../lib/git/getCurrentBranchName.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 
 interface Args {

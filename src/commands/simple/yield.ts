@@ -1,8 +1,9 @@
-import { getCurrentBranchName, getRemotes } from '../../lib/git.ts';
-
 import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
+
+import { getRemotes } from '../../lib/git/getRemotes.ts';
+import { getCurrentBranchName } from '../../lib/git/getCurrentBranchName.ts';
 
 interface Args {
   noPull: boolean,

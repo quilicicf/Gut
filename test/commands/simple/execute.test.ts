@@ -6,7 +6,8 @@ import {
   commitShit, deleteRepositories, endTestLogs, initializeRepository, startTestLogs,
 } from '../../utils/setup.ts';
 
-import { Branch, stringifyBranch } from '../../../src/lib/branch.ts';
+import { Branch } from '../../../src/lib/branch/Branch.ts';
+import { stringifyBranch } from '../../../src/lib/branch/stringifyBranch.ts';
 import { executeAndGetStdout } from '../../../src/lib/exec/executeAndGetStdout.ts';
 import { executeProcessCriticalTask } from '../../../src/lib/exec/executeProcessCriticalTask.ts';
 

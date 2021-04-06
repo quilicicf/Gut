@@ -1,6 +1,6 @@
 /* eslint-disable indent */
-import { applyStyle, theme } from '../dependencies/colors.ts';
-import { executeProcessCriticalTask } from './exec/executeProcessCriticalTask.ts';
+import { applyStyle, theme } from '../../dependencies/colors.ts';
+import { executeProcessCriticalTask } from '../exec/executeProcessCriticalTask.ts';
 
 class Remote {
   name: string;

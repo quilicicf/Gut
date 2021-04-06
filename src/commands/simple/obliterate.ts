@@ -2,7 +2,7 @@ import { applyStyle, theme } from '../../dependencies/colors.ts';
 import log from '../../dependencies/log.ts';
 import { promptConfirm, ConfirmOptions } from '../../dependencies/cliffy.ts';
 
-import { findRemote } from '../../lib/remotes.ts';
+import { findRemote } from '../../lib/git/remotes.ts';
 
 interface Args {
   remote?: string,

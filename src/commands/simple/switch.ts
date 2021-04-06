@@ -1,8 +1,10 @@
 import { promptSelect } from '../../dependencies/cliffy.ts';
 import { applyStyle, theme } from '../../dependencies/colors.ts';
 
-import { getAllRefs, getCurrentBranch } from '../../lib/git.ts';
-import { getParentBranch, stringifyBranch } from '../../lib/branch.ts';
+import { getAllRefs } from '../../lib/git/getAllRefs.ts';
+import { getCurrentBranch } from '../../lib/git/getCurrentBranch.ts';
+import { getParentBranch } from '../../lib/branch/getParentBranch.ts';
+import { stringifyBranch } from '../../lib/branch/stringifyBranch.ts';
 import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 

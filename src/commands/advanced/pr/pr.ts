@@ -8,10 +8,13 @@ import { writeToClipboard } from '../../../lib/clipboard.ts';
 import { openInDefaultApplication } from '../../../lib/open.ts';
 import { getBranchRemote } from '../../../lib/git/getBranchRemote.ts';
 import { getRepositoryFomRemote } from '../../../lib/git/getRepositoryFromRemote.ts';
-import { getParentBranch, parseBranchName, stringifyBranch } from '../../../lib/branch.ts';
-import {
-  getCommitsBetweenRefs, getCommitsUpToMax, getCurrentBranchName, getDiffBetweenRefs,
-} from '../../../lib/git.ts';
+import { getParentBranch } from '../../../lib/branch/getParentBranch.ts';
+import { parseBranchName } from '../../../lib/branch/parseBranchName.ts';
+import { stringifyBranch } from '../../../lib/branch/stringifyBranch.ts';
+import { getCommitsUpToMax } from '../../../lib/git/getCommitsUpToMax.ts';
+import { getDiffBetweenRefs } from '../../../lib/git/getDiffBetweenRefs.ts';
+import { getCurrentBranchName } from '../../../lib/git/getCurrentBranchName.ts';
+import { getCommitsBetweenRefs } from '../../../lib/git/getCommitsBetweenRefs.ts';
 
 import { github } from './reviewTools/Github.ts';
 import { PullRequestCreation, ReviewTool } from './ReviewTool.ts';

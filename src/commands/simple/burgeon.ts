@@ -1,6 +1,6 @@
 import { promptString } from '../../dependencies/cliffy.ts';
 
-import { getCurrentBranchName } from '../../lib/git.ts';
+import { getCurrentBranchName } from '../../lib/git/getCurrentBranchName.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 
 interface Args {

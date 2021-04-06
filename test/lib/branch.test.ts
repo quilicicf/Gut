@@ -1,9 +1,11 @@
 import { __, applyStyle, theme } from '../../src/dependencies/colors.ts';
 
 import { assertEquals, assertThrows } from '../utils/assert.ts';
-import {
-  parseBranchName, Branch, stringifyBranch, isPocBranch, getParentBranch,
-} from '../../src/lib/branch.ts';
+import { Branch } from '../../src/lib/branch/Branch.ts';
+import { isPocBranch } from '../../src/lib/branch/isPocBranch.ts';
+import { parseBranchName } from '../../src/lib/branch/parseBranchName.ts';
+import { stringifyBranch } from '../../src/lib/branch/stringifyBranch.ts';
+import { getParentBranch } from '../../src/lib/branch/getParentBranch.ts';
 
 const BRANCHES: { [ key: string ]: { name: string, branch: Branch, parent?: string } } = {
   MASTER: {

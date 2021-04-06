@@ -9,8 +9,9 @@ import { promptSelect } from '../../dependencies/cliffy.ts';
 
 import { EMOJIS } from '../../lib/emojis.ts';
 import { editText } from '../../lib/editText.ts';
-import { getIssueIdOrEmpty } from '../../lib/branch.ts';
-import { getCommitsUpToMax, getCurrentBranchName } from '../../lib/git.ts';
+import { getIssueIdOrEmpty } from '../../lib/branch/getIssueIdOrEmpty.ts';
+import { getCommitsUpToMax } from '../../lib/git/getCommitsUpToMax.ts';
+import { getCurrentBranchName } from '../../lib/git/getCurrentBranchName.ts';
 import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 

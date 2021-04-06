@@ -1,14 +1,12 @@
 import log from '../../dependencies/log.ts';
 import { detect as detectEol } from '../../dependencies/fs.ts';
+import { __, applyStyle, theme } from '../../dependencies/colors.ts';
 import {
   isEmpty, pad, padLeft, padRight, set, size,
 } from '../../dependencies/ramda.ts';
-import {
-  __, applyStyle, theme,
-} from '../../dependencies/colors.ts';
 
-import { getCommitsFromParentBranch } from '../../lib/git.ts';
 import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
+import { getCommitsFromParentBranch } from '../../lib/git/getCommitsFromParentBranch.ts';
 
 const REGEX_LINE_ADDED = /^\+/;
 const REGEX_LINE_REMOVED = /^-/;

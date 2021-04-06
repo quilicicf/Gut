@@ -1,7 +1,9 @@
 import { __, applyStyle, theme } from '../../src/dependencies/colors.ts';
 
+import { Commit } from '../../src/lib/git/Commit.ts';
+import { LOG_FORMATS } from '../../src/lib/git/logFormats.ts';
+
 import { fail, assertEquals } from '../utils/assert.ts';
-import { Commit, LOG_FORMATS } from '../../src/lib/git.ts';
 
 const testCommit: Commit = {
   sha: '49cd5b309e581061536bb0895cea53ae85acfcb0',

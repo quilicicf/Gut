@@ -1,8 +1,8 @@
 import log from '../../dependencies/log.ts';
 
-import { moveUpTop } from '../../lib/git.ts';
-import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
+import { moveUpTop } from '../../lib/git/moveUpTop.ts';
 import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
+import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 
 export const command = 'pile';
 export const aliases = [ 'p' ];
