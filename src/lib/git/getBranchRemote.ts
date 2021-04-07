@@ -6,7 +6,9 @@ export async function getBranchRemote (): Promise<string | undefined> {
       'git', 'rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}',
     ], true);
 
-    return output.split('/')?.[ 0 ];
+    return output === ''
+      ? undefined
+      : output.split('/')[ 0 ];
   } catch (error) {
     return undefined;
   }
