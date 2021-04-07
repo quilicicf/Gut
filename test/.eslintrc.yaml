@@ -8,3 +8,5 @@ rules:
     - error
     - ignore:
         - ^http
+  import/prefer-default-export:
+    - off
