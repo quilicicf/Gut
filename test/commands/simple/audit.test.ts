@@ -166,18 +166,18 @@ console.log('Updated :wink:');
 
 Deno.test(applyStyle(__`@int ${command} should print oddities`, [ theme.strong ]), async () => {
   await startTestLogs();
-  const { tmpDir, testRepositoryPath } = await initializeRepository('gut_test_audit');
-  await Deno.writeTextFile(resolve(testRepositoryPath, 'index.ts'), firstFileVersion);
+  const repository = await initializeRepository('gut_test_audit');
+  await Deno.writeTextFile('index.ts', firstFileVersion);
   await executeProcessCriticalTasks([
     [ 'git', 'add', '.', '--all' ],
     [ 'git', 'commit', '--message', 'Mkay' ],
   ]);
-  await Deno.writeTextFile(resolve(testRepositoryPath, 'index.ts'), secondFileVersion);
+  await Deno.writeTextFile('index.ts', secondFileVersion);
   await executeProcessCriticalTask([ 'git', 'add', '.', '--all' ]);
 
   const output = await generateDiff({});
 
-  await deleteRepositories(tmpDir, testRepositoryPath);
+  await deleteRepositories(repository);
 
   const removeSha = (input: string): string => input.replace(/[a-f0-9]+\.\.[a-f0-9]+/g, '');
 

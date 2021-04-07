@@ -14,9 +14,9 @@ const { printDivisions } = test;
 const command = 'gut divisions';
 Deno.test(applyStyle(__`@int ${command} should show local branches`, [ theme.strong ]), async () => {
   await startTestLogs();
-  const { tmpDir, testRepositoryPath } = await initializeRepository('gut_test_divisions_local');
+  const repository = await initializeRepository('gut_test_divisions_local');
 
-  await Deno.writeTextFile(resolve(testRepositoryPath, 'aFile'), 'whatever');
+  await Deno.writeTextFile('aFile', 'whatever');
   await executeProcessCriticalTasks([
     [ 'git', 'add', '.', '--all' ],
     [ 'git', 'commit', '--message', '"Mkay"' ],
@@ -27,7 +27,7 @@ Deno.test(applyStyle(__`@int ${command} should show local branches`, [ theme.str
 
   const output = await printDivisions(undefined);
 
-  await deleteRepositories(tmpDir, testRepositoryPath);
+  await deleteRepositories(repository);
 
   const expected = `\
   master${GIT_RESET_CODE}
@@ -40,22 +40,22 @@ Deno.test(applyStyle(__`@int ${command} should show local branches`, [ theme.str
 
 Deno.test(applyStyle(__`@int ${command} should show remote branches`, [ theme.strong ]), async () => {
   await startTestLogs();
-  const { tmpDir, testRepositoryPath } = await initializeRepository('gut_test_divisions_remote');
+  const repository = await initializeRepository('gut_test_divisions_remote');
   await Deno.writeTextFile('aFile', 'whatever');
   await executeProcessCriticalTasks([
     [ 'git', 'add', '.', '--all' ],
     [ 'git', 'commit', '--message', '"Mkay"' ],
   ]);
 
-  const originRepositoryPath = await initializeRemote(tmpDir, testRepositoryPath, 'origin');
-  const upstreamRepositoryPath = await initializeRemote(tmpDir, testRepositoryPath, 'upstream');
+  const originRepository = await initializeRemote(repository, 'origin');
+  const upstreamRepository = await initializeRemote(repository, 'upstream');
 
   const outputO = await printDivisions('o');
   const outputOrigin = await printDivisions('origin');
   const outputU = await printDivisions('u');
   const outputUpstream = await printDivisions('upstream');
 
-  await deleteRepositories(tmpDir, testRepositoryPath, originRepositoryPath, upstreamRepositoryPath);
+  await deleteRepositories(repository, originRepository, upstreamRepository);
 
   assertEquals(outputO, `  ${GIT_REMOTE_BRANCH_CODE}origin/master${GIT_RESET_CODE}\n`);
   assertEquals(outputOrigin, `  ${GIT_REMOTE_BRANCH_CODE}origin/master${GIT_RESET_CODE}\n`);

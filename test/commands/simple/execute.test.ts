@@ -18,8 +18,8 @@ const command = 'gut execute';
 
 Deno.test(applyStyle(__`@int ${command} should commit with message`, [ theme.strong ]), async () => {
   await startTestLogs();
-  const { tmpDir, testRepositoryPath } = await initializeRepository('gut_test_execute_message');
-  await commitShit(testRepositoryPath, 1);
+  const repository = await initializeRepository('gut_test_execute_message');
+  await commitShit(repository, 1);
 
   const branch: Branch = {
     fragments: [ { description: 'test', issueId: 'TEST-123' } ],
@@ -27,14 +27,14 @@ Deno.test(applyStyle(__`@int ${command} should commit with message`, [ theme.str
   const branchName = stringifyBranch(branch);
 
   await executeProcessCriticalTask([ 'git', 'checkout', '-b', branchName ]);
-  await Deno.writeTextFile(resolve(testRepositoryPath, 'aFile'), 'whatever');
+  await Deno.writeTextFile('aFile', 'whatever');
   await executeProcessCriticalTask([ 'git', 'add', '.', '--all' ]);
 
   const expectedCommitMessage = ':construction: Test commit';
   await commitWithMessage(expectedCommitMessage);
   const actualCommitMessage = await executeAndGetStdout([ 'git', 'log', '--max-count=1', '--pretty=format:%s' ]);
 
-  await deleteRepositories(tmpDir, testRepositoryPath);
+  await deleteRepositories(repository);
 
   await endTestLogs();
   assertEquals(actualCommitMessage, expectedCommitMessage);

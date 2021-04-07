@@ -11,7 +11,7 @@ import { getAllRefs } from '../../../src/lib/git/getAllRefs.ts';
 
 Deno.test(applyStyle(__`@int ${`${LOCATION}/getAllRefs`}`, [ theme.strong ]), async () => {
   await startTestLogs();
-  const { tmpDir, testRepositoryPath } = await initializeRepository('gut_test_getAllRefs');
+  const repository = await initializeRepository('gut_test_getAllRefs');
 
   await Deno.writeTextFile('aFile', 'whatever');
   await executeProcessCriticalTasks([
@@ -19,7 +19,7 @@ Deno.test(applyStyle(__`@int ${`${LOCATION}/getAllRefs`}`, [ theme.strong ]), as
     [ 'git', 'commit', '--message', 'Mkay' ],
   ]);
 
-  const originRepositoryPath = await initializeRemote(tmpDir, testRepositoryPath, 'origin');
+  const originRepositoryPath = await initializeRemote(repository, 'origin');
   await Deno.writeTextFile('anotherFile', 'whatever');
   await executeProcessCriticalTasks([
     [ 'git', 'tag', 'da_tag' ],
@@ -37,7 +37,7 @@ Deno.test(applyStyle(__`@int ${`${LOCATION}/getAllRefs`}`, [ theme.strong ]), as
   const allRefs = await getAllRefs();
   const onlyBranches = await getAllRefs('only');
 
-  await deleteRepositories(tmpDir, testRepositoryPath, originRepositoryPath);
+  await deleteRepositories(repository, originRepositoryPath);
 
   assertEquals(allRefs, {
     branches: [ 'local-only', 'master', 'remote-only' ],

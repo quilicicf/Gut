@@ -11,15 +11,15 @@ const command = 'gut history';
 
 Deno.test(applyStyle(__`@int ${command} should limit commits to max number`, [ theme.strong ]), async () => {
   await startTestLogs();
-  const { tmpDir, testRepositoryPath } = await initializeRepository('gut_test_history_number');
-  await commitShit(testRepositoryPath, 1);
-  await commitShit(testRepositoryPath, 2);
+  const repository = await initializeRepository('gut_test_history_number');
+  await commitShit(repository, 1);
+  await commitShit(repository, 2);
 
   const output = await history({
     format: 'subject', number: 2, reverse: false,
   });
 
-  await deleteRepositories(tmpDir, testRepositoryPath);
+  await deleteRepositories(repository);
 
   await endTestLogs();
   assertEquals(output.map(({ subject }) => subject), [ 'Commit_#2', 'Commit_#1' ]);
@@ -27,15 +27,15 @@ Deno.test(applyStyle(__`@int ${command} should limit commits to max number`, [ t
 
 Deno.test(applyStyle(__`@int ${command} should show commits in reverse order`, [ theme.strong ]), async () => {
   await startTestLogs();
-  const { tmpDir, testRepositoryPath } = await initializeRepository('gut_test_history_reverse');
-  await commitShit(testRepositoryPath, 1);
-  await commitShit(testRepositoryPath, 2);
+  const repository = await initializeRepository('gut_test_history_reverse');
+  await commitShit(repository, 1);
+  await commitShit(repository, 2);
 
   const output = await history({
     format: 'subject', number: 10, reverse: true,
   });
 
-  await deleteRepositories(tmpDir, testRepositoryPath);
+  await deleteRepositories(repository);
 
   await endTestLogs();
   assertEquals(output.map(({ subject }) => subject), [ 'Commit_#1', 'Commit_#2' ]);
@@ -43,16 +43,16 @@ Deno.test(applyStyle(__`@int ${command} should show commits in reverse order`, [
 
 Deno.test(applyStyle(__`@int ${command} should show commits from base branch`, [ theme.strong ]), async () => {
   await startTestLogs();
-  const { tmpDir, testRepositoryPath } = await initializeRepository('gut_test_history_fromBaseBranch');
-  await commitShit(testRepositoryPath, 1);
+  const repository = await initializeRepository('gut_test_history_fromBaseBranch');
+  await commitShit(repository, 1);
   await executeProcessCriticalTask([ 'git', 'checkout', '-b', 'master__anotherBranch' ]);
-  await commitShit(testRepositoryPath, 2);
+  await commitShit(repository, 2);
 
   const output = await history({
     format: 'subject', number: 10, reverse: false, fromParentBranch: true,
   });
 
-  await deleteRepositories(tmpDir, testRepositoryPath);
+  await deleteRepositories(repository);
 
   await endTestLogs();
   assertEquals(output.map(({ subject }) => subject), [ 'Commit_#2' ]);

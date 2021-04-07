@@ -7,7 +7,6 @@ import { editText } from '../../../lib/editText.ts';
 import { writeToClipboard } from '../../../lib/clipboard.ts';
 import { openInDefaultApplication } from '../../../lib/open.ts';
 import { getBranchRemote } from '../../../lib/git/getBranchRemote.ts';
-import { getRepositoryFomRemote } from '../../../lib/git/getRepositoryFromRemote.ts';
 import { getParentBranch } from '../../../lib/branch/getParentBranch.ts';
 import { parseBranchName } from '../../../lib/branch/parseBranchName.ts';
 import { stringifyBranch } from '../../../lib/branch/stringifyBranch.ts';
@@ -15,6 +14,7 @@ import { getCommitsUpToMax } from '../../../lib/git/getCommitsUpToMax.ts';
 import { getDiffBetweenRefs } from '../../../lib/git/getDiffBetweenRefs.ts';
 import { getCurrentBranchName } from '../../../lib/git/getCurrentBranchName.ts';
 import { getCommitsBetweenRefs } from '../../../lib/git/getCommitsBetweenRefs.ts';
+import { getRepositoryFromRemote } from '../../../lib/git/getRepositoryFromRemote.ts';
 
 import { github } from './reviewTools/Github.ts';
 import { PullRequestCreation, ReviewTool } from './ReviewTool.ts';
@@ -166,8 +166,8 @@ export async function handler (args: Args) {
     await thrust(false);
   }
 
-  const { owner: originOwner } = await getRepositoryFomRemote();
-  const { owner: repositoryOwner, name: repositoryName } = await getRepositoryFomRemote(remote);
+  const { owner: originOwner } = await getRepositoryFromRemote();
+  const { owner: repositoryOwner, name: repositoryName } = await getRepositoryFromRemote(remote);
   const reviewToolConfiguration = configuration.global.tools?.github; // TODO: allow changing this from configuration
   const username = reviewToolConfiguration?.account?.username;
   const token = reviewToolConfiguration?.account?.password;

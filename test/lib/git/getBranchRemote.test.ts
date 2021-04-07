@@ -12,7 +12,7 @@ import { executeProcessCriticalTasks } from '../../../src/lib/exec/executeProces
 
 Deno.test(applyStyle(__`@int ${`${LOCATION}/getBranchRemote`}`, [ theme.strong ]), async () => {
   await startTestLogs();
-  const { tmpDir, testRepositoryPath } = await initializeRepository('gut_test_getBranchRemote');
+  const repository = await initializeRepository('gut_test_getBranchRemote');
 
   await Deno.writeTextFile('aFile', 'whatever');
   await executeProcessCriticalTasks([
@@ -20,7 +20,7 @@ Deno.test(applyStyle(__`@int ${`${LOCATION}/getBranchRemote`}`, [ theme.strong ]
     [ 'git', 'commit', '--message', 'Mkay' ],
   ]);
 
-  const originRepositoryPath = await initializeRemote(tmpDir, testRepositoryPath, 'origin');
+  const originRepositoryPath = await initializeRemote(repository, 'origin');
 
   await executeProcessCriticalTask([ 'git', 'checkout', '-b', 'test-branch' ]);
   const remoteBeforePush = await getBranchRemote();
@@ -33,7 +33,7 @@ Deno.test(applyStyle(__`@int ${`${LOCATION}/getBranchRemote`}`, [ theme.strong ]
   ]);
   const remoteAfterPush = await getBranchRemote();
 
-  await deleteRepositories(tmpDir, testRepositoryPath, originRepositoryPath);
+  await deleteRepositories(repository, originRepositoryPath);
 
   assertEquals(remoteBeforePush, undefined);
   assertEquals(remoteAfterPush, 'origin');

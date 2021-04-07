@@ -7,25 +7,17 @@ import {
 import { LOCATION } from './git.utils.ts';
 import { assertEquals } from '../../utils/assert.ts';
 
-import { getCommitsBetweenRefs } from '../../../src/lib/git/getCommitsBetweenRefs.ts';
-import { executeProcessCriticalTasks } from '../../../src/lib/exec/executeProcessCriticalTasks.ts';
+import { getCommitsUpToMax } from '../../../src/lib/git/getCommitsUpToMax.ts';
 
-Deno.test(applyStyle(__`@int ${`${LOCATION}/getCommitsBetweenRefs`}`, [ theme.strong ]), async () => {
+Deno.test(applyStyle(__`@int ${`${LOCATION}/getCommitsUpToMax`}`, [ theme.strong ]), async () => {
   await startTestLogs();
-  const repository = await initializeRepository('gut_test_getCommitsBetweenRefs');
-
-  await Deno.writeTextFile('aFile', 'whatever');
-  await executeProcessCriticalTasks([
-    [ 'git', 'add', '.', '--all' ],
-    [ 'git', 'commit', '--message', 'Mkay' ],
-    [ 'git', 'checkout', '-b', 'other-ref' ],
-  ]);
+  const repository = await initializeRepository('gut_test_getCommitsUpToMax');
 
   const { subject: oldestCommitSubject } = await commitShit(repository, 1);
   const { subject: latestCommitSubject } = await commitShit(repository, 2);
 
-  const commits = await getCommitsBetweenRefs('master', 'other-ref', false);
-  const reversedCommits = await getCommitsBetweenRefs('master', 'other-ref', true);
+  const commits = await getCommitsUpToMax(2, false);
+  const reversedCommits = await getCommitsUpToMax(2, true);
 
   await deleteRepositories(repository);
 

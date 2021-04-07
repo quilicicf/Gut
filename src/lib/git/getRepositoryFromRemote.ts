@@ -1,4 +1,4 @@
-export async function getRepositoryFomRemote (remote: string = 'origin') {
+export async function getRepositoryFromRemote (remote: string = 'origin') {
   const process = Deno.run({
     cmd: [ 'git', 'remote', 'show', '-n', remote ],
     stdin: 'null',
