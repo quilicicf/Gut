@@ -28,7 +28,7 @@ import * as pr from './src/commands/advanced/pr/pr.ts';
 //   --allow-read="/home/cyp/work/forge/,/home/cyp/.config/gut/" \
 //   --allow-write="/home/cyp/work/forge/,/home/cyp/.config/gut/" \
 //   --allow-run \
-//   --name gd \
+//   --name g \
 //   --no-check \
 //   --force mod.ts
 const main = async () => {
