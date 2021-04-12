@@ -1,4 +1,3 @@
-import { resolve } from '../../../src/dependencies/path.ts';
 import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
 
 import { assertEquals } from '../../utils/assert.ts';

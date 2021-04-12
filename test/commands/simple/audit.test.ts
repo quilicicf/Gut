@@ -1,11 +1,12 @@
-import { resolve } from '../../../src/dependencies/path.ts';
 import { detect as detectEol } from '../../../src/dependencies/fs.ts';
 import {
   RESET_CODE, __, applyStyle, theme,
 } from '../../../src/dependencies/colors.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
-import { initializeRepository, deleteRepositories, startTestLogs, endTestLogs } from '../../utils/setup.ts';
+import {
+  initializeRepository, deleteRepositories, startTestLogs, endTestLogs,
+} from '../../utils/setup.ts';
 
 import { ParsingState, test } from '../../../src/commands/simple/audit.ts';
 import { executeProcessCriticalTasks } from '../../../src/lib/exec/executeProcessCriticalTasks.ts';
