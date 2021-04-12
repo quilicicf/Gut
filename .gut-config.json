@@ -1,17 +1,5 @@
 {
-  "ci": {
-    "jenkins": {
-      "build": {
-        "server": "personal",
-        "uri": "/jobs/gut",
-        "body": {
-          "branch_or_tag": "$currentBranch"
-        }
-      }
-    }
-  },
   "shouldUseEmojis": true,
   "shouldUseIssueNumbers": true,
-  "commitMessageSuffixTemplate": "#$ticketNumber",
   "reviewTool": "github"
 }
