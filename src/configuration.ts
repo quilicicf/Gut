@@ -1,8 +1,8 @@
 import { resolve } from './dependencies/path.ts';
 import { exists } from './dependencies/fs.ts';
 
+import { getConstants } from './constants.ts';
 import { getTopLevel } from './lib/git/getTopLevel.ts';
-import { executeAndGetStdout } from './lib/exec/executeAndGetStdout.ts';
 
 export interface Account {
   username: string,
@@ -34,11 +34,9 @@ export interface FullGutConfiguration {
   repository?: RepositoryGutConfiguration,
 }
 
-export const CONFIGURATION_FILE_NAME = '.gut-config.json';
-
 export async function getConfiguration (): Promise<FullGutConfiguration> {
-  const user = await executeAndGetStdout([ 'whoami' ], true);
-  const globalConfigurationPath = resolve('/home', user, '.config', 'gut', CONFIGURATION_FILE_NAME);
+  const { GUT_CONFIGURATION_FOLDER, CONFIGURATION_FILE_NAME } = await getConstants();
+  const globalConfigurationPath = resolve(GUT_CONFIGURATION_FOLDER, CONFIGURATION_FILE_NAME);
   const globalConfigurationAsJson = await Deno.readTextFile(globalConfigurationPath); // TODO: no configuration file?
   const globalConfiguration: GlobalGutConfiguration = JSON.parse(globalConfigurationAsJson);
 

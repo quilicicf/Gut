@@ -1,6 +1,5 @@
 import log from './src/dependencies/log.ts';
 import { yargs } from './src/dependencies/yargs.ts';
-import install from './src/commands/internals/install.ts';
 import { applyStyle, theme } from './src/dependencies/colors.ts';
 
 import { getConfiguration } from './src/configuration.ts';
@@ -17,6 +16,9 @@ import * as history from './src/commands/simple/history.ts';
 import * as replicate from './src/commands/simple/replicate.ts';
 import * as divisions from './src/commands/simple/divisions.ts';
 import * as obliterate from './src/commands/simple/obliterate.ts';
+
+import jump from './src/commands/internals/jump.ts';
+import install from './src/commands/internals/install.ts';
 
 import * as pr from './src/commands/advanced/pr/pr.ts';
 
@@ -60,6 +62,7 @@ const main = async () => {
     .command(pr)
 
     // Internals
+    .command(jump)
     .command(install)
 
     // To check that Gut is installed or just mess around
@@ -70,6 +73,7 @@ const main = async () => {
     .help()
     .version()
     .epilogue('For more information, read the manual at https://github.com/quilicicf/Gut/blob/master/specs/user_documentation.md')
+    .wrap(null)
     .parse(Deno.args);
 };
 
