@@ -1,6 +1,7 @@
 import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
 import { applyStyle, theme } from '../../dependencies/colors.ts';
+import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
 
 import { isDirty } from '../../lib/git/isDirty.ts';
 import { getTopLevel } from '../../lib/git/getTopLevel.ts';
@@ -18,38 +19,42 @@ interface Args {
   isTestRun: boolean,
 }
 
+const ARG_HARD = 'hard';
+const ARG_STASH_CHANGES = 'stash-changes';
+
 export const command = 'undo';
 export const aliases = [ 'u' ];
 export const describe = 'Undoes commits';
+export const options: YargsOptions = {
+  'commits-number': {
+    alias: 'n',
+    describe: 'The number of commits to undo',
+    type: 'integer',
+    default: 1,
+  },
+  [ ARG_STASH_CHANGES ]: {
+    alias: 's',
+    describe: 'Stashes the changes',
+    type: 'boolean',
+    default: false,
+  },
+  description: {
+    alias: 'd',
+    describe: `Sets the description used as stash entry if --${ARG_STASH_CHANGES} is used`,
+    type: 'string',
+    implies: [ ARG_STASH_CHANGES ],
+  },
+  [ ARG_HARD ]: {
+    alias: 'h',
+    describe: 'Deletes the changes permanently, a confirmation is prompted to prevent data loss',
+    type: 'boolean',
+    default: false,
+  },
+};
+export const usage = toYargsUsage(command, options);
 
 export async function builder (yargs: any) {
-  const stashChangesArgument = 'stash-changes';
-  const hardArgument = 'hard';
-  return yargs.usage(`usage: gut ${command} [options]`)
-    .option('commits-number', {
-      alias: 'n',
-      describe: 'The number of commits to undo',
-      type: 'integer',
-      default: 1,
-    })
-    .option(stashChangesArgument, {
-      alias: 's',
-      describe: 'Stashes the changes',
-      type: 'boolean',
-      default: false,
-    })
-    .option('description', {
-      alias: 'd',
-      describe: `Sets the description used as stash entry if --${stashChangesArgument} is used`,
-      type: 'string',
-      implies: stashChangesArgument,
-    })
-    .option(hardArgument, {
-      alias: 'h',
-      describe: 'Deletes the changes permanently, a confirmation is prompted to prevent data loss',
-      type: 'boolean',
-      default: false,
-    })
+  return bindOptionsAndCreateUsage(yargs, command, usage, options)
     .check((args: Args) => {
       if (args.description && !/^[a-zA-Z0-9_-]$/.test(args.description)) {
         throw Error('The description can only contain alpha-numeric characters and -_');
@@ -60,7 +65,7 @@ export async function builder (yargs: any) {
       }
 
       if (args.hard && args.stashChanges) {
-        throw Error(`The parameters --${hardArgument} and --${stashChangesArgument} are mutually exclusive.`);
+        throw Error(`The parameters --${ARG_HARD} and --${ARG_STASH_CHANGES} are mutually exclusive.`);
       }
 
       return true;

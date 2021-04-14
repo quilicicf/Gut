@@ -1,8 +1,9 @@
 import log from '../../dependencies/log.ts';
 import { resolve, fromFileUrl } from '../../dependencies/path.ts';
+import { __, applyStyle, theme } from '../../dependencies/colors.ts';
+import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
 
 import { getConstants } from '../../constants.ts';
-import { __, applyStyle, theme } from '../../dependencies/colors.ts';
 
 interface Args {
   installName: string;
@@ -54,18 +55,23 @@ const installShellFeatures = async (installName: string) => {
   ].join('\n'));
 };
 
-export default {
-  command: 'install',
-  aliases: [ 'i' ],
-  describe: 'Installs gut',
-  builder: (yargs: any) => yargs.usage('gut install [options]')
-    .option('install-name', {
-      alias: 'n',
-      describe: 'The name you gave to gut when installing it',
-      type: 'string',
-      default: 'gut',
-    }),
-  handler: async ({ installName }: Args) => {
-    await installShellFeatures(installName);
+export const command = 'install';
+export const aliases = [ 'i' ];
+export const describe = 'Installs Gut shell features (by copying them in $HOME/.config/gut)';
+export const options: YargsOptions = {
+  'install-name': {
+    alias: 'n',
+    describe: 'The name you gave to Gut when installing it',
+    type: 'string',
+    default: 'gut',
   },
 };
+export const usage = toYargsUsage(command, options);
+
+export function builder (yargs: any) {
+  return bindOptionsAndCreateUsage(yargs, command, usage, options);
+}
+
+export async function handler ({ installName }: Args) {
+  await installShellFeatures(installName);
+}

@@ -1,5 +1,6 @@
 import { promptSelect } from '../../dependencies/cliffy.ts';
 import { applyStyle, theme } from '../../dependencies/colors.ts';
+import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
 
 import { getAllRefs } from '../../lib/git/getAllRefs.ts';
 import { getCurrentBranch } from '../../lib/git/getCurrentBranch.ts';
@@ -18,22 +19,66 @@ interface Args {
   search?: string,
 }
 
-const simpleCommand = 'switch';
-export const command = `${simpleCommand} [search]`;
+export const command = 'switch';
 export const aliases = [ 's' ];
 export const describe = 'Checks out a branch';
+export const options: YargsOptions = {
+  master: {
+    alias: 'm',
+    describe: 'Switch to master',
+    type: 'boolean',
+  },
+  parent: {
+    alias: 'p',
+    describe: 'Switch to parent branch',
+    type: 'boolean',
+  },
+  'default-branch': {
+    alias: 'd',
+    describe: 'Switch to the default branch on the provided remote. Defaults to origin',
+    type: 'string',
+    coerce (input: string) {
+      const remoteRegex = /^[^a-z0-9A-Z_]+$/;
+      if (input !== '' && !remoteRegex.test(input)) {
+        throw Error(applyStyle(`Remote names must match ${remoteRegex}`, [ theme.error ]));
+      }
+      return input;
+    },
+  },
+  last: {
+    alias: 'l',
+    describe: 'Switch to last branch',
+    type: 'boolean',
+  },
+  'tags-only': {
+    alias: 't',
+    describe: 'Only choose from tags',
+    type: 'boolean',
+  },
+  'branches-only': {
+    alias: 'b',
+    describe: 'Only choose from branches',
+    type: 'boolean',
+  },
+  search: {
+    describe: 'Search text to filter the candidates',
+    type: 'string',
+    isPositionalOption: true,
+  },
+};
+export const usage = toYargsUsage(command, options);
 
 const switchToBranch = async (branch: string) => {
   await executeProcessCriticalTask([ 'git', 'checkout', branch ]);
 };
 
-const selectRefAndSwitch = async (options: string[]) => {
-  if (options.length === 0) { throw Error('No ref matches your search!'); }
-  if (options.length === 1) { return switchToBranch(options[ 0 ]); }
+const selectRefAndSwitch = async (candidateRefs: string[]) => {
+  if (candidateRefs.length === 0) { throw Error('No ref matches your search!'); }
+  if (candidateRefs.length === 1) { return switchToBranch(candidateRefs[ 0 ]); }
 
   const ref = await promptSelect({
     message: 'Choose the ref to switch to',
-    options,
+    options: candidateRefs,
     search: true,
   });
 
@@ -41,48 +86,7 @@ const selectRefAndSwitch = async (options: string[]) => {
 };
 
 export async function builder (yargs: any) {
-  return yargs.usage(`usage: gut ${simpleCommand} [options]`)
-    .option('master', {
-      alias: 'm',
-      describe: 'Switch to master',
-      type: 'boolean',
-    })
-    .option('parent', {
-      alias: 'p',
-      describe: 'Switch to parent branch',
-      type: 'boolean',
-    })
-    .option('default-branch', {
-      alias: 'd',
-      describe: 'Switch to the default branch on the provided remote. Defaults to origin',
-      type: 'string',
-      coerce (input: string) {
-        const remoteRegex = /^[^a-z0-9A-Z_]+$/;
-        if (input !== '' && !remoteRegex.test(input)) {
-          throw Error(applyStyle(`Remote names must match ${remoteRegex}`, [ theme.error ]));
-        }
-        return input;
-      },
-    })
-    .option('last', {
-      alias: 'l',
-      describe: 'Switch to last branch',
-      type: 'boolean',
-    })
-    .option('tags-only', {
-      alias: 't',
-      describe: 'Only choose from tags',
-      type: 'boolean',
-    })
-    .option('branches-only', {
-      alias: 'b',
-      describe: 'Only choose from branches',
-      type: 'boolean',
-    })
-    .positional('search', {
-      describe: 'Search text to filter the candidates',
-      type: 'string',
-    });
+  return bindOptionsAndCreateUsage(yargs, command, usage, options);
 }
 
 export async function handler (args: Args) {

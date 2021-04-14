@@ -1,6 +1,7 @@
-import { applyStyle, theme } from '../../dependencies/colors.ts';
 import log from '../../dependencies/log.ts';
+import { applyStyle, theme } from '../../dependencies/colors.ts';
 import { promptConfirm, ConfirmOptions } from '../../dependencies/cliffy.ts';
+import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
 
 import { findRemote } from '../../lib/git/remotes.ts';
 
@@ -14,35 +15,41 @@ interface Args {
   isTestRun: boolean,
 }
 
+const ARG_TAG = 'tag';
+const ARG_BRANCH = 'branch';
+
 export const command = 'obliterate';
 export const aliases = [ 'o' ];
 export const describe = 'Deletes a branch or a tag';
+export const options: YargsOptions = {
+  [ ARG_BRANCH ]: {
+    alias: 'b',
+    describe: 'The branch to delete',
+    type: 'string',
+    conflicts: [ ARG_TAG ],
+  },
+  [ ARG_TAG ]: {
+    alias: 't',
+    describe: 'The tag to delete',
+    type: 'string',
+    conflicts: [ ARG_BRANCH ],
+  },
+  remote: {
+    alias: 'r',
+    describe: 'The remote where the item should be deleted. Leave empty to delete the item locally.',
+    type: 'string',
+  },
+  'assume-yes': {
+    alias: 'y',
+    describe: 'Does not show confirmation before deleting. To be used with caution.',
+    type: 'boolean',
+    default: false,
+  },
+};
+export const usage = toYargsUsage(command, options);
 
 export function builder (yargs: any) {
-  return yargs.usage(`usage: gut ${command} [options]`)
-    .option('branch', {
-      alias: 'b',
-      describe: 'The branch to delete',
-      type: 'string',
-      conflicts: 'tag',
-    })
-    .option('tag', {
-      alias: 't',
-      describe: 'The tag to delete',
-      type: 'string',
-      conflicts: 'branch',
-    })
-    .option('remote', {
-      alias: 'r',
-      describe: 'The remote where the item should be deleted. Leave empty to delete the item locally.',
-      type: 'string',
-    })
-    .option('assume-yes', {
-      alias: 'y',
-      describe: 'Does not show confirmation before deleting. To be used with caution.',
-      type: 'boolean',
-      default: false,
-    })
+  return bindOptionsAndCreateUsage(yargs, command, usage, options)
     .check((currentArguments: Args) => {
       if (!currentArguments.branch && !currentArguments.tag) {
         throw Error(applyStyle('You must specify the branch/tag you want to delete', [ theme.error ]));

@@ -1,4 +1,5 @@
 import { promptString } from '../../dependencies/cliffy.ts';
+import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
 
 import { getCurrentBranchName } from '../../lib/git/getCurrentBranchName.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
@@ -26,14 +27,17 @@ function camelCase (input: string): string {
 export const command = 'burgeon';
 export const aliases = [ 'b' ];
 export const describe = 'Creates a branch';
+export const options: YargsOptions = {
+  'ticket-number': {
+    alias: 'n',
+    describe: 'Specifies the ticket number when creating a new branch',
+    type: 'string',
+  },
+};
+export const usage = toYargsUsage(command, options);
 
 export function builder (yargs: any) {
-  return yargs.usage('usage: gut burgeon [options]')
-    .option('ticket-number', {
-      alias: 'n',
-      describe: 'Specifies the ticket number when creating a new branch',
-      type: 'string',
-    });
+  return bindOptionsAndCreateUsage(yargs, command, usage, options);
 }
 
 export async function handler ({ ticketNumber, isTestRun, testDescription }: Args) {

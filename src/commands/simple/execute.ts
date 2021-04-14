@@ -1,14 +1,14 @@
-import { FullGutConfiguration } from '../../configuration.ts';
-
 import {
   __, applyStyle, theme,
 } from '../../dependencies/colors.ts';
 import log from '../../dependencies/log.ts';
 import { resolve } from '../../dependencies/path.ts';
 import { promptSelect } from '../../dependencies/cliffy.ts';
+import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
 
 import { EMOJIS } from '../../lib/emojis.ts';
 import { editText } from '../../lib/editText.ts';
+import { FullGutConfiguration } from '../../configuration.ts';
 import { getIssueIdOrEmpty } from '../../lib/branch/getIssueIdOrEmpty.ts';
 import { getCommitsUpToMax } from '../../lib/git/getCommitsUpToMax.ts';
 import { getCurrentBranchName } from '../../lib/git/getCurrentBranchName.ts';
@@ -82,10 +82,6 @@ const promptForEmoji = async () => promptSelect({
   search: true,
 });
 
-export const command = 'execute';
-export const aliases = [ 'e' ];
-export const describe = 'Commits the staged changes';
-
 const ARG_CODE_REVIEW = 'code-review';
 const ARG_WIP = 'wip';
 const ARG_SQUASH_ON = 'squash-on';
@@ -95,28 +91,35 @@ const mutuallyExclusiveBooleanArguments = [
   ARG_CODE_REVIEW, ARG_WIP, ARG_SQUASH_ON, ARG_SQUASH_ON_LAST,
 ];
 
+export const command = 'execute';
+export const aliases = [ 'e' ];
+export const describe = 'Commits the staged changes';
+export const options: YargsOptions = {
+  [ ARG_CODE_REVIEW ]: {
+    alias: 'c',
+    describe: `Auto set the message to: ${CODE_REVIEW_MESSAGE.emoji} ${CODE_REVIEW_MESSAGE.message} (if emoji is activated)`,
+    type: 'boolean',
+  },
+  [ ARG_WIP ]: {
+    alias: 'w',
+    describe: `Auto set the message to: ${WIP_MESSAGE.emoji} ${WIP_MESSAGE.message} (if emoji is activated)`,
+    type: 'boolean',
+  },
+  [ ARG_SQUASH_ON ]: {
+    alias: 's',
+    describe: 'Choose a commit in history and squash the staged changes in it',
+    type: 'boolean',
+  },
+  [ ARG_SQUASH_ON_LAST ]: {
+    alias: 'l',
+    describe: 'Squash the changes on the last commit in history',
+    type: 'boolean',
+  },
+};
+export const usage = toYargsUsage(command, options);
+
 export function builder (yargs: any) {
-  return yargs.usage('usage: gut execute [options]')
-    .option(ARG_CODE_REVIEW, {
-      alias: 'c',
-      describe: `Auto set the message to: ${CODE_REVIEW_MESSAGE.emoji} ${CODE_REVIEW_MESSAGE.message} (if emoji is activated)`,
-      type: 'boolean',
-    })
-    .option(ARG_WIP, {
-      alias: 'w',
-      describe: `Auto set the message to: ${WIP_MESSAGE.emoji} ${WIP_MESSAGE.message} (if emoji is activated)`,
-      type: 'boolean',
-    })
-    .option(ARG_SQUASH_ON, {
-      alias: 's',
-      describe: 'Choose a commit in history and squash the staged changes in it',
-      type: 'boolean',
-    })
-    .option(ARG_SQUASH_ON_LAST, {
-      alias: 'l',
-      describe: 'Squash the changes on the last commit in history',
-      type: 'boolean',
-    })
+  return bindOptionsAndCreateUsage(yargs, command, usage, options)
     .check((currentArguments: Args) => {
       const errorMessage = mutuallyExclusiveBooleanArguments
         .filter((argumentName) => (

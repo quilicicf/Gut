@@ -1,6 +1,7 @@
 import log from '../../dependencies/log.ts';
 import { detect as detectEol } from '../../dependencies/fs.ts';
 import { __, applyStyle, theme } from '../../dependencies/colors.ts';
+import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
 import {
   isEmpty, pad, padLeft, padRight, set, size,
 } from '../../dependencies/ramda.ts';
@@ -274,32 +275,35 @@ export async function parseDiffAndDisplay (diff: string) {
 export const command = 'audit';
 export const aliases = [ 'a' ];
 export const describe = 'Audits a given diff';
+export const options: YargsOptions = {
+  'commits-number': {
+    alias: 'n',
+    describe: 'The number of commits to inspect',
+    type: 'integer',
+    conflicts: [ 'from', 'to' ],
+  },
+  'from-parent-branch': {
+    alias: 'p',
+    describe: 'Audit all commits on top of the parent branch',
+    type: 'boolean',
+  },
+  from: {
+    alias: 'f',
+    describe: 'The sha of the commit from which the diff starts',
+    type: 'string',
+    conflicts: [ 'commits-number', 'from-parent-branch' ],
+  },
+  to: {
+    alias: 't',
+    describe: 'The sha of the commit where the diff ends',
+    type: 'string',
+    conflicts: [ 'commits-number', 'from-parent-branch' ],
+  },
+};
+export const usage = toYargsUsage(command, options);
 
 export function builder (yargs: any) {
-  return yargs.usage('usage: gut audit [options]')
-    .option('commits-number', {
-      alias: 'n',
-      describe: 'The number of commits to inspect',
-      type: 'integer',
-      conflicts: [ 'from', 'to' ],
-    })
-    .option('from-parent-branch', {
-      alias: 'p',
-      describe: 'Audit all commits on top of the parent branch',
-      type: 'boolean',
-    })
-    .option('from', {
-      alias: 'f',
-      describe: 'The sha of the commit from which the diff starts',
-      type: 'string',
-      conflicts: [ 'commits-number', 'from-parent-branch' ],
-    })
-    .option('to', {
-      alias: 't',
-      describe: 'The sha of the commit where the diff ends',
-      type: 'string',
-      conflicts: [ 'commits-number', 'from-parent-branch' ],
-    });
+  return bindOptionsAndCreateUsage(yargs, command, usage, options);
 }
 
 export async function handler (args: Args) {

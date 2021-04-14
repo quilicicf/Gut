@@ -1,4 +1,5 @@
 import log from '../../dependencies/log.ts';
+import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
 
 import { moveUpTop } from '../../lib/git/moveUpTop.ts';
 import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
@@ -7,9 +8,11 @@ import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCritica
 export const command = 'pile';
 export const aliases = [ 'p' ];
 export const describe = 'Adds all changes in the repository';
+export const options: YargsOptions = {};
+export const usage = toYargsUsage(command, options);
 
 export function builder (yargs: any) {
-  return yargs.usage('usage: gut pile [options]');
+  return bindOptionsAndCreateUsage(yargs, command, usage, options);
 }
 
 export async function handler () {

@@ -6,7 +6,9 @@
   "scripts": {
     "lint": "eslint '**/*.ts'"
   },
+  "type": "module",
   "devDependencies": {
+    "@quilicicf/markdown-formatter": "3.0.4",
     "@talend/eslint-config": "3.0.0",
     "babel-eslint": "10.1.0",
     "eslint": "7.23.0",

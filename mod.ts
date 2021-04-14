@@ -18,19 +18,23 @@ import * as divisions from './src/commands/simple/divisions.ts';
 import * as obliterate from './src/commands/simple/obliterate.ts';
 
 import jump from './src/commands/internals/jump.ts';
-import install from './src/commands/internals/install.ts';
+import * as install from './src/commands/internals/install.ts';
 
 import * as pr from './src/commands/advanced/pr/pr.ts';
 
 // Install with:
-// deno install --unstable \
+// deno install \
+//   --prompt \
+//   --unstable \
+//   --allow-env=HOME \
 //   --allow-net=api.github.com \
-//   --allow-read="/home/cyp/work/forge/,/home/cyp/.config/gut/" \
-//   --allow-write="/home/cyp/work/forge/,/home/cyp/.config/gut/" \
-//   --allow-run \
+//   --allow-read="${FORGE},${HOME}/.config/gut/" \
+//   --allow-write="${FORGE}/.gut-commit-message.md,${HOME}/.config/gut/" \
+//   --allow-run=git,micro,xclip,xdg-open \
 //   --name g \
 //   --no-check \
-//   --force mod.ts
+//   --force \
+//   mod.ts
 const main = async () => {
   const yargsInstance: any = yargs();
   const configuration = await getConfiguration();

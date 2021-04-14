@@ -1,5 +1,4 @@
 import { resolve } from './dependencies/path.ts';
-import { executeAndGetStdout } from './lib/exec/executeAndGetStdout.ts';
 
 interface Constants {
   HOME_DIR: string;
@@ -15,8 +14,7 @@ const constants: Constants = {
 
 export async function getConstants (): Promise<Constants> {
   if (!constants.CONFIGURATION_FILE_NAME) {
-    const user = await executeAndGetStdout([ 'whoami' ], true);
-    constants.HOME_DIR = resolve('/home', user); // TODO: get home dir without additional permission?
+    constants.HOME_DIR = Deno.env.get('HOME') || '';
     constants.CONFIGURATION_FILE_NAME = '.gut-config.json';
     constants.GUT_CONFIGURATION_FOLDER = resolve(constants.HOME_DIR, '.config', 'gut');
   }

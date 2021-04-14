@@ -1,3 +1,5 @@
+import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
+
 import { getBranchRemote } from '../../lib/git/getBranchRemote.ts';
 import { getRemotes } from '../../lib/git/getRemotes.ts';
 import { getCurrentBranchName } from '../../lib/git/getCurrentBranchName.ts';
@@ -10,6 +12,14 @@ interface Args {
 export const command = 'thrust';
 export const aliases = [ 't' ];
 export const describe = 'Pushes local changes to a remote';
+export const options: YargsOptions = {
+  force: {
+    alias: 'f',
+    describe: 'Force the push. This erases concurrent server-modifications',
+    type: 'boolean',
+  },
+};
+export const usage = toYargsUsage(command, options);
 
 export async function thrust (force: boolean) {
   const remotes = await getRemotes();
@@ -27,12 +37,7 @@ export async function thrust (force: boolean) {
 }
 
 export async function builder (yargs: any) {
-  return yargs.usage('usage: gut thrust [options]')
-    .option('force', {
-      alias: 'f',
-      describe: 'Force the push. This erases concurrent server-modifications',
-      type: 'boolean',
-    });
+  return bindOptionsAndCreateUsage(yargs, command, usage, options);
 }
 
 export async function handler ({ force }: Args) {

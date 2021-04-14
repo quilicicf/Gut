@@ -2,6 +2,7 @@ import log from '../../../dependencies/log.ts';
 import { isEmpty, size } from '../../../dependencies/ramda.ts';
 import { __, applyStyle, theme } from '../../../dependencies/colors.ts';
 import { promptConfirm, promptSelect, promptString } from '../../../dependencies/cliffy.ts';
+import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../../dependencies/yargs.ts';
 
 import { editText } from '../../../lib/editText.ts';
 import { writeToClipboard } from '../../../lib/clipboard.ts';
@@ -79,6 +80,35 @@ interface Args {
 export const command = 'pr';
 export const aliases = [];
 export const describe = 'Creates a pull request on your git server';
+export const options: YargsOptions = {
+  open: {
+    alias: 'o',
+    describe: 'Open the PR in the system\'s default browser',
+    type: 'boolean',
+  },
+  'copy-url': {
+    alias: 'c',
+    describe: 'Copies the PR\'s URL to the system\'s clipboard.',
+    type: 'boolean',
+  },
+  assignee: {
+    alias: 'a',
+    describe: 'Sets the PR\'s assignee, defaults to the creator',
+    type: 'string',
+  },
+  'base-branch': {
+    alias: 'b',
+    describe: 'Define the base branch on which the PR will be created manually. Defaults to the parent branch',
+    type: 'string',
+  },
+  remote: {
+    alias: 'r',
+    describe: 'The remote on which the PR will be done',
+    type: 'string',
+    default: 'origin',
+  },
+};
+export const usage = toYargsUsage(command, options);
 
 const findBaseBranch = async (currentBranchName: string, baseBranchNameFromCli?: string): Promise<string> => {
   if (baseBranchNameFromCli) { return baseBranchNameFromCli; }
@@ -90,33 +120,7 @@ const findBaseBranch = async (currentBranchName: string, baseBranchNameFromCli?:
 };
 
 export async function builder (yargs: any) {
-  return yargs.usage(`usage: gut ${command} [options]`)
-    .option('open', {
-      alias: 'o',
-      describe: 'Open the PR in the system\'s default browser',
-      type: 'boolean',
-    })
-    .option('copy-url', {
-      alias: 'c',
-      describe: 'Copies the PR\'s URL to the system\'s clipboard.',
-      type: 'boolean',
-    })
-    .option('assignee', {
-      alias: 'a',
-      describe: 'Sets the PR\'s assignee, defaults to the creator',
-      type: 'string',
-    })
-    .option('base-branch', {
-      alias: 'b',
-      describe: 'Define the base branch on which the PR will be created manually. Defaults to the parent branch',
-      type: 'string',
-    })
-    .option('remote', {
-      alias: 'r',
-      describe: 'The remote on which the PR will be done',
-      type: 'string',
-      default: 'origin',
-    });
+  return bindOptionsAndCreateUsage(yargs, command, usage, options);
 }
 
 export async function handler (args: Args) {

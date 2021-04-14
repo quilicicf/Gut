@@ -1,9 +1,10 @@
 import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
-import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
+import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
 
 import { getRemotes } from '../../lib/git/getRemotes.ts';
 import { getCurrentBranchName } from '../../lib/git/getCurrentBranchName.ts';
+import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 
 interface Args {
   noPull: boolean,
@@ -13,29 +14,33 @@ interface Args {
   isTestRun: boolean,
 }
 
+const ARG_FORCE = 'force';
+const ARG_NO_PULL = 'no-pull';
+
 export const command = 'yield';
 export const aliases = [ 'y' ];
 export const describe = 'Fetches from git server';
+export const options: YargsOptions = {
+  [ ARG_NO_PULL ]: {
+    alias: 'p',
+    describe: 'Do not pull the changes to the current branch',
+    type: 'boolean',
+    default: false,
+  },
+  [ ARG_FORCE ]: {
+    alias: 'f',
+    describe: 'Whether the pulling of a branch should be forced or not',
+    type: 'boolean',
+    default: false,
+  },
+};
+export const usage = toYargsUsage(command, options);
 
 export async function builder (yargs: any) {
-  const forceArgument = 'force';
-  const noPullArgument = 'no-pull';
-  return yargs.usage(`usage: gut ${command} [options]`)
-    .option(noPullArgument, {
-      alias: 'p',
-      describe: 'Do not pull the changes to the current branch',
-      type: 'boolean',
-      default: false,
-    })
-    .option(forceArgument, {
-      alias: 'f',
-      describe: 'Whether the pulling of a branch should be forced or not',
-      type: 'boolean',
-      default: false,
-    })
+  return bindOptionsAndCreateUsage(yargs, command, usage, options)
     .check((args: Args) => {
       if (args.force && !args.noPull) {
-        throw Error(`Arguments --${forceArgument} & --${noPullArgument} are mutually exclusive`);
+        throw Error(`Arguments --${ARG_FORCE} & --${ARG_NO_PULL} are mutually exclusive`);
       }
 
       return true;

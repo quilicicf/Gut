@@ -1,9 +1,10 @@
-import { FullGutConfiguration } from '../../configuration.ts';
-
 import log from '../../dependencies/log.ts';
 import { path } from '../../dependencies/ramda.ts';
 import { resolve } from '../../dependencies/path.ts';
 import { __, applyStyle, theme } from '../../dependencies/colors.ts';
+import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
+
+import { FullGutConfiguration } from '../../configuration.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 
 interface Args {
@@ -16,10 +17,6 @@ interface Args {
   // Test thingies
   isTestRun: boolean,
 }
-
-export const command = 'replicate';
-export const aliases = [ 'r' ];
-export const describe = 'Clones a repository';
 
 interface GitServer {
   getSshUrl: (owner: string, repository: string) => string,
@@ -75,25 +72,32 @@ const buildGitSshUrl = (args: Args): RepositoryMetadata => {
   };
 };
 
+export const command = 'replicate';
+export const aliases = [ 'r' ];
+export const describe = 'Clones a repository';
+export const options: YargsOptions = {
+  server: {
+    alias: 's',
+    describe: 'The git server where the repository is.',
+    type: 'string',
+    choices: Object.keys(GIT_SERVERS),
+  },
+  owner: {
+    alias: 'o',
+    describe: 'The owner of the repository to be cloned.',
+    type: 'string',
+  },
+  repository: {
+    alias: 'r',
+    describe: 'The name of the repository to be cloned.',
+    type: 'string',
+    demandOption: true,
+  },
+};
+export const usage = toYargsUsage(command, options);
+
 export async function builder (yargs: any) {
-  return yargs.usage('usage: gut replicate [options]')
-    .option('server', {
-      alias: 's',
-      describe: 'The git server where the repository is.',
-      type: 'string',
-      choices: Object.keys(GIT_SERVERS),
-    })
-    .option('owner', {
-      alias: 'o',
-      describe: 'The owner of the repository to be cloned.',
-      type: 'string',
-    })
-    .option('repository', {
-      alias: 'r',
-      describe: 'The name of the repository to be cloned.',
-      type: 'string',
-      demandOption: true,
-    });
+  return bindOptionsAndCreateUsage(yargs, command, usage, options);
 }
 
 export async function handler (args: Args) {
