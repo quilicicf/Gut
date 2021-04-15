@@ -1,6 +1,8 @@
 import { promptSelect } from '../../dependencies/cliffy.ts';
 import { applyStyle, theme } from '../../dependencies/colors.ts';
-import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
+import {
+  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+} from '../../dependencies/yargs.ts';
 
 import { getAllRefs } from '../../lib/git/getAllRefs.ts';
 import { getCurrentBranch } from '../../lib/git/getCurrentBranch.ts';
@@ -67,6 +69,7 @@ export const options: YargsOptions = {
   },
 };
 export const usage = toYargsUsage(command, options);
+export const extraPermissions: ExtraPermissions = {};
 
 const switchToBranch = async (branch: string) => {
   await executeProcessCriticalTask([ 'git', 'checkout', branch ]);

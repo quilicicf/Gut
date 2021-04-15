@@ -1,7 +1,9 @@
 import log from '../../dependencies/log.ts';
 import { resolve, fromFileUrl } from '../../dependencies/path.ts';
 import { __, applyStyle, theme } from '../../dependencies/colors.ts';
-import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
+import {
+  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+} from '../../dependencies/yargs.ts';
 
 import { getConstants } from '../../constants.ts';
 
@@ -67,6 +69,12 @@ export const options: YargsOptions = {
   },
 };
 export const usage = toYargsUsage(command, options);
+export const extraPermissions: ExtraPermissions = {
+  '--allow-net': {
+    value: '`raw.githubusercontent.com`',
+    description: 'This permission allows Gut to retrieve the file containing the shell features from GitHub and write it in `~/.config/gut`',
+  },
+};
 
 export function builder (yargs: any) {
   return bindOptionsAndCreateUsage(yargs, command, usage, options);

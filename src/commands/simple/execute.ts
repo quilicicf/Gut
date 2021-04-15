@@ -1,10 +1,12 @@
-import {
-  __, applyStyle, theme,
-} from '../../dependencies/colors.ts';
 import log from '../../dependencies/log.ts';
 import { resolve } from '../../dependencies/path.ts';
 import { promptSelect } from '../../dependencies/cliffy.ts';
-import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
+import {
+  __, applyStyle, theme,
+} from '../../dependencies/colors.ts';
+import {
+  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+} from '../../dependencies/yargs.ts';
 
 import { EMOJIS } from '../../lib/emojis.ts';
 import { editText } from '../../lib/editText.ts';
@@ -117,6 +119,7 @@ export const options: YargsOptions = {
   },
 };
 export const usage = toYargsUsage(command, options);
+export const extraPermissions: ExtraPermissions = {};
 
 export function builder (yargs: any) {
   return bindOptionsAndCreateUsage(yargs, command, usage, options)

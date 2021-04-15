@@ -2,7 +2,9 @@ import log from '../../../dependencies/log.ts';
 import { isEmpty, size } from '../../../dependencies/ramda.ts';
 import { __, applyStyle, theme } from '../../../dependencies/colors.ts';
 import { promptConfirm, promptSelect, promptString } from '../../../dependencies/cliffy.ts';
-import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../../dependencies/yargs.ts';
+import {
+  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+} from '../../../dependencies/yargs.ts';
 
 import { editText } from '../../../lib/editText.ts';
 import { writeToClipboard } from '../../../lib/clipboard.ts';
@@ -77,16 +79,19 @@ interface Args {
   isTestRun: boolean,
 }
 
+const ARG_OPEN = 'open';
+const ARG_COPY = 'copy-url';
+
 export const command = 'pr';
 export const aliases = [];
 export const describe = 'Creates a pull request on your git server';
 export const options: YargsOptions = {
-  open: {
+  [ ARG_OPEN ]: {
     alias: 'o',
     describe: 'Open the PR in the system\'s default browser',
     type: 'boolean',
   },
-  'copy-url': {
+  [ ARG_COPY ]: {
     alias: 'c',
     describe: 'Copies the PR\'s URL to the system\'s clipboard.',
     type: 'boolean',
@@ -109,6 +114,20 @@ export const options: YargsOptions = {
   },
 };
 export const usage = toYargsUsage(command, options);
+export const extraPermissions: ExtraPermissions = {
+  '--allow-run': {
+    value: [
+      '`powershell,explorer` (Windows)',
+      '`pbcopy,open` (Mac)',
+      '`xclip,xfg-open` (Linux)',
+    ].join('<br>'),
+    description: [
+      // '',
+      `Allows:<ul><li>Writing the PR's URL to the clipboard when \`--${ARG_COPY}\` is set</li>`,
+      `<li>Opening the PR's URL with the default browser when \`--${ARG_OPEN}\` is set</li></ul>`,
+    ].join('<br>'),
+  },
+};
 
 const findBaseBranch = async (currentBranchName: string, baseBranchNameFromCli?: string): Promise<string> => {
   if (baseBranchNameFromCli) { return baseBranchNameFromCli; }

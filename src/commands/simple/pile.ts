@@ -1,5 +1,7 @@
 import log from '../../dependencies/log.ts';
-import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
+import {
+  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+} from '../../dependencies/yargs.ts';
 
 import { moveUpTop } from '../../lib/git/moveUpTop.ts';
 import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
@@ -10,6 +12,7 @@ export const aliases = [ 'p' ];
 export const describe = 'Adds all changes in the repository';
 export const options: YargsOptions = {};
 export const usage = toYargsUsage(command, options);
+export const extraPermissions: ExtraPermissions = {};
 
 export function builder (yargs: any) {
   return bindOptionsAndCreateUsage(yargs, command, usage, options);

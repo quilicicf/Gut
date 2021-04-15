@@ -1,4 +1,6 @@
-import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
+import {
+  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+} from '../../dependencies/yargs.ts';
 
 import { getBranchRemote } from '../../lib/git/getBranchRemote.ts';
 import { getRemotes } from '../../lib/git/getRemotes.ts';
@@ -20,6 +22,7 @@ export const options: YargsOptions = {
   },
 };
 export const usage = toYargsUsage(command, options);
+export const extraPermissions: ExtraPermissions = {};
 
 export async function thrust (force: boolean) {
   const remotes = await getRemotes();

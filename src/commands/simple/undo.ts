@@ -1,7 +1,9 @@
 import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
 import { applyStyle, theme } from '../../dependencies/colors.ts';
-import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
+import {
+  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+} from '../../dependencies/yargs.ts';
 
 import { isDirty } from '../../lib/git/isDirty.ts';
 import { getTopLevel } from '../../lib/git/getTopLevel.ts';
@@ -52,6 +54,7 @@ export const options: YargsOptions = {
   },
 };
 export const usage = toYargsUsage(command, options);
+export const extraPermissions: ExtraPermissions = {};
 
 export async function builder (yargs: any) {
   return bindOptionsAndCreateUsage(yargs, command, usage, options)

@@ -2,7 +2,9 @@ import log from '../../dependencies/log.ts';
 import { path } from '../../dependencies/ramda.ts';
 import { resolve } from '../../dependencies/path.ts';
 import { __, applyStyle, theme } from '../../dependencies/colors.ts';
-import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
+import {
+  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+} from '../../dependencies/yargs.ts';
 
 import { FullGutConfiguration } from '../../configuration.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
@@ -95,6 +97,7 @@ export const options: YargsOptions = {
   },
 };
 export const usage = toYargsUsage(command, options);
+export const extraPermissions: ExtraPermissions = {};
 
 export async function builder (yargs: any) {
   return bindOptionsAndCreateUsage(yargs, command, usage, options);

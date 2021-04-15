@@ -214,6 +214,8 @@ Each command's documentation explains the additional permissions it might need a
 
 > :warning: The link will be updated with a more stable one once the Deno implementation of Gut becomes more stable.
 
+<!-- TODO: also change the host in `install` extraPermissions -->
+
 ```shell
 deno install \
   --prompt \
@@ -292,6 +294,12 @@ __Options:__
 | Name           | Description                                 | Type     | Required | Default value |
 | -------------- | ------------------------------------------- | -------- | -------- | ------------- |
 | `install-name` | The name you gave to Gut when installing it | `string` | false    | `gut`         |
+
+__Extra permissions:__
+
+| Permission    | Value                       | Reason                                                                                                                    |
+| ------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `--allow-net` | `raw.githubusercontent.com` | This permission allows Gut to retrieve the file containing the shell features from GitHub and write it in `~/.config/gut` |
 
 ### Simple commands
 
@@ -478,6 +486,12 @@ __Options:__
 | `assignee`    | Sets the PR's assignee, defaults to the creator                                                | `string`  | false    |               |
 | `base-branch` | Define the base branch on which the PR will be created manually. Defaults to the parent branch | `string`  | false    |               |
 | `remote`      | The remote on which the PR will be done                                                        | `string`  | false    | `origin`      |
+
+__Extra permissions:__
+
+| Permission    | Value                                                                              | Reason                                                                                                                                                                 |
+| ------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--allow-run` | `powershell,explorer` (Windows)<br>`pbcopy,open` (Mac)<br>`xclip,xfg-open` (Linux) | Allows:<ul><li>Writing the PR's URL to the clipboard when `--copy-url` is set</li><br><li>Opening the PR's URL with the default browser when `--open` is set</li></ul> |
 
 <!-- END CLI DOC -->
 

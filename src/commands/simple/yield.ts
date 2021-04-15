@@ -1,6 +1,8 @@
 import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
-import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
+import {
+  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+} from '../../dependencies/yargs.ts';
 
 import { getRemotes } from '../../lib/git/getRemotes.ts';
 import { getCurrentBranchName } from '../../lib/git/getCurrentBranchName.ts';
@@ -35,6 +37,7 @@ export const options: YargsOptions = {
   },
 };
 export const usage = toYargsUsage(command, options);
+export const extraPermissions: ExtraPermissions = {};
 
 export async function builder (yargs: any) {
   return bindOptionsAndCreateUsage(yargs, command, usage, options)

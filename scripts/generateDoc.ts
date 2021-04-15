@@ -1,5 +1,6 @@
-import { YargsOptions } from '../src/dependencies/yargs.ts';
+import { isEmpty } from '../src/dependencies/ramda.ts';
 import { fromFileUrl, resolve } from '../src/dependencies/path.ts';
+import { Command, ExtraPermissions, YargsOptions } from '../src/dependencies/yargs.ts';
 
 import * as audit from '../src/commands/simple/audit.ts';
 import * as burgeon from '../src/commands/simple/burgeon.ts';
@@ -17,21 +18,28 @@ import * as _yield from '../src/commands/simple/yield.ts';
 import * as pr from '../src/commands/advanced/pr/pr.ts';
 
 import * as install from '../src/commands/internals/install.ts';
-import { isEmpty } from '../src/dependencies/ramda.ts';
 
-interface Command {
-  command: string;
-  describe: string;
-  usage: string;
-  options: YargsOptions;
+const toMarkdownExtraPermissions = (permissions: ExtraPermissions): string => `
+
+__Extra permissions:__
+
+|Permission|Value|Reason|
+|----------|-----|------|
+${
+  Object.entries(permissions)
+    .map(([ name, permission ]) => (
+      `|\`${name}\`|${permission.value}|${permission.description}|`
+    ))
+    .join('\n')
 }
+`;
 
 const toMarkdownOptions = (options: YargsOptions): string => `
 
 __Options:__
 
 |Name|Description|Type|Required|Default value|
-|---|---|---|---|---|
+|----|-----------|----|--------|-------------|
 ${
   Object.entries(options)
     .map(([ name, option ]) => {
@@ -47,7 +55,9 @@ const toMarkdownSection = (command: Command) => `\
 
 ${command.describe}
 
-\`${command.usage}\`${isEmpty(command.options) ? '' : toMarkdownOptions(command.options)}
+\`${command.usage}\`\
+${isEmpty(command.options) ? '' : toMarkdownOptions(command.options)}\
+${isEmpty(command.extraPermissions) ? '' : toMarkdownExtraPermissions(command.extraPermissions)}\
 `;
 
 const toMarkdownSections = (commands: Command[]) => commands

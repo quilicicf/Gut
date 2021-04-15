@@ -1,7 +1,9 @@
 import log from '../../dependencies/log.ts';
 import { applyStyle, theme } from '../../dependencies/colors.ts';
 import { promptConfirm, ConfirmOptions } from '../../dependencies/cliffy.ts';
-import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
+import {
+  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+} from '../../dependencies/yargs.ts';
 
 import { findRemote } from '../../lib/git/remotes.ts';
 
@@ -47,6 +49,7 @@ export const options: YargsOptions = {
   },
 };
 export const usage = toYargsUsage(command, options);
+export const extraPermissions: ExtraPermissions = {};
 
 export function builder (yargs: any) {
   return bindOptionsAndCreateUsage(yargs, command, usage, options)

@@ -1,5 +1,7 @@
 import log from '../../dependencies/log.ts';
-import { bindOptionsAndCreateUsage, toYargsUsage, YargsOptions } from '../../dependencies/yargs.ts';
+import {
+  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+} from '../../dependencies/yargs.ts';
 
 import { LOG_FORMATS } from '../../lib/git/logFormats.ts';
 import { getCommitsUpToMax } from '../../lib/git/getCommitsUpToMax.ts';
@@ -44,6 +46,7 @@ export const options: YargsOptions = {
   },
 };
 export const usage = toYargsUsage(command, options);
+export const extraPermissions: ExtraPermissions = {};
 
 export function builder (yargs: any) {
   return bindOptionsAndCreateUsage(yargs, command, usage, options);
