@@ -74,8 +74,6 @@ Most importantly, Gut is built atop git, this means you can use small bits of Gu
 
 ## So how do git and gut compare?
 
-## So how do git and gut compare?
-
 The example below shows the differences in workflow for a simple contribution to a GitHub repository.
 
 The examples take you through a basic workflow:
@@ -154,7 +152,7 @@ Differences:
   * BONUS: to share or edit the PR, you can either have it opened automatically in your favorite browser or have its URL copied to your clipboard
 * All of this comes with:
   * no need to open GitHub (or any git server) and click everywhere
-  * only ~40% of the keystrokes from the git example (without even counting that the git server argument can probably be omitted from the `gut clone`, and the `gut thrust` command can be omitted too) :tada:
+  * only \~40% of the keystrokes from the git example (without even counting that the git server argument can probably be omitted from the `gut clone`, and the `gut thrust` command can be omitted too) :tada:
 
 > The abbreviated Gut commands do look cryptic but since you type git commands every day, it becomes second nature in days (if not hours).
 
