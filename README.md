@@ -74,7 +74,18 @@ Most importantly, Gut is built atop git, this means you can use small bits of Gu
 
 ## So how do git and gut compare?
 
+## So how do git and gut compare?
+
 The example below shows the differences in workflow for a simple contribution to a GitHub repository.
+
+The examples take you through a basic workflow:
+
+* clone
+* create a dev branch
+* develop
+* commit
+* push
+* create a PR
 
 <table style="width:100%">
   <tr>
@@ -84,58 +95,68 @@ The example below shows the differences in workflow for a simple contribution to
   <tr>
     <td>
       <pre lang="shell">
-# The long command below or a cd to $REPOSITORIES_PATH before cloning
-# You either have to remember the syntax or open GitHub to find the URL
-git clone git@github.com:owner/repository.git "$REPOSITORIES_PATH/repository-name"
-# You must cd to begin working
-cd "$REPOSITORIES_PATH/repository-name"
-# Create the new branch
-git checkout -b "$devBranchName"
+        <code>
+git clone \
+  git@github.com:owner/repository.git \
+  ~/github/owner/repository-name
+<br>
+cd ~/github/owner/repository-name
+git checkout -b "TEST-12/myDev"
 <br>
 # Actual work
 <br>
 git add . -A
-# To verify which files where changed
 git status -sb
-# Add the ticket number by hand so that GitHub tracks the commit in the ticket
-git commit
-# Set the upstream by hand, 99% of the case you will type this exact line
-git push --set-upstream origin "$devBranchName"
+git commit # then complete the subject/description
+git push --set-upstream origin "TEST-12/myDev"
 <br>
-# Open GitHub
-# Use the compare and pull request feature to create a PR
-# You must select the base branch yourself, and write the title
-# 99% of the cases, the title of the PR can be the commit subject
+# Create the PR on GitHub
+        </code>
       </pre>
     </td>
     <td>
       <pre lang="shell">
-# The path where the repository is cloned is defined in gut's configuration
-gut replicate -s 'github' -o 'owner' -r 'repository'
-# Find the repository in the repositories path with interactive fuzzy search and cd to it
-cr
-# Creates a branch with a name including the ticket number for later use
-gut burgeon -n ticketNumber
+        <code>
+g r -s github -o owner -r repository
+cr repo
+g b -n TEST-12 # then type the dev description
 <br>
 # Actual work
 <br>
-# Add all the un-staged changes in the repository, show the changed files with git status -sb
-gut pile
-# Create the commit, ticket number is added automatically
-gut execute
-# Push to the server, upstream is set by default to "origin/$devBranchName"
-gut thrust
+g p
+g e # then complete the subject/description
+g t
 <br>
-# Audit the PR for TODOs, FIXMEs etc...
-# Help you build the PR (title from PR commits or hand-written, description with template supported)
-# Output the PR's URL, or open the PR, or copy the URL to clipboard
-# Better yet, the base branch is deducted from the name of the current branch!
-# Sets yourself as assignee
-gut pr --open --copy-url
+g pr -oc
+        </code>
       </pre>
     </td>
   </tr>
 </table>
+
+Differences:
+
+* Easier clone command: no bothering where the repo is going or from where the clone is done
+  * BONUS: the server can be omitted (you can set a default one)
+  * BONUS 2: the owner can be omitted (if it's you)
+* Easier branch creation: type English, let Gut create a valid branch name that contains its lineage (the name of the parent branch)
+* Easier staging: Gut always stages all the changes in the repository (you should work on a single task most of the time) and shows the modified files, so you can check easily if you are committing too many files. Git would have you check by hand or stage by hand, both are longer
+* Better commit: the commit automatically adds the issue number if you created your branch with it: `g e -n $ISSUE_NUMBER`
+* Easier push: by default, Gut sets your branch's upstream, meaning it's tracked correctly. This is what most people do when working with a central server which is the main use-case
+* Easier PR creation: the PR creation process is both simplet and better
+  * The branch is auto-pushed if it was never pushed before (can save one command)
+  * The base branch is auto-detected (from the branch name)
+  * The diff from the base branch is audited for TODOs, FIXMEs and other common mistakes
+  * The title is pickable from the PR's commit subjects
+  * The description is editable in your favorite text editor
+  * You are auto-assigned to the PR (or can assign someone else)
+  * All of that without leaving the CLI!
+  * BONUS: to share or edit the PR, you can either have it opened automatically in your favorite browser or have its URL copied to your clipboard
+* All of this comes with:
+  * no need to open GitHub (or any git server) and click everywhere
+  * only ~40% of the keystrokes from the git example (without even counting that the git server argument can probably be omitted from the `gut clone`, and the `gut thrust` command can be omitted too) :tada:
+
+> The abbreviated Gut commands do look cryptic but since you type git commands every day, it becomes second nature in days (if not hours).
 
 ## Gut flow
 
