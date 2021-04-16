@@ -107,7 +107,7 @@ git checkout -b "TEST-12/myDev"
 <br>
 git add . -A
 git status -sb
-git commit # then complete the subject/description
+git commit # then write subject/description
 git push --set-upstream origin "TEST-12/myDev"
 <br>
 # Create the PR on GitHub
@@ -119,12 +119,12 @@ git push --set-upstream origin "TEST-12/myDev"
         <code>
 g r -s github -o owner -r repository
 cr repo
-g b -n TEST-12 # then type the dev description
+g b -n TEST-12 # then type dev description
 <br>
 # Actual work
 <br>
 g p
-g e # then complete the subject/description
+g e # then complete subject/description
 g t
 <br>
 g pr -oc
