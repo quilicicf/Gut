@@ -1,6 +1,6 @@
 import log from '../../dependencies/log.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
@@ -19,7 +19,7 @@ const printDivisions = async (remote: string | undefined): Promise<string> => {
   );
 };
 
-export const command = 'divisions';
+export const baseCommand = 'divisions';
 export const aliases = [ 'd' ];
 export const describe = 'Displays the given remote\'s branches';
 export const options: YargsOptions = {
@@ -30,11 +30,12 @@ export const options: YargsOptions = {
     type: 'string',
   },
 };
-export const usage = toYargsUsage(command, options);
+export const command = toYargsCommand(baseCommand, options);
+export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {};
 
 export function builder (yargs: any) {
-  return bindOptionsAndCreateUsage(yargs, command, usage, options);
+  return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 
 export async function handler ({ remote, isTestRun }: { remote?: string, isTestRun: boolean }) {

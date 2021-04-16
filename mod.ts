@@ -17,7 +17,7 @@ import * as replicate from './src/commands/simple/replicate.ts';
 import * as divisions from './src/commands/simple/divisions.ts';
 import * as obliterate from './src/commands/simple/obliterate.ts';
 
-import jump from './src/commands/internals/jump.ts';
+import * as jump from './src/commands/internals/jump.ts';
 import * as install from './src/commands/internals/install.ts';
 
 import * as pr from './src/commands/advanced/pr/pr.ts';

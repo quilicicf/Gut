@@ -1,7 +1,7 @@
 import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { getRemotes } from '../../lib/git/getRemotes.ts';
@@ -19,7 +19,7 @@ interface Args {
 const ARG_FORCE = 'force';
 const ARG_NO_PULL = 'no-pull';
 
-export const command = 'yield';
+export const baseCommand = 'yield';
 export const aliases = [ 'y' ];
 export const describe = 'Fetches from git server';
 export const options: YargsOptions = {
@@ -36,11 +36,12 @@ export const options: YargsOptions = {
     default: false,
   },
 };
-export const usage = toYargsUsage(command, options);
+export const command = toYargsCommand(baseCommand, options);
+export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {};
 
 export async function builder (yargs: any) {
-  return bindOptionsAndCreateUsage(yargs, command, usage, options)
+  return bindOptionsAndCreateUsage(yargs, usage, options)
     .check((args: Args) => {
       if (args.force && !args.noPull) {
         throw Error(`Arguments --${ARG_FORCE} & --${ARG_NO_PULL} are mutually exclusive`);

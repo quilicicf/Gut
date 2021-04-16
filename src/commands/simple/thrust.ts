@@ -1,5 +1,5 @@
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { getBranchRemote } from '../../lib/git/getBranchRemote.ts';
@@ -11,7 +11,7 @@ interface Args {
   force: boolean,
 }
 
-export const command = 'thrust';
+export const baseCommand = 'thrust';
 export const aliases = [ 't' ];
 export const describe = 'Pushes local changes to a remote';
 export const options: YargsOptions = {
@@ -21,7 +21,8 @@ export const options: YargsOptions = {
     type: 'boolean',
   },
 };
-export const usage = toYargsUsage(command, options);
+export const command = toYargsCommand(baseCommand, options);
+export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {};
 
 export async function thrust (force: boolean) {
@@ -40,7 +41,7 @@ export async function thrust (force: boolean) {
 }
 
 export async function builder (yargs: any) {
-  return bindOptionsAndCreateUsage(yargs, command, usage, options);
+  return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 
 export async function handler ({ force }: Args) {

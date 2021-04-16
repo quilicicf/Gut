@@ -1,5 +1,7 @@
 import yargs from 'https://deno.land/x/yargs@v16.2.0-deno/deno.ts';
 
+export { yargs };
+
 export interface YargsOption {
   describe: string;
   type: 'integer' | 'boolean' | 'string' | 'number';
@@ -31,31 +33,35 @@ export interface ExtraPermissions {
 
 export interface Command {
   command: string;
+  baseCommand: string;
   describe: string;
   usage: string;
   options: YargsOptions;
   extraPermissions: ExtraPermissions
 }
 
-const toYargsUsage = (command: string, options: YargsOptions) => {
+export function toYargsCommand (baseCommand: string, options: YargsOptions): string {
   const positionalOptionNames = Object.entries(options)
     .filter(([ , option ]) => option.isPositionalOption)
     .map(([ name ]) => `[${name}]`) // Note: assumes all positional options are optional, otherwise wrap in <>
     .join(' ');
 
   return positionalOptionNames
-    ? `USAGE: gut ${command} ${positionalOptionNames} [options...]`
-    : `USAGE: gut ${command} [options...]`;
-};
+    ? `${baseCommand} ${positionalOptionNames}`
+    : baseCommand;
+}
 
-const bindOptionsAndCreateUsage = (_yargs: any, command: string, usage: string, options: YargsOptions): any => (
-  Object.entries(options)
+export function toYargsUsage (baseCommand: string, options: YargsOptions): string {
+  return `USAGE: gut ${toYargsCommand(baseCommand, options)} [options...]`;
+}
+
+export function bindOptionsAndCreateUsage (_yargs: any, usage: string, options: YargsOptions): any {
+  return Object.entries(options)
     .reduce((seed, [ name, option ]) => (
       option.isPositionalOption
         ? seed.positional(name, option)
         : seed.option(name, option)
     ), _yargs)
     .usage(usage)
-);
-
-export { yargs, toYargsUsage, bindOptionsAndCreateUsage };
+    .help();
+}

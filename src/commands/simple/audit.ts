@@ -2,11 +2,11 @@ import log from '../../dependencies/log.ts';
 import { detect as detectEol } from '../../dependencies/fs.ts';
 import { __, applyStyle, theme } from '../../dependencies/colors.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
-} from '../../dependencies/yargs.ts';
-import {
   isEmpty, pad, padLeft, padRight, set, size,
 } from '../../dependencies/ramda.ts';
+import {
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
+} from '../../dependencies/yargs.ts';
 
 import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
 import { getCommitsFromParentBranch } from '../../lib/git/getCommitsFromParentBranch.ts';
@@ -274,7 +274,7 @@ export async function parseDiffAndDisplay (diff: string) {
   await displayDiff(parsedDiff);
 }
 
-export const command = 'audit';
+export const baseCommand = 'audit';
 export const aliases = [ 'a' ];
 export const describe = 'Audits a given diff';
 export const options: YargsOptions = {
@@ -302,11 +302,12 @@ export const options: YargsOptions = {
     conflicts: [ 'commits-number', 'from-parent-branch' ],
   },
 };
-export const usage = toYargsUsage(command, options);
+export const command = toYargsCommand(baseCommand, options);
+export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {};
 
 export function builder (yargs: any) {
-  return bindOptionsAndCreateUsage(yargs, command, usage, options);
+  return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 
 export async function handler (args: Args) {

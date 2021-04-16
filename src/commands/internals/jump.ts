@@ -5,6 +5,10 @@ import { walk, WalkOptions } from '../../dependencies/fs.ts';
 import { __, applyStyle, theme } from '../../dependencies/colors.ts';
 
 import { FullGutConfiguration } from '../../configuration.ts';
+import { getRepositoryNameFromPath } from '../../lib/git/getRepositoryNameFromPath.ts';
+import {
+  bindOptionsAndCreateUsage, toYargsCommand, toYargsUsage, YargsOptions,
+} from '../../dependencies/yargs.ts';
 
 interface Args {
   search: string;
@@ -22,17 +26,21 @@ const toOptions = (paths: string[], currentRepositoryPath: string) => paths
     value: path,
   }));
 
-const command = 'cr [search]';
+export const baseCommand = 'cr';
+export const options: YargsOptions = {
+  search: {
+    describe: 'Search text to filter the candidates',
+    type: 'string',
+    isPositionalOption: true,
+  },
+};
+export const command = toYargsCommand(baseCommand, options);
+export const usage = toYargsUsage(baseCommand, options);
+export const describe = false; // Un-documented command
+export const aliases = [];
 
-export default {
-  command,
-  aliases: [],
-  describe: false,
-  builder: (yargs: any) => yargs.usage(`gut ${command} [options]`)
-    .positional('search', {
-      describe: 'Search text to filter the candidates',
-      type: 'string',
-    })
+export function builder (yargs: any) {
+  return bindOptionsAndCreateUsage(yargs, usage, options)
     .epilogue([
       applyStyle(__`Command used by the shell feature ${'cr'} to manage the interactive part.\n`, [ theme.strong ]),
       'This command is only called from the shell function because gut (being a child process) cannot change ',
@@ -40,51 +48,51 @@ export default {
       'This command outputs its result on stderr to allow the shell caller not to interfere with stdout (used ',
       'for interactivity with the user) but still retrieve the result without having gut write to a file (this ',
       'would be annoying due to Deno permissions system and because I simply refuse to use --allow-all).',
-    ].join(''))
-    .help(),
-  handler: async (args: Args) => {
-    const {
-      search = '',
-      configuration,
-    } = args;
+    ].join(''));
+}
 
-    const { forgePath } = configuration.global;
-    const walkOptions: WalkOptions = {
-      maxDepth: 4,
-      includeFiles: false,
-      match: [ /\.git$/ ],
-    };
+export async function handler (args: Args) {
+  const {
+    search = '',
+    configuration,
+  } = args;
 
-    const allCandidateRepositories = [];
+  const { forgePath } = configuration.global;
+  const walkOptions: WalkOptions = {
+    maxDepth: 4,
+    includeFiles: false,
+    match: [ /\.git$/ ],
+  };
 
-    // eslint-disable-next-line no-restricted-syntax
-    for await (const repositoryGitFolderPath of walk(forgePath, walkOptions)) {
-      const candidateRepositoryPath = repositoryGitFolderPath.path.replace(/.\.git$/, '');
-      allCandidateRepositories.push(candidateRepositoryPath);
-    }
+  const allCandidateRepositories = [];
 
-    const fullMatches = allCandidateRepositories
-      .filter((path) => basename(path).toLocaleLowerCase() === search.toLocaleLowerCase());
+  // eslint-disable-next-line no-restricted-syntax
+  for await (const repositoryGitFolderPath of walk(forgePath, walkOptions)) {
+    const candidateRepositoryPath = repositoryGitFolderPath.path.replace(/.\.git$/, '');
+    allCandidateRepositories.push(candidateRepositoryPath);
+  }
 
-    if (fullMatches.length === 1) { // Perfect match with search
-      return writeResult(fullMatches[ 0 ]);
-    }
+  const fullMatches = allCandidateRepositories
+    .filter((path) => basename(path).toLocaleLowerCase() === search.toLocaleLowerCase());
 
-    const directMatches = allCandidateRepositories
-      .filter((path) => path.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
+  if (fullMatches.length === 1) { // Perfect match with search
+    return writeResult(fullMatches[ 0 ]);
+  }
 
-    if (directMatches.length === 1) { // Only one candidate after search
-      return writeResult(directMatches[ 0 ]);
-    }
+  const directMatches = allCandidateRepositories
+    .filter((path) => path.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
 
-    const currentRepositoryPath = await Deno.cwd();
-    const targetPath = await promptSelect({
-      message: 'Select the repository to cd to:',
-      options: toOptions(directMatches, currentRepositoryPath),
-      maxRows: 10,
-      search: true,
-    });
+  if (directMatches.length === 1) { // Only one candidate after search
+    return writeResult(directMatches[ 0 ]);
+  }
 
-    return writeResult(targetPath);
-  },
-};
+  const currentRepositoryPath = await getRepositoryNameFromPath();
+  const targetPath = await promptSelect({
+    message: 'Select the repository to cd to:',
+    options: toOptions(directMatches, currentRepositoryPath),
+    maxRows: 10,
+    search: true,
+  });
+
+  return writeResult(targetPath);
+}

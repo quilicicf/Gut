@@ -2,7 +2,7 @@ import log from '../../dependencies/log.ts';
 import { applyStyle, theme } from '../../dependencies/colors.ts';
 import { promptConfirm, ConfirmOptions } from '../../dependencies/cliffy.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { findRemote } from '../../lib/git/remotes.ts';
@@ -20,7 +20,7 @@ interface Args {
 const ARG_TAG = 'tag';
 const ARG_BRANCH = 'branch';
 
-export const command = 'obliterate';
+export const baseCommand = 'obliterate';
 export const aliases = [ 'o' ];
 export const describe = 'Deletes a branch or a tag';
 export const options: YargsOptions = {
@@ -48,11 +48,12 @@ export const options: YargsOptions = {
     default: false,
   },
 };
-export const usage = toYargsUsage(command, options);
+export const command = toYargsCommand(baseCommand, options);
+export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {};
 
 export function builder (yargs: any) {
-  return bindOptionsAndCreateUsage(yargs, command, usage, options)
+  return bindOptionsAndCreateUsage(yargs, usage, options)
     .check((currentArguments: Args) => {
       if (!currentArguments.branch && !currentArguments.tag) {
         throw Error(applyStyle('You must specify the branch/tag you want to delete', [ theme.error ]));

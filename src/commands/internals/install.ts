@@ -2,7 +2,7 @@ import log from '../../dependencies/log.ts';
 import { resolve, fromFileUrl } from '../../dependencies/path.ts';
 import { __, applyStyle, theme } from '../../dependencies/colors.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { getConstants } from '../../constants.ts';
@@ -57,7 +57,7 @@ const installShellFeatures = async (installName: string) => {
   ].join('\n'));
 };
 
-export const command = 'install';
+export const baseCommand = 'install';
 export const aliases = [ 'i' ];
 export const describe = 'Installs Gut shell features (by copying them in $HOME/.config/gut)';
 export const options: YargsOptions = {
@@ -68,7 +68,8 @@ export const options: YargsOptions = {
     default: 'gut',
   },
 };
-export const usage = toYargsUsage(command, options);
+export const command = toYargsCommand(baseCommand, options);
+export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {
   '--allow-net': {
     value: '`raw.githubusercontent.com`',
@@ -77,7 +78,7 @@ export const extraPermissions: ExtraPermissions = {
 };
 
 export function builder (yargs: any) {
-  return bindOptionsAndCreateUsage(yargs, command, usage, options);
+  return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 
 export async function handler ({ installName }: Args) {

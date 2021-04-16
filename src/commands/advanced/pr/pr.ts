@@ -3,7 +3,7 @@ import { isEmpty, size } from '../../../dependencies/ramda.ts';
 import { __, applyStyle, theme } from '../../../dependencies/colors.ts';
 import { promptConfirm, promptSelect, promptString } from '../../../dependencies/cliffy.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions, toYargsCommand,
 } from '../../../dependencies/yargs.ts';
 
 import { editText } from '../../../lib/editText.ts';
@@ -82,8 +82,7 @@ interface Args {
 const ARG_OPEN = 'open';
 const ARG_COPY = 'copy-url';
 
-export const command = 'pr';
-export const aliases = [];
+export const baseCommand = 'pr';
 export const describe = 'Creates a pull request on your git server';
 export const options: YargsOptions = {
   [ ARG_OPEN ]: {
@@ -113,7 +112,9 @@ export const options: YargsOptions = {
     default: 'origin',
   },
 };
-export const usage = toYargsUsage(command, options);
+export const command = toYargsCommand(baseCommand, options);
+export const aliases = [];
+export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {
   '--allow-run': {
     value: [
@@ -139,7 +140,7 @@ const findBaseBranch = async (currentBranchName: string, baseBranchNameFromCli?:
 };
 
 export async function builder (yargs: any) {
-  return bindOptionsAndCreateUsage(yargs, command, usage, options);
+  return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 
 export async function handler (args: Args) {

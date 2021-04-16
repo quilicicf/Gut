@@ -51,7 +51,7 @@ ${
 `;
 
 const toMarkdownSection = (command: Command) => `\
-#### ${command.command}
+#### ${command.baseCommand}
 
 ${command.describe}
 

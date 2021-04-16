@@ -5,7 +5,7 @@ import {
   __, applyStyle, theme,
 } from '../../dependencies/colors.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { EMOJIS } from '../../lib/emojis.ts';
@@ -93,7 +93,7 @@ const mutuallyExclusiveBooleanArguments = [
   ARG_CODE_REVIEW, ARG_WIP, ARG_SQUASH_ON, ARG_SQUASH_ON_LAST,
 ];
 
-export const command = 'execute';
+export const baseCommand = 'execute';
 export const aliases = [ 'e' ];
 export const describe = 'Commits the staged changes';
 export const options: YargsOptions = {
@@ -118,11 +118,12 @@ export const options: YargsOptions = {
     type: 'boolean',
   },
 };
+export const command = toYargsCommand(baseCommand, options);
 export const usage = toYargsUsage(command, options);
 export const extraPermissions: ExtraPermissions = {};
 
 export function builder (yargs: any) {
-  return bindOptionsAndCreateUsage(yargs, command, usage, options)
+  return bindOptionsAndCreateUsage(yargs, usage, options)
     .check((currentArguments: Args) => {
       const errorMessage = mutuallyExclusiveBooleanArguments
         .filter((argumentName) => (

@@ -1,6 +1,6 @@
 import log from '../../dependencies/log.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { LOG_FORMATS } from '../../lib/git/logFormats.ts';
@@ -16,7 +16,7 @@ interface Args {
 
 const DEFAULT_FORMAT = 'pretty';
 
-export const command = 'history';
+export const baseCommand = 'history';
 export const aliases = [ 'h' ];
 export const describe = 'Displays the commit history';
 export const options: YargsOptions = {
@@ -45,11 +45,12 @@ export const options: YargsOptions = {
     type: 'boolean',
   },
 };
-export const usage = toYargsUsage(command, options);
+export const command = toYargsCommand(baseCommand, options);
+export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {};
 
 export function builder (yargs: any) {
-  return bindOptionsAndCreateUsage(yargs, command, usage, options);
+  return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 
 export async function handler (args: Args) {

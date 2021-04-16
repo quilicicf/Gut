@@ -2,7 +2,7 @@ import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
 import { applyStyle, theme } from '../../dependencies/colors.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { isDirty } from '../../lib/git/isDirty.ts';
@@ -24,7 +24,7 @@ interface Args {
 const ARG_HARD = 'hard';
 const ARG_STASH_CHANGES = 'stash-changes';
 
-export const command = 'undo';
+export const baseCommand = 'undo';
 export const aliases = [ 'u' ];
 export const describe = 'Undoes commits';
 export const options: YargsOptions = {
@@ -53,11 +53,12 @@ export const options: YargsOptions = {
     default: false,
   },
 };
-export const usage = toYargsUsage(command, options);
+export const command = toYargsCommand(baseCommand, options);
+export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {};
 
 export async function builder (yargs: any) {
-  return bindOptionsAndCreateUsage(yargs, command, usage, options)
+  return bindOptionsAndCreateUsage(yargs, usage, options)
     .check((args: Args) => {
       if (args.description && !/^[a-zA-Z0-9_-]$/.test(args.description)) {
         throw Error('The description can only contain alpha-numeric characters and -_');
