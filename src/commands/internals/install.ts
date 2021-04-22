@@ -7,14 +7,15 @@ import {
 
 import { getConstants } from '../../constants.ts';
 
+const SHELL_SCRIPT_NAME = 'shell-features.sh';
+
 interface Args {
   installName: string;
 }
 
-const importScript = `\
-# Installation of Gut scripts, see https://github.com/quilicicf/Gut/blob/master/specs/user_documentation.md#shell-features
-# If the link is broken, you probably want to read the README again https://github.com/quilicicf/Gut/blob/master/README.md
-if test -s ~/.config/gut/gut_shell_features.sh; then
+const importScript = (targetShellScriptPath: string) => `\
+# Installation of Gut scripts, see https://github.com/quilicicf/Gut/#shell-features
+if test -s ${targetShellScriptPath}; then
   source "$_"
 fi
 `;
@@ -36,14 +37,13 @@ const retrieveShellScript = async (urlToScript: URL): Promise<string> => {
 };
 
 const installShellFeatures = async (installName: string) => {
-  const shellScriptName = 'shell-features.sh';
-  const urlToScript = new URL(`../../../shell/${shellScriptName}`, import.meta.url);
+  const urlToScript = new URL(`../../../shell/${SHELL_SCRIPT_NAME}`, import.meta.url);
   const initialShellScript = await retrieveShellScript(urlToScript);
   const shellScriptWithGutNameSubstituted = initialShellScript
     .replace(/%GUT_NAME/g, installName);
 
   const { GUT_CONFIGURATION_FOLDER } = await getConstants();
-  const targetShellScriptPath = resolve(GUT_CONFIGURATION_FOLDER, shellScriptName);
+  const targetShellScriptPath = resolve(GUT_CONFIGURATION_FOLDER, SHELL_SCRIPT_NAME);
 
   await Deno.writeTextFile(targetShellScriptPath, shellScriptWithGutNameSubstituted);
 
@@ -51,7 +51,7 @@ const installShellFeatures = async (installName: string) => {
     applyStyle(__`Copying the shell features in ${targetShellScriptPath}`, [ theme.fileName ]),
     applyStyle('Installation almost complete, now copy the following to your ~/.bashrc or equivalent:', [ theme.strong ]),
     '',
-    importScript,
+    importScript(targetShellScriptPath),
     applyStyle(__`💡 You'll need to run ${'exec bash'} or open a new terminal to test it`, [ theme.strong ]),
     '',
   ].join('\n'));
