@@ -4,18 +4,16 @@ import {
 } from '../../dependencies/yargs.ts';
 
 import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
+import { findRemote } from '../../lib/git/remotes.ts';
 
-const REMOTES_SHORTCUTS: { [ id: string ]: string } = {
-  o: 'origin',
-  u: 'upstream',
-};
-
-const printDivisions = async (remote: string | undefined): Promise<string> => {
+const printDivisions = async (remoteArgument?: string): Promise<string> => {
   const baseCommand = [ 'git', 'branch', '--color' ];
+  const remote = findRemote(remoteArgument || '');
   return executeAndGetStdout(
-    remote
-      ? [ ...baseCommand, '--remotes', '--list', `${REMOTES_SHORTCUTS[ remote ] || remote}/*` ]
+    remoteArgument
+      ? [ ...baseCommand, '--remotes', '--list', `${remote.name}/*` ]
       : baseCommand,
+    {},
   );
 };
 

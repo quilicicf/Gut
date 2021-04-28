@@ -16,7 +16,10 @@ Deno.test(applyStyle(__`@int ${`${LOCATION}/getMergeBaseFromParent`}`, [ theme.s
   const repository = await initializeRepository('gut_test_getMergeBaseFromParent');
 
   await commitShit(repository, 1);
-  const lastMasterCommitSha = await executeAndGetStdout([ 'git', 'log', '--max-count', '1', '--pretty=format:%H' ], true);
+  const lastMasterCommitSha = await executeAndGetStdout(
+    [ 'git', 'log', '--max-count', '1', '--pretty=format:%H' ],
+    { shouldTruncateTrailingLineBreak: true },
+  );
 
   await executeProcessCriticalTask([ 'git', 'checkout', '-b', 'master__devBranch' ]);
 

@@ -10,6 +10,7 @@ import { getParentBranch } from '../../lib/branch/getParentBranch.ts';
 import { stringifyBranch } from '../../lib/branch/stringifyBranch.ts';
 import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
+import { DEFAULT_REMOTE } from '../../lib/git/remotes.ts';
 
 interface Args {
   master?: boolean,
@@ -104,8 +105,8 @@ export async function handler (args: Args) {
   if (last) { return switchToBranch('-'); }
 
   if (defaultBranch !== undefined) {
-    const remote = defaultBranch || 'origin';
-    const output = await executeAndGetStdout([ 'git', 'remote', 'set-head', remote, '--auto' ]);
+    const remote = defaultBranch || DEFAULT_REMOTE.name;
+    const output = await executeAndGetStdout([ 'git', 'remote', 'set-head', remote, '--auto' ], {});
     const defaultBranchName = output.split(' ').pop();
 
     if (!defaultBranchName) {

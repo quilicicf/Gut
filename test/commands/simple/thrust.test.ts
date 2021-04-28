@@ -29,7 +29,10 @@ Deno.test(applyStyle(__`@int ${command} should push to a branch`, [ theme.strong
   await thrust({ force: false });
 
   await executeProcessCriticalTask([ 'git', 'checkout', 'origin/master' ]);
-  const lastCommitSubject = await executeAndGetStdout([ 'git', 'log', '--max-count', '1', '--pretty=format:%s' ], true);
+  const lastCommitSubject = await executeAndGetStdout(
+    [ 'git', 'log', '--max-count', '1', '--pretty=format:%s' ],
+    { shouldTruncateTrailingLineBreak: true },
+  );
 
   await deleteRepositories(repository, originRepositoryPath);
 
@@ -70,7 +73,10 @@ Deno.test(applyStyle(__`@int ${command} should force-push to a branch`, [ theme.
   await thrust({ force: true });
 
   await executeProcessCriticalTask([ 'git', 'checkout', 'origin/master' ]);
-  const lastCommitSubject = await executeAndGetStdout([ 'git', 'log', '--max-count', '1', '--pretty=format:%s' ], true);
+  const lastCommitSubject = await executeAndGetStdout(
+    [ 'git', 'log', '--max-count', '1', '--pretty=format:%s' ],
+    { shouldTruncateTrailingLineBreak: true },
+  );
   const newContentOnMaster = await Deno.readTextFile(theFilePath);
 
   await deleteRepositories(repository, originRepositoryPath);

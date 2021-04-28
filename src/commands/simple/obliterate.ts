@@ -83,7 +83,7 @@ export async function handler (args: Args) {
   const itemToDelete = branch || tag;
 
   const question: ConfirmOptions = {
-    message: `Delete ${itemName} ${itemToDelete} on ${targetRemote.name}?`,
+    message: `Delete ${itemName} ${itemToDelete} on ${targetRemote.coloredName}?`,
     default: false,
   };
 

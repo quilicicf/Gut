@@ -1,5 +1,6 @@
 import {
   fail,
+  assert,
   assertEquals,
   assertMatch,
   assertThrows,
@@ -7,6 +8,7 @@ import {
 
 export {
   fail,
+  assert,
   assertEquals,
   assertMatch,
   assertThrows,

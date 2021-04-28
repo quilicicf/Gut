@@ -48,7 +48,8 @@ Ein gut git Fluss [🔊](https://translate.google.com/?sl=de\&tl=en\&text=Ein%20
 
   * [Advanced commands](#advanced-commands)
 
-    * [pr](#pr)
+    * [auto-rebase](#auto-rebase)
+    * [pull-request](#pull-request)
 
 * [F.A.Q](#faq)
 
@@ -490,11 +491,23 @@ __Options:__
 
 > Commands that either connect to external tools or combine multiple git features
 
-#### pr
+#### auto-rebase
+
+Re-bases the parent branch on the given remote, then re-bases the current branch on top of it. Stashes the local changes first if there are any
+
+`USAGE: gut auto-rebase [options...]`
+
+__Options:__
+
+| Name     | Description         | Type     | Required | Default value |
+| -------- | ------------------- | -------- | -------- | ------------- |
+| `remote` | The remote to fetch | `string` | false    | `origin`      |
+
+#### pull-request
 
 Creates a pull request on your git server
 
-`USAGE: gut pr [options...]`
+`USAGE: gut pull-request [options...]`
 
 __Options:__
 

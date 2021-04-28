@@ -20,7 +20,8 @@ import * as obliterate from './src/commands/simple/obliterate.ts';
 import * as jump from './src/commands/internals/jump.ts';
 import * as install from './src/commands/internals/install.ts';
 
-import * as pr from './src/commands/advanced/pr/pr.ts';
+import * as autoRebase from './src/commands/advanced/auto-rebase/auto-rebase.ts';
+import * as pullRequest from './src/commands/advanced/pull-request/pull-request.ts';
 
 // Install with:
 // deno install \
@@ -63,7 +64,8 @@ const main = async () => {
     .command(yield_)
 
     // Advanced commands
-    .command(pr)
+    .command(autoRebase)
+    .command(pullRequest)
 
     // Internals
     .command(jump)

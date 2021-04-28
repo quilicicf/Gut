@@ -1,4 +1,6 @@
-export async function getRepositoryFromRemote (remote: string = 'origin') {
+import { DEFAULT_REMOTE } from './remotes.ts';
+
+export async function getRepositoryFromRemote (remote: string = DEFAULT_REMOTE.name) {
   const process = Deno.run({
     cmd: [ 'git', 'remote', 'show', '-n', remote ],
     stdin: 'null',

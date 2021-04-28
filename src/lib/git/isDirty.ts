@@ -1,5 +1,6 @@
-import { executeAndReturnStatus } from '../exec/executeAndReturnStatus.ts';
+import { executeAndGetStdout } from '../exec/executeAndGetStdout.ts';
 
 export async function isDirty (): Promise<boolean> {
-  return executeAndReturnStatus([ 'git', 'diff', '--quiet', '--exit-code' ]);
+  const status = await executeAndGetStdout([ 'git', 'status', '--short' ], { shouldTrim: true });
+  return !!status;
 }

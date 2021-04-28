@@ -8,6 +8,7 @@ export async function getCommitsUpToMax (maxCommits: number, shouldReverse: bool
   const reverseArgument = shouldReverse ? [ '--reverse' ] : [];
   const commitsAsPsv = await executeAndGetStdout(
     [ 'git', '--no-pager', 'log', PSV_FORMAT_ARGUMENT, '--color=never', '--max-count', maxCommits.toString(), ...reverseArgument ],
+    {},
   );
   return psvToJs(commitsAsPsv);
 }

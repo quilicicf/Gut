@@ -52,7 +52,7 @@ const commitWithMessage = async (message?: string) => (
     : executeProcessCriticalTask([ 'git', 'commit' ])
 );
 
-const commitWithFile = async (filePath: string) => executeAndGetStdout([ 'git', 'commit', '--file', filePath ]);
+const commitWithFile = async (filePath: string) => executeAndGetStdout([ 'git', 'commit', '--file', filePath ], {});
 
 const commit = async (forgePath: string, emoji: string, suffix: string) => {
   const commitMessageFilePath = resolve(forgePath, COMMIT_MESSAGE_FILE_NAME);

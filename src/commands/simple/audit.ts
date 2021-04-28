@@ -177,7 +177,10 @@ async function generateDiff (args: Args): Promise<string> {
   const commandWithoutRefs = [ 'git', '--no-pager', 'diff', '-U0', '--no-color' ];
 
   if (commitsNumber) {
-    return executeAndGetStdout([ ...commandWithoutRefs, `HEAD~${commitsNumber}..HEAD` ], true);
+    return executeAndGetStdout(
+      [ ...commandWithoutRefs, `HEAD~${commitsNumber}..HEAD` ],
+      { shouldTruncateTrailingLineBreak: true },
+    );
   }
 
   if (fromParentBranch) {
@@ -186,12 +189,15 @@ async function generateDiff (args: Args): Promise<string> {
     await log(Deno.stdout, applyStyle(__`The current PR had ${String(numberOfCommits)} commit(s)\n`, [ theme.commitsNumber ]));
 
     if (numberOfCommits < 1) { return ''; }
-    return executeAndGetStdout([ ...commandWithoutRefs, `HEAD~${numberOfCommits}..HEAD` ], true);
+    return executeAndGetStdout(
+      [ ...commandWithoutRefs, `HEAD~${numberOfCommits}..HEAD` ],
+      { shouldTruncateTrailingLineBreak: true },
+    );
   }
 
   return from
-    ? executeAndGetStdout([ ...commandWithoutRefs, `${from}..${to}` ], true)
-    : executeAndGetStdout([ ...commandWithoutRefs, 'HEAD' ], true);
+    ? executeAndGetStdout([ ...commandWithoutRefs, `${from}..${to}` ], { shouldTruncateTrailingLineBreak: true })
+    : executeAndGetStdout([ ...commandWithoutRefs, 'HEAD' ], { shouldTruncateTrailingLineBreak: true });
 }
 
 function printFileDiff (parsedDiff: ParsingState): string {

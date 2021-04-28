@@ -13,6 +13,7 @@ export async function getCommitsBetweenRefs (
   const reverseArgument = shouldReverse ? [ '--reverse' ] : [];
   const commitsAsPsv = await executeAndGetStdout(
     [ 'git', '--no-pager', 'log', PSV_FORMAT_ARGUMENT, '--color=never', ...reverseArgument, `${baseRef}..${targetRef}` ],
+    {},
   );
   return psvToJs(commitsAsPsv);
 }

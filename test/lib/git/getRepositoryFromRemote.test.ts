@@ -16,7 +16,10 @@ Deno.test({
   async fn () {
     await startTestLogs();
     const repository = await initializeRepository('gut_test_getRepositoryFromRemote');
-    const currentGitUser = await executeAndGetStdout([ 'git', 'config', 'user.name' ], true);
+    const currentGitUser = await executeAndGetStdout(
+      [ 'git', 'config', 'user.name' ],
+      { shouldTruncateTrailingLineBreak: true },
+    );
 
     await commitShit(repository, 1);
 

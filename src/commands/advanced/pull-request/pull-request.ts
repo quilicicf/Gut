@@ -8,6 +8,7 @@ import {
 
 import { editText } from '../../../lib/editText.ts';
 import { writeToClipboard } from '../../../lib/clipboard.ts';
+import { DEFAULT_REMOTE } from '../../../lib/git/remotes.ts';
 import { openInDefaultApplication } from '../../../lib/open.ts';
 import { getBranchRemote } from '../../../lib/git/getBranchRemote.ts';
 import { getParentBranch } from '../../../lib/branch/getParentBranch.ts';
@@ -82,7 +83,7 @@ interface Args {
 const ARG_OPEN = 'open';
 const ARG_COPY = 'copy-url';
 
-export const baseCommand = 'pr';
+export const baseCommand = 'pull-request';
 export const describe = 'Creates a pull request on your git server';
 export const options: YargsOptions = {
   [ ARG_OPEN ]: {
@@ -109,11 +110,11 @@ export const options: YargsOptions = {
     alias: 'r',
     describe: 'The remote on which the PR will be done',
     type: 'string',
-    default: 'origin',
+    default: DEFAULT_REMOTE.name,
   },
 };
 export const command = toYargsCommand(baseCommand, options);
-export const aliases = [];
+export const aliases = [ 'pr' ];
 export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {
   '--allow-run': {

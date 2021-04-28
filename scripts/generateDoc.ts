@@ -15,7 +15,8 @@ import * as thrust from '../src/commands/simple/thrust.ts';
 import * as undo from '../src/commands/simple/undo.ts';
 import * as _yield from '../src/commands/simple/yield.ts';
 
-import * as pr from '../src/commands/advanced/pr/pr.ts';
+import * as autoRebase from '../src/commands/advanced/auto-rebase/auto-rebase.ts';
+import * as pullRequest from '../src/commands/advanced/pull-request/pull-request.ts';
 
 import * as install from '../src/commands/internals/install.ts';
 
@@ -92,7 +93,7 @@ const main = async () => {
     '> Commands that either connect to external tools or combine multiple git features',
     '',
   ].join('\n'));
-  markdownSections.push(toMarkdownSections([ pr ]));
+  markdownSections.push(toMarkdownSections([ autoRebase, pullRequest ]));
   markdownSections.push('<!-- END CLI DOC -->');
 
   const fullMarkdownContent = markdownSections.join('\n');

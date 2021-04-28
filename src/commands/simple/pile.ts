@@ -25,7 +25,7 @@ export async function handler () {
 
   const output = await executeAndGetStdout([
     'git', '-c', 'color.status=always', 'status', '--short', '--branch',
-  ]);
+  ], {});
 
   await log(Deno.stdout, `${output}\n`);
 

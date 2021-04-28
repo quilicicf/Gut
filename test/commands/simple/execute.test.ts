@@ -31,7 +31,7 @@ Deno.test(applyStyle(__`@int ${command} should commit with message`, [ theme.str
 
   const expectedCommitMessage = ':construction: Test commit';
   await commitWithMessage(expectedCommitMessage);
-  const actualCommitMessage = await executeAndGetStdout([ 'git', 'log', '--max-count=1', '--pretty=format:%s' ]);
+  const actualCommitMessage = await executeAndGetStdout([ 'git', 'log', '--max-count=1', '--pretty=format:%s' ], {});
 
   await deleteRepositories(repository);
 

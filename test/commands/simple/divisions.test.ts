@@ -24,7 +24,7 @@ Deno.test(applyStyle(__`@int ${command} should show local branches`, [ theme.str
     [ 'git', 'checkout', '-b', 'toto' ],
   ]);
 
-  const output = await printDivisions(undefined);
+  const output = await printDivisions();
 
   await deleteRepositories(repository);
 
