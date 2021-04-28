@@ -30,7 +30,7 @@ import * as pullRequest from './src/commands/advanced/pull-request/pull-request.
 //   --allow-env=HOME \
 //   --allow-net=api.github.com \
 //   --allow-read="${FORGE},${HOME}/.config/gut/" \
-//   --allow-write="${FORGE}/.gut-commit-message.md,${HOME}/.config/gut/" \
+//   --allow-write="${HOME}/.config/gut/" \
 //   --allow-run=git,micro,xclip,xdg-open \
 //   --name g \
 //   --no-check \

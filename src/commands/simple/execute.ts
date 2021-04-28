@@ -36,7 +36,7 @@ class CommitMessage {
 
 const CODE_REVIEW_MESSAGE = new CommitMessage('Code review', ':eyes:');
 const WIP_MESSAGE = new CommitMessage('WIP', ':construction:');
-const COMMIT_MESSAGE_FILE_NAME = '.gut-commit-message.md';
+const COMMIT_MESSAGE_FILE_NAME = 'commit-message.md';
 
 interface Args {
   codeReview?: boolean,
@@ -54,8 +54,8 @@ const commitWithMessage = async (message?: string) => (
 
 const commitWithFile = async (filePath: string) => executeAndGetStdout([ 'git', 'commit', '--file', filePath ], {});
 
-const commit = async (forgePath: string, emoji: string, suffix: string) => {
-  const commitMessageFilePath = resolve(forgePath, COMMIT_MESSAGE_FILE_NAME);
+const commit = async (tempFolderPath: string, emoji: string, suffix: string) => {
+  const commitMessageFilePath = resolve(tempFolderPath, COMMIT_MESSAGE_FILE_NAME);
   const paddedEmoji = emoji ? `${emoji} ` : '';
   const paddedSuffix = suffix ? ` ${suffix}` : '';
   await editText({
@@ -192,8 +192,8 @@ export async function handler (args: Args) {
   }
 
   const emoji = shouldUseEmojis ? await promptForEmoji() : '';
-  const forgePath = configuration?.global?.forgePath;
-  await commit(forgePath, emoji, suffix);
+  const tempFolderPath = configuration?.global?.tempFolderPath;
+  await commit(tempFolderPath, emoji, suffix);
 }
 
 export const test = {

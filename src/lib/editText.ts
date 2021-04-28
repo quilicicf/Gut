@@ -13,7 +13,9 @@ export interface EditorOptions {
 const generatePositionArgument = (index: Index) => `+${index.line || 1}:${index.column}`;
 
 export async function editText (options: EditorOptions) {
-  const startIndexArgument = options.startIndex ? [ generatePositionArgument(options.startIndex) ] : [];
+  const startIndexArgument = options.startIndex
+    ? [ generatePositionArgument(options.startIndex) ]
+    : [ generatePositionArgument({ line: 1, column: 1 }) ];
   const fileTypeArgument = options.fileType ? [ '-filetype', options.fileType ] : [];
 
   const process = Deno.run({
@@ -27,8 +29,9 @@ export async function editText (options: EditorOptions) {
     stderr: 'null',
   });
 
-  if (options.startTemplate && process?.stdin?.write) {
-    await process.stdin.write(new TextEncoder().encode(options.startTemplate));
+  if (process?.stdin?.write) {
+    const startTemplate = options.startTemplate ? options.startTemplate : '\n';
+    await process.stdin.write(new TextEncoder().encode(startTemplate));
     process.stdin.close();
   }
 

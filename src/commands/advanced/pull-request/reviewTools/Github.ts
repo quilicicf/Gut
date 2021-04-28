@@ -69,7 +69,7 @@ export const github: ReviewTool = {
     const topLevel = await getTopLevel();
     const pullRequestTemplatePath = resolve(topLevel, '.github', 'PULL_REQUEST_TEMPLATE.md');
 
-    if (!exists(pullRequestTemplatePath)) { return ''; }
+    if (!await exists(pullRequestTemplatePath)) { return ''; }
 
     return Deno.readTextFile(pullRequestTemplatePath);
   },

@@ -26,6 +26,8 @@ import { PullRequestCreation, ReviewTool } from './ReviewTool.ts';
 import { thrust } from '../../simple/thrust.ts';
 import { parseDiffAndDisplay } from '../../simple/audit.ts';
 import { FullGutConfiguration } from '../../../configuration.ts';
+import { resolve } from '../../../dependencies/path.ts';
+import { exists } from '../../../dependencies/fs.ts';
 
 async function promptForPrTitle (commitsNumber: number): Promise<string> {
   const tenLastCommits = await getCommitsUpToMax(commitsNumber, false);
@@ -54,7 +56,7 @@ async function promptForPrTitle (commitsNumber: number): Promise<string> {
   });
 }
 
-async function promptForPrDescription (descriptionTemplate?: string): Promise<string> {
+async function promptForPrDescription (tempDescriptionFile: string, descriptionTemplate?: string): Promise<string> {
   const shouldWriteDescription = await promptConfirm({
     message: 'Do you want to write a description?',
     default: !!descriptionTemplate,
@@ -65,6 +67,7 @@ async function promptForPrDescription (descriptionTemplate?: string): Promise<st
   return editText({
     fileType: 'markdown',
     startTemplate: descriptionTemplate,
+    outputFilePath: tempDescriptionFile,
   });
 }
 
@@ -80,6 +83,7 @@ interface Args {
   isTestRun: boolean,
 }
 
+const PR_DESCRIPTION_FILE_NAME = 'pr-description.md';
 const ARG_OPEN = 'open';
 const ARG_COPY = 'copy-url';
 
@@ -183,8 +187,11 @@ export async function handler (args: Args) {
   const title = await promptForPrTitle(commitsNumber);
   const reviewTool: ReviewTool = github; // TODO: allow changing this from configuration
 
-  const descriptionTemplate = await reviewTool.retrievePullRequestTemplate();
-  const description = await promptForPrDescription(descriptionTemplate);
+  const tempDescriptionFile = resolve(configuration.global.tempFolderPath, PR_DESCRIPTION_FILE_NAME);
+  const descriptionTemplate = await exists(tempDescriptionFile)
+    ? await Deno.readTextFile(tempDescriptionFile) // In case previous PR try failed
+    : await reviewTool.retrievePullRequestTemplate();
+  const description = await promptForPrDescription(tempDescriptionFile, descriptionTemplate);
 
   if (!await getBranchRemote()) {
     await log(Deno.stdout, applyStyle('The branch was never pushed, pushing it now\n', [ theme.strong ]));
@@ -217,6 +224,8 @@ export async function handler (args: Args) {
   if (copyUrl) { await writeToClipboard(prUrl); }
 
   if (open) { await openInDefaultApplication(prUrl); }
+
+  await Deno.remove(tempDescriptionFile); // Only remove if PR was successfully created
 }
 
 export const test = {};

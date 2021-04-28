@@ -242,7 +242,7 @@ deno install \
   --unstable \
   --allow-env=HOME \
   --allow-read="${FORGE},${HOME}.config/gut/" \
-  --allow-write="${FORGE}/.gut-commit-message.md,${HOME}/.config/gut/" \
+  --allow-write="${HOME}/.config/gut/" \
   --allow-run=git,micro \
   --name gut \
   --no-check \
@@ -253,9 +253,9 @@ deno install \
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `--prompt`      | Allows Deno to prompt you for any missing permission at runtime                                                                                    |
 | `--unstable`    | [The prompt lib](https://deno.land/x/cliffy) Gut uses requires `Deno.setRaw` which is still unstable                                               |
-| `--unstable`    | [The prompt lib](https://deno.land/x/cliffy) Gut uses requires `Deno.setRaw` which is still unstable                                               |
 | `--allow-env`   | Allows Gut to find your home directory so that it can find `~/.config/gut`                                                                         |
-| `--allow-write` | Allows Gut to write to global configuration files and commit messages (to avoid escape hell when committing)                                       |
+| `--allow-read`  | Allows Gut to read the global/repository configuration files, PR templates (ex: from `.github`) and Gut temp files (ex: commit messages)           |
+| `--allow-write` | Allows Gut to write to global configuration files and Gut temp files (ex: commit messages, PR descriptions)                                        |
 | `--allow-run`   | Allows Gut to run git commands and the text editor [micro](https://micro-editor.github.io/) which is required until I find a way to use any editor |
 | `--name`        | The name of the command that will be generated. You can change it if you want (I use `g`, faster to type)                                          |
 | `--no-check`    | Makes Deno skip the TypeScript validation before running Gut, it is not needed at runtime                                                          |
