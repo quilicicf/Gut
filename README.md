@@ -348,9 +348,10 @@ Creates a branch
 
 __Options:__
 
-| Name            | Description                                            | Type     | Required | Default value |
-| --------------- | ------------------------------------------------------ | -------- | -------- | ------------- |
-| `ticket-number` | Specifies the ticket number when creating a new branch | `string` | false    |               |
+| Name           | Description                                           | Type      | Required | Default value |
+| -------------- | ----------------------------------------------------- | --------- | -------- | ------------- |
+| `issue-number` | Specifies the issue number when creating a new branch | `string`  | false    |               |
+| `poc`          | Specifies that the branch contains a PoC              | `boolean` | false    |               |
 
 #### divisions
 
@@ -493,7 +494,8 @@ __Options:__
 
 #### auto-rebase
 
-Re-bases the parent branch on the given remote, then re-bases the current branch on top of it. Stashes the local changes first if there are any
+Re-bases the parent branch on the given remote, then re-bases the current branch on top of it.
+Stashes the local changes first if there are any
 
 `USAGE: gut auto-rebase [options...]`
 

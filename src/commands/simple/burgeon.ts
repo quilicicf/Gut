@@ -3,11 +3,14 @@ import {
   bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
 
-import { getCurrentBranchName } from '../../lib/git/getCurrentBranchName.ts';
+import { Branch, BranchFragment } from '../../lib/branch/Branch.ts';
+import { getCurrentBranch } from '../../lib/git/getCurrentBranch.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
+import { stringifyBranch } from '../../lib/branch/stringifyBranch.ts';
 
 interface Args {
-  ticketNumber?: string,
+  issueNumber?: string,
+  poc?: boolean,
 
   // Test thingies
   isTestRun: boolean,
@@ -30,10 +33,15 @@ export const baseCommand = 'burgeon';
 export const aliases = [ 'b' ];
 export const describe = 'Creates a branch';
 export const options: YargsOptions = {
-  'ticket-number': {
+  'issue-number': {
     alias: 'n',
-    describe: 'Specifies the ticket number when creating a new branch',
+    describe: 'Specifies the issue number when creating a new branch',
     type: 'string',
+  },
+  poc: {
+    alias: 'p',
+    describe: 'Specifies that the branch contains a PoC',
+    type: 'boolean',
   },
 };
 export const command = toYargsCommand(baseCommand, options);
@@ -44,14 +52,29 @@ export function builder (yargs: any) {
   return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 
-export async function handler ({ ticketNumber, isTestRun, testDescription }: Args) {
+export async function handler (args: Args) {
+  const {
+    issueNumber,
+    poc,
+
+    isTestRun,
+    testDescription,
+  } = args;
+
   const description = isTestRun ? testDescription : await promptString({ message: 'Describe your dev', minLength: 1 });
   const camelCasedDescription = camelCase(description);
-  const fragment = [ ticketNumber, camelCasedDescription ]
-    .filter(Boolean)
-    .join('_');
-  const currentBranchName = await getCurrentBranchName();
-  const newBranchName = `${currentBranchName}__${fragment}`;
+  const currentBranch: Branch = await getCurrentBranch();
+  const newFragment: BranchFragment = {
+    isPoc: poc,
+    issueId: issueNumber,
+    description: camelCasedDescription,
+  };
+
+  const newBranch: Branch = {
+    fragments: currentBranch.fragments.concat([ newFragment ]),
+  };
+
+  const newBranchName = stringifyBranch(newBranch);
   await executeProcessCriticalTask([ 'git', 'checkout', '-b', newBranchName ]);
   return newBranchName;
 }
