@@ -50,6 +50,7 @@ Ein gut git Fluss [🔊](https://translate.google.com/?sl=de\&tl=en\&text=Ein%20
 
     * [auto-rebase](#auto-rebase)
     * [pull-request](#pull-request)
+    * [switch-default](#switch-default)
 
 * [F.A.Q](#faq)
 
@@ -526,6 +527,18 @@ __Extra permissions:__
 | Permission    | Value                                                                              | Reason                                                                                                                                                                 |
 | ------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `--allow-run` | `powershell,explorer` (Windows)<br>`pbcopy,open` (Mac)<br>`xclip,xfg-open` (Linux) | Allows:<ul><li>Writing the PR's URL to the clipboard when `--copy-url` is set</li><br><li>Opening the PR's URL with the default browser when `--open` is set</li></ul> |
+
+#### switch-default
+
+Fetches the origin's default branch, then switches to it
+
+`USAGE: gut switch-default [options...]`
+
+__Options:__
+
+| Name     | Description         | Type     | Required | Default value |
+| -------- | ------------------- | -------- | -------- | ------------- |
+| `remote` | The remote to check | `string` | false    | `origin`      |
 
 <!-- END CLI DOC -->
 

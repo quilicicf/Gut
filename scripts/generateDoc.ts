@@ -17,6 +17,7 @@ import * as _yield from '../src/commands/simple/yield.ts';
 
 import * as autoRebase from '../src/commands/advanced/auto-rebase/auto-rebase.ts';
 import * as pullRequest from '../src/commands/advanced/pull-request/pull-request.ts';
+import * as switchDefault from '../src/commands/advanced/switch-default/switch-default.ts';
 
 import * as install from '../src/commands/internals/install.ts';
 
@@ -93,7 +94,7 @@ const main = async () => {
     '> Commands that either connect to external tools or combine multiple git features',
     '',
   ].join('\n'));
-  markdownSections.push(toMarkdownSections([ autoRebase, pullRequest ]));
+  markdownSections.push(toMarkdownSections([ autoRebase, pullRequest, switchDefault ]));
   markdownSections.push('<!-- END CLI DOC -->');
 
   const fullMarkdownContent = markdownSections.join('\n');

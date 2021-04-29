@@ -22,6 +22,7 @@ import * as install from './src/commands/internals/install.ts';
 
 import * as autoRebase from './src/commands/advanced/auto-rebase/auto-rebase.ts';
 import * as pullRequest from './src/commands/advanced/pull-request/pull-request.ts';
+import * as switchDefault from './src/commands/advanced/switch-default/switch-default.ts';
 
 // Install with:
 // deno install \
@@ -66,6 +67,7 @@ const main = async () => {
     // Advanced commands
     .command(autoRebase)
     .command(pullRequest)
+    .command(switchDefault)
 
     // Internals
     .command(jump)
