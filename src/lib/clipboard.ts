@@ -6,6 +6,7 @@ const writeText = async (cmd: string[], data: string): Promise<number> => {
     stderr: 'piped',
   });
   await process?.stdin?.write(new TextEncoder().encode(data));
+  await process?.stdin?.write(new TextEncoder().encode(undefined));
   process?.stdin?.close();
   const { code } = await process.status();
   return code;

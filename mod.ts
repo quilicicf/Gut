@@ -21,6 +21,7 @@ import * as jump from './src/commands/internals/jump.ts';
 import * as install from './src/commands/internals/install.ts';
 
 import * as autoRebase from './src/commands/advanced/auto-rebase/auto-rebase.ts';
+import * as copyBranch from './src/commands/advanced/copy-branch/copy-branch.ts';
 import * as pullRequest from './src/commands/advanced/pull-request/pull-request.ts';
 import * as switchDefault from './src/commands/advanced/switch-default/switch-default.ts';
 
@@ -66,6 +67,7 @@ const main = async () => {
 
     // Advanced commands
     .command(autoRebase)
+    .command(copyBranch)
     .command(pullRequest)
     .command(switchDefault)
 

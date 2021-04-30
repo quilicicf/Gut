@@ -16,6 +16,7 @@ import * as undo from '../src/commands/simple/undo.ts';
 import * as _yield from '../src/commands/simple/yield.ts';
 
 import * as autoRebase from '../src/commands/advanced/auto-rebase/auto-rebase.ts';
+import * as copyBranch from '../src/commands/advanced/copy-branch/copy-branch.ts';
 import * as pullRequest from '../src/commands/advanced/pull-request/pull-request.ts';
 import * as switchDefault from '../src/commands/advanced/switch-default/switch-default.ts';
 
@@ -94,7 +95,7 @@ const main = async () => {
     '> Commands that either connect to external tools or combine multiple git features',
     '',
   ].join('\n'));
-  markdownSections.push(toMarkdownSections([ autoRebase, pullRequest, switchDefault ]));
+  markdownSections.push(toMarkdownSections([ autoRebase, copyBranch, pullRequest, switchDefault ]));
   markdownSections.push('<!-- END CLI DOC -->');
 
   const fullMarkdownContent = markdownSections.join('\n');

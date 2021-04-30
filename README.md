@@ -49,6 +49,7 @@ Ein gut git Fluss [🔊](https://translate.google.com/?sl=de\&tl=en\&text=Ein%20
   * [Advanced commands](#advanced-commands)
 
     * [auto-rebase](#auto-rebase)
+    * [copy-branch](#copy-branch)
     * [pull-request](#pull-request)
     * [switch-default](#switch-default)
 
@@ -505,6 +506,18 @@ __Options:__
 | Name     | Description         | Type     | Required | Default value |
 | -------- | ------------------- | -------- | -------- | ------------- |
 | `remote` | The remote to fetch | `string` | false    | `origin`      |
+
+#### copy-branch
+
+Copies the current branch name in the clipboard
+
+`USAGE: gut copy-branch [options...]`
+
+__Extra permissions:__
+
+| Permission    | Value                                                       | Reason                                                    |
+| ------------- | ----------------------------------------------------------- | --------------------------------------------------------- |
+| `--allow-run` | `powershell` (Windows)<br>`pbcopy` (Mac)<br>`xclip` (Linux) | Allows writing the current branch's name to the clipboard |
 
 #### pull-request
 
