@@ -56,13 +56,19 @@ export async function getConfiguration (): Promise<FullGutConfiguration> {
   await ensureDir(tempFolderPath);
 
   const currentRepositoryTopLevel = await getTopLevel();
-  if (!currentRepositoryTopLevel) { return { global: globalConfiguration }; }
+
+  if (!currentRepositoryTopLevel || !currentRepositoryTopLevel.startsWith(globalConfiguration.forgePath)) {
+    return { global: globalConfiguration };
+  }
+
+
   const repositoryConfigurationPath = resolve(currentRepositoryTopLevel, CONFIGURATION_FILE_NAME);
 
   if (await exists(repositoryConfigurationPath)) {
     const repositoryConfigurationAsJson = await Deno.readTextFile(repositoryConfigurationPath);
     const repositoryConfiguration: RepositoryGutConfiguration = JSON.parse(repositoryConfigurationAsJson);
 
+    console.log(repositoryConfiguration);
     return {
       global: globalConfiguration,
       repository: repositoryConfiguration,
