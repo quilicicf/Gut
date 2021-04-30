@@ -1,20 +1,13 @@
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
+  ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsCommand, toYargsUsage,
 } from '../../../dependencies/yargs.ts';
-
-import { isDirty } from '../../../lib/git/isDirty.ts';
-import { moveUpTop } from '../../../lib/git/moveUpTop.ts';
-import { DEFAULT_REMOTE, findRemote } from '../../../lib/git/remotes.ts';
-import { getParentBranch } from '../../../lib/branch/getParentBranch.ts';
-import { stringifyBranch } from '../../../lib/branch/stringifyBranch.ts';
-import { parseBranchName } from '../../../lib/branch/parseBranchName.ts';
-import { getCurrentBranchName } from '../../../lib/git/getCurrentBranchName.ts';
-import { executeProcessCriticalTask } from '../../../lib/exec/executeProcessCriticalTask.ts';
-import { executeProcessCriticalTasks } from '../../../lib/exec/executeProcessCriticalTasks.ts';
-import { executeAndGetStdout } from '../../../lib/exec/executeAndGetStdout.ts';
 import log from '../../../dependencies/log.ts';
 import { applyStyle, theme } from '../../../dependencies/colors.ts';
-import apply = Reflect.apply;
+
+import { DEFAULT_REMOTE, findRemote } from '../../../lib/git/remotes.ts';
+import { executeAndGetStdout } from '../../../lib/exec/executeAndGetStdout.ts';
+import { executeProcessCriticalTask } from '../../../lib/exec/executeProcessCriticalTask.ts';
 
 interface Args {
   remote: string;
