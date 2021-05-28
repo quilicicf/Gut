@@ -240,7 +240,6 @@ Each command's documentation explains the additional permissions it might need a
 
 ```shell
 deno install \
-  --prompt \
   --unstable \
   --allow-env=HOME \
   --allow-read="${FORGE},${HOME}.config/gut/" \
@@ -253,7 +252,6 @@ deno install \
 
 | Parameter       | Explanation                                                                                                                                        |
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--prompt`      | Allows Deno to prompt you for any missing permission at runtime                                                                                    |
 | `--unstable`    | [The prompt lib](https://deno.land/x/cliffy) Gut uses requires `Deno.setRaw` which is still unstable                                               |
 | `--allow-env`   | Allows Gut to find your home directory so that it can find `~/.config/gut`                                                                         |
 | `--allow-read`  | Allows Gut to read the global/repository configuration files, PR templates (ex: from `.github`) and Gut temp files (ex: commit messages)           |

@@ -19,6 +19,7 @@ const CONFIGURATION: FullGutConfiguration = {
     },
     preferredGitServer: GIT_SERVER,
     forgePath: '/tmp/gut_replicate_tests',
+    tempFolderPath: '/tmp/gut_temp_path',
   },
 };
 

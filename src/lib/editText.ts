@@ -1,3 +1,9 @@
+import { getConstants } from '../constants.ts';
+import { writeTextFile } from './writeTextFile.ts';
+import { getPermissionOrExit } from './getPermissionOrExit.ts';
+
+const EDITOR_NAME = 'micro';
+
 interface Index {
   line?: number, // Base-1 index of the line. Defaults to 1
   column: number, // Base-1 index of the column
@@ -13,6 +19,8 @@ export interface EditorOptions {
 const generatePositionArgument = (index: Index) => `+${index.line || 1}:${index.column}`;
 
 export async function editText (options: EditorOptions) {
+  await getPermissionOrExit({ name: 'run', command: EDITOR_NAME });
+
   const startIndexArgument = options.startIndex
     ? [ generatePositionArgument(options.startIndex) ]
     : [ generatePositionArgument({ line: 1, column: 1 }) ];
@@ -20,7 +28,7 @@ export async function editText (options: EditorOptions) {
 
   const process = Deno.run({
     cmd: [
-      'micro',
+      EDITOR_NAME,
       ...fileTypeArgument,
       ...startIndexArgument,
     ],
@@ -41,7 +49,8 @@ export async function editText (options: EditorOptions) {
   const resultAsText = new TextDecoder().decode(result);
 
   if (options.outputFilePath) {
-    await Deno.writeTextFile(options.outputFilePath, resultAsText);
+    const { GUT_CONFIGURATION_FOLDER } = await getConstants();
+    await writeTextFile(options.outputFilePath, resultAsText, { permissionPath: GUT_CONFIGURATION_FOLDER });
   }
 
   return resultAsText;

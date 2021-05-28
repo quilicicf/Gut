@@ -1,9 +1,13 @@
 import log from '../../dependencies/log.ts';
+import { getPermissionOrExit } from '../getPermissionOrExit.ts';
 import { applyStyle, theme } from '../../dependencies/colors.ts';
 
 import { ExecOptions } from './ExecOptions.ts';
 
 export async function executeProcessCriticalTask (command: string[], options: ExecOptions = {}) {
+  const [ programName ] = command;
+  await getPermissionOrExit({ name: 'run', command: programName });
+
   const process = await Deno.run({
     cmd: command,
     stdin: 'inherit',

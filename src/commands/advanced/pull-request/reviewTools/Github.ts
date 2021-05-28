@@ -3,6 +3,8 @@ import { exists } from '../../../../dependencies/fs.ts';
 import { resolve } from '../../../../dependencies/path.ts';
 import { __, applyStyle, theme } from '../../../../dependencies/colors.ts';
 
+import { request } from '../../../../lib/request.ts';
+import { readTextFile } from '../../../../lib/readTextFile.ts';
 import { getTopLevel } from '../../../../lib/git/getTopLevel.ts';
 
 import { PullRequest, PullRequestCreation, ReviewTool } from '../ReviewTool.ts';
@@ -46,7 +48,7 @@ const setAssigneeIfApplicable = async (
   const { number } = pullRequest;
   const { repositoryOwner, repositoryName, assignee } = pullRequestCreation;
   try {
-    await fetch(
+    await request(
       // https://docs.github.com/en/rest/reference/issues#add-assignees-to-an-issue
       `${BASE_URL}/repos/${repositoryOwner}/${repositoryName}/issues/${number}/assignees`,
       {
@@ -71,7 +73,7 @@ export const github: ReviewTool = {
 
     if (!await exists(pullRequestTemplatePath)) { return ''; }
 
-    return Deno.readTextFile(pullRequestTemplatePath);
+    return readTextFile(pullRequestTemplatePath, { permissionPath: topLevel });
   },
   async createPullRequest (pullRequestCreation: PullRequestCreation, token: string): Promise<PullRequest> {
     const {
@@ -81,7 +83,7 @@ export const github: ReviewTool = {
     } = pullRequestCreation;
 
     try {
-      const response = await fetch(
+      const response = await request(
         // https://docs.github.com/en/rest/reference/pulls#create-a-pull-request
         `${BASE_URL}/repos/${repositoryOwner}/${repositoryName}/pulls`,
         {

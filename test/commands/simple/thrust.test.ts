@@ -5,10 +5,11 @@ import {
   commitShit, deleteRepositories, endTestLogs, initializeRemote, initializeRepository, startTestLogs,
 } from '../../utils/setup.ts';
 
-import { handler as thrust } from '../../../src/commands/simple/thrust.ts';
-import { executeProcessCriticalTasks } from '../../../src/lib/exec/executeProcessCriticalTasks.ts';
-import { executeProcessCriticalTask } from '../../../src/lib/exec/executeProcessCriticalTask.ts';
 import { executeAndGetStdout } from '../../../src/lib/exec/executeAndGetStdout.ts';
+import { executeProcessCriticalTask } from '../../../src/lib/exec/executeProcessCriticalTask.ts';
+import { executeProcessCriticalTasks } from '../../../src/lib/exec/executeProcessCriticalTasks.ts';
+
+import { handler as thrust } from '../../../src/commands/simple/thrust.ts';
 
 const command = 'gut thrust';
 const remoteName = 'origin';

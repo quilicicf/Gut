@@ -27,7 +27,6 @@ import * as switchDefault from './src/commands/advanced/switch-default/switch-de
 
 // Install with:
 // deno install \
-//   --prompt \
 //   --unstable \
 //   --allow-env=HOME \
 //   --allow-net=api.github.com \
@@ -82,7 +81,7 @@ const main = async () => {
     .strictCommands()
     .help()
     .version()
-    .epilogue('For more information, read the manual at https://github.com/quilicicf/Gut/blob/master/specs/user_documentation.md')
+    .epilogue('For more information, read the manual at https://github.com/quilicicf/Gut')
     .wrap(null)
     .parse(Deno.args);
 };

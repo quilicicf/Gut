@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="generate_doc" type="DenoConfigurationType" exePath="$USER_HOME$/.asdf/installs/deno/1.8.0/bin/deno" inputPath="$PROJECT_DIR$/scripts/generateDoc.ts" programParameters="run --unstable --allow-run=node --allow-read=README.md --allow-write=README.md --no-check">
-    <method v="2">
-      <option name="Make" enabled="true" />
-    </method>
-  </configuration>
-</component>

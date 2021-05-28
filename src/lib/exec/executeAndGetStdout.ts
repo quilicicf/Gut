@@ -1,3 +1,5 @@
+import { getPermissionOrExit } from '../getPermissionOrExit.ts';
+
 interface _ExecuteAndGetStdoutOptions {
   shouldTrim?: boolean;
   shouldTruncateTrailingLineBreak?: boolean;
@@ -6,6 +8,9 @@ interface _ExecuteAndGetStdoutOptions {
 export type ExecuteAndGetStdoutOptions = _ExecuteAndGetStdoutOptions;
 
 export async function executeAndGetStdout (command: string[], options: ExecuteAndGetStdoutOptions) {
+  const [ programName ] = command;
+  await getPermissionOrExit({ name: 'run', command: programName });
+
   const process = Deno.run({
     cmd: command,
     stdin: 'inherit',

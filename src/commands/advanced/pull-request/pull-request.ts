@@ -1,4 +1,6 @@
 import log from '../../../dependencies/log.ts';
+import { exists } from '../../../dependencies/fs.ts';
+import { resolve } from '../../../dependencies/path.ts';
 import { isEmpty, size } from '../../../dependencies/ramda.ts';
 import { __, applyStyle, theme } from '../../../dependencies/colors.ts';
 import { promptConfirm, promptSelect, promptString } from '../../../dependencies/cliffy.ts';
@@ -7,6 +9,7 @@ import {
 } from '../../../dependencies/yargs.ts';
 
 import { editText } from '../../../lib/editText.ts';
+import { readTextFile } from '../../../lib/readTextFile.ts';
 import { writeToClipboard } from '../../../lib/clipboard.ts';
 import { DEFAULT_REMOTE } from '../../../lib/git/remotes.ts';
 import { openInDefaultApplication } from '../../../lib/open.ts';
@@ -26,8 +29,6 @@ import { PullRequestCreation, ReviewTool } from './ReviewTool.ts';
 import { thrust } from '../../simple/thrust.ts';
 import { parseDiffAndDisplay } from '../../simple/audit.ts';
 import { FullGutConfiguration } from '../../../configuration.ts';
-import { resolve } from '../../../dependencies/path.ts';
-import { exists } from '../../../dependencies/fs.ts';
 
 async function promptForPrTitle (commitsNumber: number): Promise<string> {
   const tenLastCommits = await getCommitsUpToMax(commitsNumber, false);
@@ -189,7 +190,7 @@ export async function handler (args: Args) {
 
   const tempDescriptionFile = resolve(configuration.global.tempFolderPath, PR_DESCRIPTION_FILE_NAME);
   const descriptionTemplate = await exists(tempDescriptionFile)
-    ? await Deno.readTextFile(tempDescriptionFile) // In case previous PR try failed
+    ? await readTextFile(tempDescriptionFile, {}) // In case previous PR try failed
     : await reviewTool.retrievePullRequestTemplate();
   const description = await promptForPrDescription(tempDescriptionFile, descriptionTemplate);
 

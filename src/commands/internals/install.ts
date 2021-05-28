@@ -5,6 +5,10 @@ import {
   bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
 
+import { request } from '../../lib/request.ts';
+import { readTextFile } from '../../lib/readTextFile.ts';
+import { writeTextFile } from '../../lib/writeTextFile.ts';
+
 import { getConstants } from '../../constants.ts';
 
 const SHELL_SCRIPT_NAME = 'shell-features.sh';
@@ -23,11 +27,11 @@ fi
 const retrieveShellScript = async (urlToScript: URL): Promise<string> => {
   if (urlToScript.protocol === 'file:') {
     const scriptFilePath = fromFileUrl(urlToScript);
-    return Deno.readTextFile(scriptFilePath);
+    return readTextFile(scriptFilePath, {});
   }
 
   if (/^http(s)?:/.test(urlToScript.protocol)) {
-    const response = await fetch(urlToScript.toString());
+    const response = await request(urlToScript.toString());
     if (response.status < 300 && response.status > 199) {
       return response.text();
     }
@@ -45,7 +49,11 @@ const installShellFeatures = async (installName: string) => {
   const { GUT_CONFIGURATION_FOLDER } = await getConstants();
   const targetShellScriptPath = resolve(GUT_CONFIGURATION_FOLDER, SHELL_SCRIPT_NAME);
 
-  await Deno.writeTextFile(targetShellScriptPath, shellScriptWithGutNameSubstituted);
+  await writeTextFile(
+    targetShellScriptPath,
+    shellScriptWithGutNameSubstituted,
+    { permissionPath: GUT_CONFIGURATION_FOLDER },
+  );
 
   await log(Deno.stdout, [
     applyStyle(__`Copying the shell features in ${targetShellScriptPath}`, [ theme.fileName ]),

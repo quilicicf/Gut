@@ -1,10 +1,10 @@
-import log from './dependencies/log.ts';
 import { resolve } from './dependencies/path.ts';
 import { ensureDir, exists } from './dependencies/fs.ts';
-import { applyStyle, theme } from './dependencies/colors.ts';
+
+import { getTopLevel } from './lib/git/getTopLevel.ts';
+import { readTextFile } from './lib/readTextFile.ts';
 
 import { getConstants } from './constants.ts';
-import { getTopLevel } from './lib/git/getTopLevel.ts';
 
 export interface Account {
   username: string,
@@ -43,12 +43,9 @@ export async function getConfiguration (): Promise<FullGutConfiguration> {
 
   const globalConfigurationPath = resolve(GUT_CONFIGURATION_FOLDER, CONFIGURATION_FILE_NAME);
 
-  if (!await exists(globalConfigurationPath)) {
-    await log(Deno.stderr, applyStyle(`No global configuration file found: ${globalConfigurationPath}`, [ theme.error ]));
-    Deno.exit(1);
-  }
-
-  const globalConfigurationAsJson = await Deno.readTextFile(globalConfigurationPath); // TODO: no configuration file?
+  const globalConfigurationAsJson = await exists(globalConfigurationPath)
+    ? await readTextFile(globalConfigurationPath, { permissionPath: GUT_CONFIGURATION_FOLDER })
+    : '{}';
   const globalConfiguration: GlobalGutConfiguration = JSON.parse(globalConfigurationAsJson);
 
   const tempFolderPath = resolve(GUT_CONFIGURATION_FOLDER, 'temp');
@@ -64,7 +61,7 @@ export async function getConfiguration (): Promise<FullGutConfiguration> {
   const repositoryConfigurationPath = resolve(currentRepositoryTopLevel, CONFIGURATION_FILE_NAME);
 
   if (await exists(repositoryConfigurationPath)) {
-    const repositoryConfigurationAsJson = await Deno.readTextFile(repositoryConfigurationPath);
+    const repositoryConfigurationAsJson = await readTextFile(repositoryConfigurationPath, {});
     const repositoryConfiguration: RepositoryGutConfiguration = JSON.parse(repositoryConfigurationAsJson);
 
     return {
