@@ -2,7 +2,7 @@ import log from '../../dependencies/log.ts';
 import { basename } from '../../dependencies/path.ts';
 import { promptSelect } from '../../dependencies/cliffy.ts';
 import { walk, WalkOptions } from '../../dependencies/fs.ts';
-import { __, applyStyle, theme } from '../../dependencies/colors.ts';
+import { stoyle, theme } from '../../dependencies/stoyle.ts';
 
 import { FullGutConfiguration } from '../../configuration.ts';
 import { getRepositoryNameFromPath } from '../../lib/git/getRepositoryNameFromPath.ts';
@@ -42,7 +42,7 @@ export const aliases = [];
 export function builder (yargs: any) {
   return bindOptionsAndCreateUsage(yargs, usage, options)
     .epilogue([
-      applyStyle(__`Command used by the shell feature ${'cr'} to manage the interactive part.\n`, [ theme.strong ]),
+      stoyle`Command used by the shell feature ${'cr'} to manage the interactive part.\n`({ nodes: [ theme.strong ] }),
       'This command is only called from the shell function because gut (being a child process) cannot change ',
       'the directory of the parent process.\n',
       'This command outputs its result on stderr to allow the shell caller not to interfere with stdout (used ',

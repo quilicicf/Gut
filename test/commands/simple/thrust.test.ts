@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
 import {
@@ -14,7 +14,7 @@ import { handler as thrust } from '../../../src/commands/simple/thrust.ts';
 const command = 'gut thrust';
 const remoteName = 'origin';
 
-Deno.test(applyStyle(__`@int ${command} should push to a branch`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${command} should push to a branch`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const localRepositoryName = 'gut_test_thrust';
   const repository = await initializeRepository(localRepositoryName);
@@ -41,7 +41,7 @@ Deno.test(applyStyle(__`@int ${command} should push to a branch`, [ theme.strong
   await endTestLogs();
 });
 
-Deno.test(applyStyle(__`@int ${command} should force-push to a branch`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${command} should force-push to a branch`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const localRepositoryName = 'gut_test_thrust_force';
   const repository = await initializeRepository(localRepositoryName);

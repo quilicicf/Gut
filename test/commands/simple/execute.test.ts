@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
 import {
@@ -15,7 +15,7 @@ import { test } from '../../../src/commands/simple/execute.ts';
 const { commitWithMessage } = test;
 const command = 'gut execute';
 
-Deno.test(applyStyle(__`@int ${command} should commit with message`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${command} should commit with message`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_execute_message');
   await commitShit(repository, 1);

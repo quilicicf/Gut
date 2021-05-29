@@ -1,13 +1,11 @@
-import {
-  __, RESET_CODE, applyStyle, theme,
-} from '../../../src/dependencies/colors.ts';
+import { RESET_CODE, stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import { TEST_COMMIT, LOCATION } from './git.utils.ts';
 import { LOG_FORMATS } from '../../../src/lib/git/logFormats.ts';
 
 import { fail, assertEquals } from '../../utils/assert.ts';
 
-Deno.test(applyStyle(__`@unit ${`${LOCATION}/logFormats`}`, [ theme.strong ]), () => {
+Deno.test(stoyle`@unit ${`${LOCATION}/logFormats`}`({ nodes: [ theme.strong ] }), () => {
   const expected: { [ key: string ]: string } = {
     JSON: `${JSON.stringify([ TEST_COMMIT ])}\n`,
     SHA: `${TEST_COMMIT.sha}\n`,

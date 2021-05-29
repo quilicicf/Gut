@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
   commitShit,
@@ -9,7 +9,7 @@ import { assertEquals } from '../../utils/assert.ts';
 
 import { getRemotes } from '../../../src/lib/git/getRemotes.ts';
 
-Deno.test(applyStyle(__`@int ${`${LOCATION}/getRemotes`}`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${`${LOCATION}/getRemotes`}`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_getRemotes');
 

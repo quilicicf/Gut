@@ -1,9 +1,7 @@
 import log from '../../dependencies/log.ts';
 import { resolve } from '../../dependencies/path.ts';
 import { promptSelect } from '../../dependencies/cliffy.ts';
-import {
-  __, applyStyle, theme,
-} from '../../dependencies/colors.ts';
+import { stoyle, theme } from '../../dependencies/stoyle.ts';
 import {
   bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
@@ -135,10 +133,10 @@ export function builder (yargs: any) {
             .slice(index + 1)
             .map((otherName) => ([ argumentName, otherName ]))
         ))
-        .map(([ firstArgumentName, secondArgumentName ]) => applyStyle(
-          __`Arguments ${firstArgumentName} and ${secondArgumentName} are mutually exclusive`,
-          [ theme.strong, theme.strong ],
-        ))
+        .map(([ firstArgumentName, secondArgumentName ]) => (
+          stoyle`Arguments ${firstArgumentName} and ${secondArgumentName} are mutually exclusive`(
+            { nodes: [ theme.strong, theme.strong ] },
+          )))
         .join('\n');
 
       if (errorMessage) { throw Error(errorMessage); }

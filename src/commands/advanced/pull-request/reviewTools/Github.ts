@@ -1,7 +1,7 @@
 import log from '../../../../dependencies/log.ts';
 import { exists } from '../../../../dependencies/fs.ts';
 import { resolve } from '../../../../dependencies/path.ts';
-import { __, applyStyle, theme } from '../../../../dependencies/colors.ts';
+import { stoyle, stoyleGlobal, theme } from '../../../../dependencies/stoyle.ts';
 
 import { request } from '../../../../lib/request.ts';
 import { readTextFile } from '../../../../lib/readTextFile.ts';
@@ -17,27 +17,25 @@ const handleResponseError = async <T> (response: Response): Promise<T> => {
   const firstError = body?.errors?.[ 0 ];
 
   if (message && !firstError) {
-    await log(Deno.stderr, applyStyle(`GitHub API call failed with message: ${message}.\n`, [ theme.error ]));
+    await log(Deno.stderr, stoyleGlobal`GitHub API call failed with message: ${message}.\n`(theme.error));
     Deno.exit(1);
   }
 
   if (firstError?.field === 'head') {
-    await log(Deno.stderr, applyStyle('It looks like your branch was not pushed to upstream.\n', [ theme.error ]));
+    await log(Deno.stderr, stoyleGlobal`It looks like your branch was not pushed to upstream.\n`(theme.error));
     Deno.exit(1);
   }
 
   if (firstError?.message) {
-    await log(Deno.stderr, applyStyle(`${firstError.message}\n`, [ theme.error ]));
+    await log(Deno.stderr, stoyleGlobal`${firstError.message}\n`(theme.error));
     Deno.exit(1);
   }
 
-  const errorMessage = [
-    `GitHub API call failed with status ${response.status}.`,
-    'The full error:',
-    JSON.stringify(body, null, 2),
-    '',
-  ].join('\n');
-  await log(Deno.stderr, applyStyle(errorMessage, [ theme.error ]));
+  const error = JSON.stringify(body, null, 2);
+  await log(
+    Deno.stderr,
+    stoyleGlobal`GitHub API call failed with status ${response.status}.\nThe full error:\n${error}\n`(theme.error),
+  );
   Deno.exit(1);
 };
 
@@ -62,7 +60,7 @@ const setAssigneeIfApplicable = async (
       },
     );
   } catch (error) {
-    await log(Deno.stderr, applyStyle(`Could not set assignee for PR ${number}\n`, [ theme.error ]));
+    await log(Deno.stderr, stoyleGlobal`Could not set assignee for PR ${number}\n`(theme.error));
   }
 };
 
@@ -107,7 +105,7 @@ export const github: ReviewTool = {
       if (response.status < 299) {
         const pullRequest = await response.json();
         const { html_url: prUrl } = pullRequest;
-        await log(Deno.stdout, applyStyle(__`Your PR is available at ${prUrl} 🎉\n`, [ theme.link ]));
+        await log(Deno.stdout, stoyle`Your PR is available at ${prUrl} 🎉\n`({ nodes: [ theme.link ] }));
         await setAssigneeIfApplicable(pullRequestCreation, pullRequest, token);
         return { url: prUrl, number: pullRequest.number };
       }
@@ -115,7 +113,7 @@ export const github: ReviewTool = {
       return handleResponseError<PullRequest>(response);
 
     } catch (error) {
-      await log(Deno.stderr, applyStyle(`Unknown error when creating the PR:\n${error.stack}\n`, [ theme.error ]));
+      await log(Deno.stderr, stoyleGlobal`Unknown error when creating the PR:\n${error.stack}\n`(theme.error));
       return Deno.exit(1);
     }
   },

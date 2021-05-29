@@ -1,6 +1,6 @@
 import log from '../../dependencies/log.ts';
 import { getPermissionOrExit } from '../getPermissionOrExit.ts';
-import { applyStyle, theme } from '../../dependencies/colors.ts';
+import { stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
 
 import { ExecOptions } from './ExecOptions.ts';
 
@@ -21,6 +21,6 @@ export async function executeProcessCriticalTask (command: string[], options: Ex
 
   if (success) { return; }
 
-  await log(Deno.stderr, options.errorMessage || applyStyle(`Command ${command.join(' ')} failed\n`, [ theme.error ]));
+  await log(Deno.stderr, options.errorMessage || stoyleGlobal`Command ${command.join(' ')} failed\n`(theme.error));
   Deno.exit(1);
 }

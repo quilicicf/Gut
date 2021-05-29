@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
   commitShit,
@@ -10,7 +10,7 @@ import { assertEquals } from '../../utils/assert.ts';
 import { executeProcessCriticalTask } from '../../../src/lib/exec/executeProcessCriticalTask.ts';
 import { getCommitsFromParentBranch } from '../../../src/lib/git/getCommitsFromParentBranch.ts';
 
-Deno.test(applyStyle(__`@int ${`${LOCATION}/getCommitsFromParentBranch`}`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${`${LOCATION}/getCommitsFromParentBranch`}`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_getCommitsFromParentBranch');
 

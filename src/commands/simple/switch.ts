@@ -1,5 +1,5 @@
 import { promptSelect } from '../../dependencies/cliffy.ts';
-import { applyStyle, theme } from '../../dependencies/colors.ts';
+import { stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
 import {
   bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
@@ -43,7 +43,7 @@ export const options: YargsOptions = {
     coerce (input: string) {
       const remoteRegex = /^[^a-z0-9A-Z_]+$/;
       if (input !== '' && !remoteRegex.test(input)) {
-        throw Error(applyStyle(`Remote names must match ${remoteRegex}`, [ theme.error ]));
+        throw Error(stoyleGlobal`Remote names must match ${remoteRegex}`(theme.error));
       }
       return input;
     },

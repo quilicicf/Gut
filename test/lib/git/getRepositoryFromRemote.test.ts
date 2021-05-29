@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
   commitShit,
@@ -11,7 +11,7 @@ import { getRepositoryFromRemote } from '../../../src/lib/git/getRepositoryFromR
 import { executeAndGetStdout } from '../../../src/lib/exec/executeAndGetStdout.ts';
 
 Deno.test({
-  name: applyStyle(__`@int ${`${LOCATION}/getRepositoryFromRemote`}`, [ theme.strong ]),
+  name: stoyle`@int ${`${LOCATION}/getRepositoryFromRemote`}`({ nodes: [ theme.strong ] }),
   ignore: true, // FIXME: how to create a repository with an SSH remote locally?
   async fn () {
     await startTestLogs();

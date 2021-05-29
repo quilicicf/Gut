@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
 import {
@@ -11,7 +11,7 @@ import { GIT_CURRENT_BRANCH_CODE, GIT_REMOTE_BRANCH_CODE, GIT_RESET_CODE } from 
 
 const { printDivisions } = test;
 const command = 'gut divisions';
-Deno.test(applyStyle(__`@int ${command} should show local branches`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${command} should show local branches`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_divisions_local');
 
@@ -37,7 +37,7 @@ Deno.test(applyStyle(__`@int ${command} should show local branches`, [ theme.str
   await endTestLogs();
 });
 
-Deno.test(applyStyle(__`@int ${command} should show remote branches`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${command} should show remote branches`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_divisions_remote');
   await Deno.writeTextFile('aFile', 'whatever');

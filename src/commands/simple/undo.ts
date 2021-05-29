@@ -1,6 +1,6 @@
 import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
-import { applyStyle, theme } from '../../dependencies/colors.ts';
+import { stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
 import {
   bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
@@ -82,7 +82,7 @@ export async function handler (args: Args) {
   } = args;
 
   if (await isDirty()) {
-    await log(Deno.stderr, applyStyle('Can only undo commits when the repository is clean!', [ theme.error ]));
+    await log(Deno.stderr, stoyleGlobal`Can only undo commits when the repository is clean!`(theme.error));
     Deno.exit(1);
   }
 

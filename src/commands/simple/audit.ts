@@ -1,6 +1,6 @@
 import log from '../../dependencies/log.ts';
 import { detect as detectEol } from '../../dependencies/fs.ts';
-import { __, applyStyle, theme } from '../../dependencies/colors.ts';
+import { stoyle, stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
 import {
   isEmpty, pad, padLeft, padRight, set, size,
 } from '../../dependencies/ramda.ts';
@@ -186,7 +186,7 @@ async function generateDiff (args: Args): Promise<string> {
   if (fromParentBranch) {
     const branchOnlyCommits = await getCommitsFromParentBranch(false);
     const numberOfCommits = branchOnlyCommits.length;
-    await log(Deno.stdout, applyStyle(__`The current PR had ${String(numberOfCommits)} commit(s)\n`, [ theme.commitsNumber ]));
+    await log(Deno.stdout, stoyle`The current PR had ${String(numberOfCommits)} commit(s)\n`({ nodes: [ theme.commitsNumber ] }));
 
     if (numberOfCommits < 1) { return ''; }
     return executeAndGetStdout(
@@ -204,10 +204,7 @@ function printFileDiff (parsedDiff: ParsingState): string {
   const width = (MODIFIED_LINES_DISPLAY_WIDTH * 2) + 10;
   const modifiedFilesLine = pad(`Modified files: ${parsedDiff.modifiedFiles}`, width);
   const separator = padRight('', width, '=');
-  return applyStyle(
-    `${separator}\n${modifiedFilesLine}\n${separator}\n`,
-    [ theme.strong ],
-  );
+  return stoyleGlobal`${separator}\n${modifiedFilesLine}\n${separator}\n`(theme.strong);
 }
 
 function printLineDiff (parsedDiff: ParsingState): string {
@@ -222,15 +219,14 @@ function printLineDiff (parsedDiff: ParsingState): string {
   const removedProportion = padRight('', removedPertenage, '◼');
   const paddedMinusSigns = padLeft(`${parsedDiff.lines.removed}---`, MODIFIED_LINES_DISPLAY_WIDTH, ' ');
 
-  return applyStyle(
-    __`${paddedPlusSigns}${addedProportion}${removedProportion}${paddedMinusSigns}\n`,
-    [ theme.success, theme.success, theme.error, theme.error ],
+  return stoyle`${paddedPlusSigns}${addedProportion}${removedProportion}${paddedMinusSigns}\n`(
+    { nodes: [ theme.success, theme.success, theme.error, theme.error ] },
   );
 }
 
 function printOddities (parsedDiff: ParsingState): string {
   if (isEmpty(parsedDiff.oddities)) {
-    return applyStyle('No oddities found, good job Bob!\n', [ theme.success ]);
+    return stoyleGlobal`No oddities found, good job Bob!\n`(theme.success);
   }
 
   return Object.entries(parsedDiff.oddities).reduce(
@@ -242,7 +238,7 @@ function printOddities (parsedDiff: ParsingState): string {
         .map((oddity) => oddity.oddityType);
 
       return seed
-        + applyStyle(`File ${fileName}\n`, [ theme.fileName ])
+        + stoyleGlobal`File ${fileName}\n`(theme.fileName)
         + oddities
           .filter((oddity) => oddity.lineType === LineType.LINE_ADDED)
           .reduce(
@@ -251,13 +247,11 @@ function printOddities (parsedDiff: ParsingState): string {
                 ? '(it may only be a modification)'
                 : '';
 
-              const header = applyStyle(
-                __`  Found a ${oddity.oddityType} ${warningMessage}\n`,
-                [ theme.emphasis, theme.dim ],
+              const header = stoyle`  Found a ${oddity.oddityType} ${warningMessage}\n`(
+                { nodes: [ theme.emphasis, theme.dim ] },
               );
-              const body = applyStyle(
-                __`      ${oddity.lineNumber.toString()}: ${oddity.line}\n`,
-                [ theme.lineNumber, theme.important ],
+              const body = stoyle`      ${oddity.lineNumber.toString()}: ${oddity.line}\n`(
+                { nodes: [ theme.lineNumber, theme.important ] },
               );
               return accu + header + body;
             },

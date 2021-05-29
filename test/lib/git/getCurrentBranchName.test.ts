@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
   commitShit,
@@ -9,7 +9,7 @@ import { assertEquals } from '../../utils/assert.ts';
 
 import { getCurrentBranchName } from '../../../src/lib/git/getCurrentBranchName.ts';
 
-Deno.test(applyStyle(__`@int ${`${LOCATION}/getCurrentBranchName`}`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${`${LOCATION}/getCurrentBranchName`}`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_getCurrentBranchName');
 

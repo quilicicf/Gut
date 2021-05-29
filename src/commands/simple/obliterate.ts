@@ -1,5 +1,5 @@
 import log from '../../dependencies/log.ts';
-import { applyStyle, theme } from '../../dependencies/colors.ts';
+import { stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
 import { promptConfirm, ConfirmOptions } from '../../dependencies/cliffy.ts';
 import {
   bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
@@ -56,7 +56,7 @@ export function builder (yargs: any) {
   return bindOptionsAndCreateUsage(yargs, usage, options)
     .check((currentArguments: Args) => {
       if (!currentArguments.branch && !currentArguments.tag) {
-        throw Error(applyStyle('You must specify the branch/tag you want to delete', [ theme.error ]));
+        throw Error(stoyleGlobal`You must specify the branch/tag you want to delete`(theme.error));
       }
 
       return true;

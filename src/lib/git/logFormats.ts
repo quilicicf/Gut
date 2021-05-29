@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../dependencies/colors.ts';
+import { stoyle, theme } from '../../dependencies/stoyle.ts';
 
 import { Commit } from './Commit.ts';
 
@@ -11,15 +11,14 @@ export const LOG_FORMATS: { [ key: string ]: LogFormat } = {
   SHA: (commits: Commit[]): string => `${commits.map(({ sha }) => sha).join('\n')}\n`,
   SUBJECT: (commits: Commit[]): string => `${commits.map(({ subject }) => subject).join('\n')}\n`,
   SIMPLE: (commits: Commit[]): string => commits
-    .map((commit: Commit) => applyStyle(
-      __`${commit.sha.substr(0, 7)} ${commit.subject} ${`<${commit.author}>`}\n`,
-      [ theme.sha, null, theme.author ],
+    .map((commit: Commit) => stoyle`${commit.sha.substr(0, 7)} ${commit.subject} ${`<${commit.author}>`}\n`(
+      { nodes: [ theme.sha, undefined, theme.author ] },
     ))
     .join(''),
   PRETTY: (commits: Commit[]): string => commits
-    .map((commit: Commit) => applyStyle(
-      __`${commit.sha}\n\t${commit.subject} ${`(${commit.relativeDate})`} ${`<${commit.author}>`}\n\t${`(${commit.branches.join(', ')})`}\n`,
-      [ theme.sha, null, theme.relativeDate, theme.author, theme.branches ],
-    ))
+    .map((commit: Commit) => (
+      stoyle`${commit.sha}\n\t${commit.subject} ${`(${commit.relativeDate})`} ${`<${commit.author}>`}\n\t${`(${commit.branches.join(', ')})`}\n`(
+        { nodes: [ theme.sha, undefined, theme.relativeDate, theme.author, theme.branches ] },
+      )))
     .join(''),
 };

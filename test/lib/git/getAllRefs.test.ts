@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
   deleteRepositories, endTestLogs, initializeRemote, initializeRepository, startTestLogs,
@@ -9,7 +9,7 @@ import { assertEquals } from '../../utils/assert.ts';
 import { executeProcessCriticalTasks } from '../../../src/lib/exec/executeProcessCriticalTasks.ts';
 import { getAllRefs } from '../../../src/lib/git/getAllRefs.ts';
 
-Deno.test(applyStyle(__`@int ${`${LOCATION}/getAllRefs`}`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${`${LOCATION}/getAllRefs`}`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_getAllRefs');
 

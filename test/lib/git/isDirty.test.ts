@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
   commitShit,
@@ -10,7 +10,7 @@ import { assert } from '../../utils/assert.ts';
 import { isDirty } from '../../../src/lib/git/isDirty.ts';
 import { resolve } from '../../../src/dependencies/path.ts';
 
-Deno.test(applyStyle(__`@int ${`${LOCATION}/isDirty`}`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${`${LOCATION}/isDirty`}`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_isDirty');
 

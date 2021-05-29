@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
   ShitCommit, commitShit,
@@ -23,7 +23,7 @@ const generateExpectedFileDiffRegex = ({ fileName, fileContent }: ShitCommit): R
   ].join('\n'),
 );
 
-Deno.test(applyStyle(__`@int ${`${LOCATION}/getDiffBetweenRefs`}`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${`${LOCATION}/getDiffBetweenRefs`}`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_getDiffBetweenRefs');
 

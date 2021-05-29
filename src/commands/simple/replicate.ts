@@ -1,7 +1,7 @@
 import log from '../../dependencies/log.ts';
 import { path } from '../../dependencies/ramda.ts';
 import { resolve } from '../../dependencies/path.ts';
-import { __, applyStyle, theme } from '../../dependencies/colors.ts';
+import { stoyle, theme } from '../../dependencies/stoyle.ts';
 import {
   bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
@@ -51,9 +51,8 @@ const buildGitSshUrl = (args: Args): RepositoryMetadata => {
   const gitServer = GIT_SERVERS[ serverName ];
 
   if (!gitServer) {
-    throw Error(applyStyle(
-      __`Server ${serverName} not configured. Please make sure it is not being implemented and create an issue.`,
-      [ theme.strong ],
+    throw Error(stoyle`Server ${serverName} not configured. Please make sure it is not being implemented and create an issue.`(
+      { nodes: [ theme.strong ] },
     ));
   }
 

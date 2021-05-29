@@ -1,5 +1,5 @@
 import { resolve } from '../../../src/dependencies/path.ts';
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
 import { handler as pile } from '../../../src/commands/simple/pile.ts';
@@ -8,7 +8,7 @@ import { executeProcessCriticalTasks } from '../../../src/lib/exec/executeProces
 import { endTestLogs, startTestLogs } from '../../utils/setup.ts';
 
 const command = 'gut pile';
-Deno.test(applyStyle(__`@int ${command} should stage & add all changes in the repository`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${command} should stage & add all changes in the repository`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const testRepositoryPath = await Deno.makeTempDir({ prefix: 'gut_test_pile' });
   Deno.chdir(testRepositoryPath);

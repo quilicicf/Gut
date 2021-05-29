@@ -1,7 +1,5 @@
 import { detect as detectEol } from '../../../src/dependencies/fs.ts';
-import {
-  RESET_CODE, __, applyStyle, theme,
-} from '../../../src/dependencies/colors.ts';
+import { RESET_CODE, stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
 import {
@@ -87,23 +85,23 @@ ${RESET_CODE}\
 
 const command = 'gut audit';
 
-Deno.test(applyStyle(__`@unit ${command} should parse diff`, [ theme.strong ]), () => {
+Deno.test(stoyle`@unit ${command} should parse diff`({ nodes: [ theme.strong ] }), () => {
   const eol = detectEol(diff) || '\n';
   const output = parseDiff(diff, eol);
   assertEquals(output, parsedDiff);
 });
 
-Deno.test(applyStyle(__`@unit ${command} should print file diff`, [ theme.strong ]), () => {
+Deno.test(stoyle`@unit ${command} should print file diff`({ nodes: [ theme.strong ] }), () => {
   const output = printFileDiff(parsedDiff);
   assertEquals(output, fileDiff);
 });
 
-Deno.test(applyStyle(__`@unit ${command} should print line diff`, [ theme.strong ]), () => {
+Deno.test(stoyle`@unit ${command} should print line diff`({ nodes: [ theme.strong ] }), () => {
   const output = printLineDiff(parsedDiff);
   assertEquals(output, lineDiff);
 });
 
-Deno.test(applyStyle(__`@unit ${command} should print oddities`, [ theme.strong ]), () => {
+Deno.test(stoyle`@unit ${command} should print oddities`({ nodes: [ theme.strong ] }), () => {
   const output = printOddities(parsedDiff);
   assertEquals(output, oddities);
 });
@@ -165,7 +163,7 @@ console.log(applyStyle(
 console.log('Updated :wink:');
 `;
 
-Deno.test(applyStyle(__`@int ${command} should print oddities`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${command} should print oddities`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_audit');
   await Deno.writeTextFile('index.ts', firstFileVersion);

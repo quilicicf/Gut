@@ -3,7 +3,7 @@ import {
   bindOptionsAndCreateUsage, toYargsCommand, toYargsUsage,
 } from '../../../dependencies/yargs.ts';
 import log from '../../../dependencies/log.ts';
-import { applyStyle, theme } from '../../../dependencies/colors.ts';
+import { stoyleGlobal, stoyleString, theme } from '../../../dependencies/stoyle.ts';
 
 import { DEFAULT_REMOTE, findRemote } from '../../../lib/git/remotes.ts';
 import { executeAndGetStdout } from '../../../lib/exec/executeAndGetStdout.ts';
@@ -45,11 +45,11 @@ export async function handler (args: Args) {
   const [ , defaultBranchName ] = /set to (.*)$/.exec(defaultBranchLine) || [ '', undefined ];
 
   if (!defaultBranchName) {
-    await log(Deno.stderr, applyStyle(`Default branch seems off: ${defaultBranchLine}`, [ theme.error ]));
+    await log(Deno.stderr, stoyleGlobal`Default branch seems off: ${defaultBranchLine}`(theme.error));
     Deno.exit(1);
   }
 
-  const styledDefaultBranchName = applyStyle(defaultBranchName, [ theme.strong ]);
+  const styledDefaultBranchName = stoyleString(defaultBranchName, theme.strong);
   await log(Deno.stdout, `Switching to default branch for remote ${remote.coloredName} -> ${styledDefaultBranchName}\n`);
   await executeProcessCriticalTask([ 'git', 'checkout', defaultBranchName ]);
 }

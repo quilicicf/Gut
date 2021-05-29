@@ -1,6 +1,6 @@
 import log from './src/dependencies/log.ts';
 import { yargs } from './src/dependencies/yargs.ts';
-import { applyStyle, theme } from './src/dependencies/colors.ts';
+import { stoyleGlobal, theme } from './src/dependencies/stoyle.ts';
 
 import { getConfiguration } from './src/configuration.ts';
 
@@ -77,7 +77,7 @@ const main = async () => {
     // To check that Gut is installed or just mess around
     .command('groot', 'Display a random sentence, in French', () => log(Deno.stdout, 'Je s\'appelle Groot\n'))
 
-    .demandCommand(1, applyStyle('Specify the command you want to run!', [ theme.error ]))
+    .demandCommand(1, stoyleGlobal`Specify the command you want to run!`([ theme.error ]))
     .strictCommands()
     .help()
     .version()

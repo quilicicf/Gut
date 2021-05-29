@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
   deleteRepositories, endTestLogs, initializeRemote, initializeRepository, startTestLogs,
@@ -10,7 +10,7 @@ import { getBranchRemote } from '../../../src/lib/git/getBranchRemote.ts';
 import { executeProcessCriticalTask } from '../../../src/lib/exec/executeProcessCriticalTask.ts';
 import { executeProcessCriticalTasks } from '../../../src/lib/exec/executeProcessCriticalTasks.ts';
 
-Deno.test(applyStyle(__`@int ${`${LOCATION}/getBranchRemote`}`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${`${LOCATION}/getBranchRemote`}`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_getBranchRemote');
 

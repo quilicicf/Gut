@@ -1,6 +1,6 @@
 import log from '../../dependencies/log.ts';
+import { stoyle, stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
 import { resolve, fromFileUrl } from '../../dependencies/path.ts';
-import { __, applyStyle, theme } from '../../dependencies/colors.ts';
 import {
   bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
@@ -56,11 +56,11 @@ const installShellFeatures = async (installName: string) => {
   );
 
   await log(Deno.stdout, [
-    applyStyle(__`Copying the shell features in ${targetShellScriptPath}`, [ theme.fileName ]),
-    applyStyle('Installation almost complete, now copy the following to your ~/.bashrc or equivalent:', [ theme.strong ]),
+    stoyle`Copying the shell features in ${targetShellScriptPath}`({ nodes: [ theme.fileName ] }),
+    stoyleGlobal`Installation almost complete, now copy the following to your ~/.bashrc or equivalent:`(theme.strong),
     '',
     importScript(targetShellScriptPath),
-    applyStyle(__`💡 You'll need to run ${'exec bash'} or open a new terminal to test it`, [ theme.strong ]),
+    stoyle`💡 You'll need to run ${'exec bash'} or open a new terminal to test it`({ nodes: [ theme.strong ] }),
     '',
   ].join('\n'));
 };

@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
   commitShit,
@@ -11,7 +11,7 @@ import { getMergeBaseFromParent } from '../../../src/lib/git/getMergeBaseFromPar
 import { executeProcessCriticalTask } from '../../../src/lib/exec/executeProcessCriticalTask.ts';
 import { executeAndGetStdout } from '../../../src/lib/exec/executeAndGetStdout.ts';
 
-Deno.test(applyStyle(__`@int ${`${LOCATION}/getMergeBaseFromParent`}`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${`${LOCATION}/getMergeBaseFromParent`}`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_getMergeBaseFromParent');
 

@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
   commitShit,
@@ -9,7 +9,7 @@ import { assertEquals } from '../../utils/assert.ts';
 
 import { getCommitsUpToMax } from '../../../src/lib/git/getCommitsUpToMax.ts';
 
-Deno.test(applyStyle(__`@int ${`${LOCATION}/getCommitsUpToMax`}`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${`${LOCATION}/getCommitsUpToMax`}`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_getCommitsUpToMax');
 

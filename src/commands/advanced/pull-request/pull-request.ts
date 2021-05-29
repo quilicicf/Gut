@@ -2,7 +2,7 @@ import log from '../../../dependencies/log.ts';
 import { exists } from '../../../dependencies/fs.ts';
 import { resolve } from '../../../dependencies/path.ts';
 import { isEmpty, size } from '../../../dependencies/ramda.ts';
-import { __, applyStyle, theme } from '../../../dependencies/colors.ts';
+import { stoyle, stoyleGlobal, theme } from '../../../dependencies/stoyle.ts';
 import { promptConfirm, promptSelect, promptString } from '../../../dependencies/cliffy.ts';
 import {
   bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions, toYargsCommand,
@@ -160,15 +160,14 @@ export async function handler (args: Args) {
   const commitsInPr = await getCommitsBetweenRefs(baseBranchName, currentBranchName, false);
 
   if (isEmpty(commitsInPr)) {
-    const message = applyStyle('There are no commits added from the base branch, aborting.\n', [ theme.warning ]);
+    const message = stoyleGlobal`There are no commits added from the base branch, aborting.\n'`(theme.warning);
     await log(Deno.stdout, message);
     Deno.exit(1);
   }
 
   const commitsNumber = size(commitsInPr);
-  await log(Deno.stdout, applyStyle(
-    __`Auditing ${commitsNumber.toString()} commit(s)\n`,
-    [ theme.commitsNumber ],
+  await log(Deno.stdout, stoyle`Auditing ${commitsNumber.toString()} commit(s)\n`(
+    { nodes: [ theme.commitsNumber ] },
   ));
 
   const diff = await getDiffBetweenRefs(baseBranchName, currentBranchName);
@@ -195,7 +194,7 @@ export async function handler (args: Args) {
   const description = await promptForPrDescription(tempDescriptionFile, descriptionTemplate);
 
   if (!await getBranchRemote()) {
-    await log(Deno.stdout, applyStyle('The branch was never pushed, pushing it now\n', [ theme.strong ]));
+    await log(Deno.stdout, stoyleGlobal`The branch was never pushed, pushing it now\n'`(theme.strong));
     await thrust(false);
   }
 
@@ -206,7 +205,7 @@ export async function handler (args: Args) {
   const token = reviewToolConfiguration?.account?.password;
 
   if (!username || !token) {
-    await log(Deno.stderr, applyStyle('No valid account found for git server: github', [ theme.error ]));
+    await log(Deno.stderr, stoyleGlobal`No valid account found for git server: github'`(theme.error));
     Deno.exit(1);
   }
 

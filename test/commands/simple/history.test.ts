@@ -1,4 +1,4 @@
-import { __, applyStyle, theme } from '../../../src/dependencies/colors.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
 import { handler as history } from '../../../src/commands/simple/history.ts';
@@ -9,7 +9,7 @@ import {
 
 const command = 'gut history';
 
-Deno.test(applyStyle(__`@int ${command} should limit commits to max number`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${command} should limit commits to max number`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_history_number');
   await commitShit(repository, 1);
@@ -25,7 +25,7 @@ Deno.test(applyStyle(__`@int ${command} should limit commits to max number`, [ t
   assertEquals(output.map(({ subject }) => subject), [ 'Commit_#2', 'Commit_#1' ]);
 });
 
-Deno.test(applyStyle(__`@int ${command} should show commits in reverse order`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${command} should show commits in reverse order`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_history_reverse');
   await commitShit(repository, 1);
@@ -41,7 +41,7 @@ Deno.test(applyStyle(__`@int ${command} should show commits in reverse order`, [
   assertEquals(output.map(({ subject }) => subject), [ 'Commit_#1', 'Commit_#2' ]);
 });
 
-Deno.test(applyStyle(__`@int ${command} should show commits from base branch`, [ theme.strong ]), async () => {
+Deno.test(stoyle`@int ${command} should show commits from base branch`({ nodes: [ theme.strong ] }), async () => {
   await startTestLogs();
   const repository = await initializeRepository('gut_test_history_fromBaseBranch');
   await commitShit(repository, 1);

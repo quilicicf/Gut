@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import { applyStyle, theme } from '../../dependencies/colors.ts';
+import { stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
 import { executeProcessCriticalTask } from '../exec/executeProcessCriticalTask.ts';
 
 async function deleteRemoteBranch (remote: string, branch: string) {
@@ -55,14 +55,14 @@ function createUnknownRemote (name: string): Remote {
 
 export const DEFAULT_REMOTE = createRemote(
   'origin',
-  applyStyle('origin', [ theme.origin ]),
+  stoyleGlobal`origin`(theme.origin),
   (argument) => !argument || argument === 'o' || argument === 'origin',
 );
 
 export const REMOTES: Remote[] = [
   new Remote(
     'local',
-    applyStyle('local', [ theme.local ]),
+    stoyleGlobal`local`(theme.local),
     (argument) => !argument || argument === 'l' || argument === 'local',
     async (branchToDelete) => {
       await executeProcessCriticalTask([ 'git', 'branch', '--delete', '--force', branchToDelete ]);
@@ -74,7 +74,7 @@ export const REMOTES: Remote[] = [
   DEFAULT_REMOTE,
   createRemote(
     'upstream',
-    applyStyle('upstream', [ theme.upstream ]),
+    stoyleGlobal`upstream`(theme.upstream),
     (argument) => !argument || argument === 'u' || argument === 'upstream',
   ),
 ];
