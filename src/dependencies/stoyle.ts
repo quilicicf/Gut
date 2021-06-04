@@ -44,6 +44,9 @@ const theme: { [ key: string ]: Style } = {
 
   // PRs
   commitsNumber: { color: cyan, decoration: DecorationCode.Bold },
+
+  // Thread-pool
+  taskProgression: { color: purple },
 };
 
 export const RESET_CODE = styleToAnsiCode({}, true);

@@ -23,6 +23,7 @@ import * as install from './src/commands/internals/install.ts';
 import * as autoRebase from './src/commands/advanced/auto-rebase/auto-rebase.ts';
 import * as copyBranch from './src/commands/advanced/copy-branch/copy-branch.ts';
 import * as pullRequest from './src/commands/advanced/pull-request/pull-request.ts';
+import * as smartReplace from './src/commands/advanced/smart-replace/smart-replace.ts';
 import * as switchDefault from './src/commands/advanced/switch-default/switch-default.ts';
 
 // Install with:
@@ -68,6 +69,7 @@ const main = async () => {
     .command(autoRebase)
     .command(copyBranch)
     .command(pullRequest)
+    .command(smartReplace)
     .command(switchDefault)
 
     // Internals

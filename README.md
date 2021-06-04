@@ -250,15 +250,15 @@ deno install \
   https://raw.githubusercontent.com/quilicicf/Gut/master/mod.ts
 ```
 
-| Parameter       | Explanation                                                                                                                                        |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--unstable`    | [The prompt lib](https://deno.land/x/cliffy) Gut uses requires `Deno.setRaw` which is still unstable                                               |
-| `--allow-env`   | Allows Gut to find your home directory so that it can find `~/.config/gut`                                                                         |
-| `--allow-read`  | Allows Gut to read the global/repository configuration files, PR templates (ex: from `.github`) and Gut temp files (ex: commit messages)           |
-| `--allow-write` | Allows Gut to write to global configuration files and Gut temp files (ex: commit messages, PR descriptions)                                        |
-| `--allow-run`   | Allows Gut to run git commands and the text editor [micro](https://micro-editor.github.io/) which is required until I find a way to use any editor |
-| `--name`        | The name of the command that will be generated. You can change it if you want (I use `g`, faster to type)                                          |
-| `--no-check`    | Makes Deno skip the TypeScript validation before running Gut, it is not needed at runtime                                                          |
+| Parameter       | Explanation                                                                                                                                                                  |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--unstable`    | [The prompt lib](https://deno.land/x/cliffy) Gut uses requires `Deno.setRaw` which is still unstable. Also, the command `smart-replace` uses it to estimate CPU cores number |
+| `--allow-env`   | Allows Gut to find your home directory so that it can find `~/.config/gut`                                                                                                   |
+| `--allow-read`  | Allows Gut to read the global/repository configuration files, PR templates (ex: from `.github`) and Gut temp files (ex: commit messages)                                     |
+| `--allow-write` | Allows Gut to write to global configuration files and Gut temp files (ex: commit messages, PR descriptions)                                                                  |
+| `--allow-run`   | Allows Gut to run git commands and the text editor [micro](https://micro-editor.github.io/) which is required until I find a way to use any editor                           |
+| `--name`        | The name of the command that will be generated. You can change it if you want (I use `g`, faster to type)                                                                    |
+| `--no-check`    | Makes Deno skip the TypeScript validation before running Gut, it is not needed at runtime                                                                                    |
 
 ## CLI documentation
 
@@ -494,8 +494,7 @@ __Options:__
 
 #### auto-rebase
 
-Re-bases the parent branch on the given remote, then re-bases the current branch on top of it.
-Stashes the local changes first if there are any
+Re-bases the parent branch on the given remote, then re-bases the current branch on top of it. Stashes the local changes first if there are any
 
 `USAGE: gut auto-rebase [options...]`
 
