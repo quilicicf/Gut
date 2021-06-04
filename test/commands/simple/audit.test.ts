@@ -1,5 +1,5 @@
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 import { detect as detectEol } from '../../../src/dependencies/fs.ts';
-import { RESET_CODE, stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
 import {
@@ -67,20 +67,20 @@ const parsedDiff: ParsingState = {
   },
 };
 
-const fileDiff = `${theme.strong}\
+const fileDiff = `\x1b[1m\
 ==========================
     Modified files: 1     
 ==========================
-${RESET_CODE}`;
+\x1b[0m`;
 
-const lineDiff = `${theme.success}+++4    ◼◼◼◼${theme.error}◼◼◼◼◼◼    6---${RESET_CODE}\n`;
+const lineDiff = `\x1b[32m+++4    ◼◼◼◼\x1b[31m◼◼◼◼◼◼    6---\x1b[0m\n`;
 
-const oddities = `${theme.fileName}File index.ts
-${RESET_CODE}\
-  Found a ${theme.emphasis}FIXME${RESET_CODE} 
-      ${theme.lineNumber}18${RESET_CODE}: ${theme.important}// FIXME: use a better formatting${RESET_CODE}
-  Found a ${theme.emphasis}console.log${RESET_CODE} ${theme.dim}(it may only be a modification)${RESET_CODE}
-      ${theme.lineNumber}25${RESET_CODE}: ${theme.important}console.log('Updated :wink:');${RESET_CODE}
+const oddities = `\x1b[38;2;230;219;116mFile index.ts
+\x1b[0m\
+  Found a \x1b[3mFIXME\x1b[0m 
+      \x1b[38;2;174;129;255m18\x1b[0m: \x1b[38;2;102;217;239m// FIXME: use a better formatting\x1b[0m
+  Found a \x1b[3mconsole.log\x1b[0m \x1b[2m(it may only be a modification)\x1b[0m
+      \x1b[38;2;174;129;255m25\x1b[0m: \x1b[38;2;102;217;239mconsole.log('Updated :wink:');\x1b[0m
 `;
 
 const command = 'gut audit';
