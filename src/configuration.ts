@@ -5,6 +5,7 @@ import { getTopLevel } from './lib/git/getTopLevel.ts';
 import { readTextFile } from './lib/readTextFile.ts';
 
 import { getConstants } from './constants.ts';
+import { getPermissionOrExit } from './lib/getPermissionOrExit.ts';
 
 export interface Account {
   username: string,
@@ -39,19 +40,22 @@ export interface FullGutConfiguration {
 
 export async function getConfiguration (): Promise<FullGutConfiguration> {
   const { GUT_CONFIGURATION_FOLDER, CONFIGURATION_FILE_NAME } = await getConstants();
+
+  await getPermissionOrExit({ name: 'read', path: GUT_CONFIGURATION_FOLDER });
   await ensureDir(GUT_CONFIGURATION_FOLDER);
 
   const globalConfigurationPath = resolve(GUT_CONFIGURATION_FOLDER, CONFIGURATION_FILE_NAME);
 
   const globalConfigurationAsJson = await exists(globalConfigurationPath)
     ? await readTextFile(globalConfigurationPath, { permissionPath: GUT_CONFIGURATION_FOLDER })
-    : '{}';
+    : '{}'; // TODO: make sure forge path is added at first run or you're screwed
   const globalConfiguration: GlobalGutConfiguration = JSON.parse(globalConfigurationAsJson);
 
   const tempFolderPath = resolve(GUT_CONFIGURATION_FOLDER, 'temp');
   globalConfiguration.tempFolderPath = tempFolderPath;
   await ensureDir(tempFolderPath);
 
+  await getPermissionOrExit({ name: 'read', path: globalConfiguration.forgePath });
   const currentRepositoryTopLevel = await getTopLevel();
 
   if (!currentRepositoryTopLevel || !currentRepositoryTopLevel.startsWith(globalConfiguration.forgePath)) {
