@@ -6,6 +6,7 @@ import {
   bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
 } from '../../dependencies/yargs.ts';
 
+import { getConstants } from '../../constants.ts';
 import { FullGutConfiguration } from '../../configuration.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 
@@ -20,10 +21,6 @@ interface Args {
   isTestRun: boolean,
 }
 
-interface GitServer {
-  getSshUrl: (owner: string, repository: string) => string,
-}
-
 interface RepositoryMetadata {
   sshUrl: string,
   server: string,
@@ -31,13 +28,7 @@ interface RepositoryMetadata {
   repository: string,
 }
 
-const GIT_SERVERS: { [ key: string ]: GitServer } = { // TODO: get custom servers from gut-config
-  github: {
-    getSshUrl (owner, repository): string {
-      return `git@github.com:${owner}/${repository}.git`;
-    },
-  },
-};
+const { GIT_SERVERS } = await getConstants();
 
 const buildGitSshUrl = (args: Args): RepositoryMetadata => {
   const {
@@ -79,7 +70,7 @@ export const describe = 'Clones a repository';
 export const options: YargsOptions = {
   server: {
     alias: 's',
-    describe: 'The git server where the repository is.',
+    describe: 'The git server where the repository is, defaults to the preferred git server from global configuration file',
     type: 'string',
     choices: Object.keys(GIT_SERVERS),
   },
