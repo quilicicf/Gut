@@ -1,6 +1,6 @@
 # Test file to fiddle
 
-src/test.ts
+src/fiddle*.ts
 
 # Logs
 logs
