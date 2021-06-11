@@ -48,6 +48,6 @@ const COMMANDS_BY_OS: CommandsByOs = {
 
 export async function writeToClipboard (data: string): Promise<number> {
   const command = COMMANDS_BY_OS[ Deno.build.os ];
-  await getPermissionOrExit({ name: 'run' }, command.programName);
+  await getPermissionOrExit({ name: 'run', command: command.programName });
   return command.writeText(data);
 }

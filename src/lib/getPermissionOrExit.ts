@@ -36,11 +36,11 @@ export async function getPermissionOrExit (permissionDescriptor: Deno.Permission
   const permissionValue = value || getPermissionValue(permissionDescriptor);
   const permissionCli = `--allow-${permissionDescriptor.name}${permissionValue ? `=${permissionValue}` : ''}`;
   await log(Deno.stdout, stoyleGlobal`ℹ I need the permission ${permissionCli} to run.\n`(theme.strong));
-  await log(Deno.stdout, stoyleGlobal`You can install Gut with this permission to avoir this step next time.\n`(theme.dim));
+  await log(Deno.stdout, stoyleGlobal`You can install Gut with this permission to avoid this step next time.\n`(theme.dim));
 
   const { state } = await Deno.permissions.request(permissionDescriptor);
   if (state === 'denied') {
-    await log(Deno.stderr, stoyleGlobal`The permission was denied, exiting\n'`(theme.warning));
+    await log(Deno.stderr, stoyleGlobal`The permission was denied, exiting\n`(theme.warning));
     Deno.exit(1);
   }
 }
