@@ -16,19 +16,20 @@ import { parseBranchName } from '../../../lib/branch/parseBranchName.ts';
 import { executeAndGetStdout } from '../../../lib/exec/executeAndGetStdout.ts';
 import { executeProcessCriticalTask } from '../../../lib/exec/executeProcessCriticalTask.ts';
 
-const ONE_MONTH_IN_SECONDS = 30 * 24 * 60 * 60;
+const ONE_DAY_IN_SECONDS = 24 * 60 * 60;
 
 interface Args {
   remote: string;
+  maxAge: number;
 }
 
 export const baseCommand = 'prune-local-branches';
 export const aliases = [ 'plb' ];
 export const describe = [
   'Removes all local branches that:',
+  '  * are older than the specified age',
   '  * have no remote counter-part',
   '  * are not tagged as PoC',
-  '  * are older than a month',
   '  * are not `master`, or the current branch',
 ].join('\n');
 export const options: YargsOptions = {
@@ -36,6 +37,12 @@ export const options: YargsOptions = {
     alias: 'r',
     default: DEFAULT_REMOTE.name,
     describe: 'The remote used to find remote counter-parts',
+    type: 'string',
+  },
+  'max-age': {
+    alias: 'a',
+    default: 30,
+    describe: 'The max age in days for the branches',
     type: 'string',
   },
 };
@@ -74,7 +81,7 @@ const getBranchesInfo = async (remoteName?: string): Promise<{ [ key: string ]: 
 };
 
 export async function handler (args: Args) {
-  const { remote: remoteArgument } = args;
+  const { remote: remoteArgument, maxAge: maxAgeInDays } = args;
 
   const remote = findRemote(remoteArgument);
 
@@ -84,14 +91,15 @@ export async function handler (args: Args) {
   const localBranchesInfo = await getBranchesInfo();
   const remoteBranchesInfo = await getBranchesInfo(remote.name);
 
+  const maxAgeInSeconds = ONE_DAY_IN_SECONDS * maxAgeInDays;
   const now = Math.trunc(new Date().getTime() / 1_000);
-  const oneMonthAgo = now - ONE_MONTH_IN_SECONDS;
+  const stalenessLimit = now - maxAgeInSeconds;
 
   const currentBranchName = await getCurrentBranchName();
 
   const branchesToPrune = Object.values(localBranchesInfo)
     .filter(({ name }) => !Boolean(remoteBranchesInfo[ name ]))
-    .filter(({ timestamp }) => timestamp < oneMonthAgo)
+    .filter(({ timestamp }) => timestamp < stalenessLimit)
     .filter(({ name }) => !isPocBranch(parseBranchName(name)))
     .filter(({ name }) => name !== currentBranchName)
     .filter(({ name }) => name !== 'master');

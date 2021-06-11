@@ -522,18 +522,19 @@ __Extra permissions:__
 
 Removes all local branches that:
 
+* are older than the specified age
 * have no remote counter-part
 * are not tagged as PoC
-* are older than a month
 * are not `master`, or the current branch
 
 `USAGE: gut prune-local-branches [options...]`
 
 __Options:__
 
-| Name     | Description                                  | Type     | Required | Default value |
-| -------- | -------------------------------------------- | -------- | -------- | ------------- |
-| `remote` | The remote used to find remote counter-parts | `string` | false    | `origin`      |
+| Name      | Description                                  | Type     | Required | Default value |
+| --------- | -------------------------------------------- | -------- | -------- | ------------- |
+| `remote`  | The remote used to find remote counter-parts | `string` | false    | `origin`      |
+| `max-age` | The max age in days for the branches         | `string` | false    | `30`          |
 
 #### pull-request
 
