@@ -50,6 +50,7 @@ Ein gut git Fluss [🔊](https://translate.google.com/?sl=de\&tl=en\&text=Ein%20
 
     * [auto-rebase](#auto-rebase)
     * [copy-branch](#copy-branch)
+    * [prune-local-branches](#prune-local-branches)
     * [pull-request](#pull-request)
     * [switch-default](#switch-default)
 
@@ -424,11 +425,11 @@ Clones a repository
 
 __Options:__
 
-| Name         | Description                               | Type     | Required | Default value |
-| ------------ | ----------------------------------------- | -------- | -------- | ------------- |
-| `server`     | The git server where the repository is.   | `string` | false    |               |
-| `owner`      | The owner of the repository to be cloned. | `string` | false    |               |
-| `repository` | The name of the repository to be cloned.  | `string` | true     |               |
+| Name         | Description                                                                                                 | Type     | Required | Default value |
+| ------------ | ----------------------------------------------------------------------------------------------------------- | -------- | -------- | ------------- |
+| `server`     | The git server where the repository is, defaults to the preferred git server from global configuration file | `string` | false    |               |
+| `owner`      | The owner of the repository to be cloned.                                                                   | `string` | false    |               |
+| `repository` | The name of the repository to be cloned.                                                                    | `string` | true     |               |
 
 #### switch
 
@@ -516,6 +517,23 @@ __Extra permissions:__
 | Permission    | Value                                                       | Reason                                                    |
 | ------------- | ----------------------------------------------------------- | --------------------------------------------------------- |
 | `--allow-run` | `powershell` (Windows)<br>`pbcopy` (Mac)<br>`xclip` (Linux) | Allows writing the current branch's name to the clipboard |
+
+#### prune-local-branches
+
+Removes all local branches that:
+
+* have no remote counter-part
+* are not tagged as PoC
+* are older than a month
+* are not `master`, or the current branch
+
+`USAGE: gut prune-local-branches [options...]`
+
+__Options:__
+
+| Name     | Description                                  | Type     | Required | Default value |
+| -------- | -------------------------------------------- | -------- | -------- | ------------- |
+| `remote` | The remote used to find remote counter-parts | `string` | false    | `origin`      |
 
 #### pull-request
 

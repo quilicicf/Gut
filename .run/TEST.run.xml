@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TEST" type="DenoConfigurationType" exePath="$USER_HOME$/.asdf/shims/deno" inputPath="$PROJECT_DIR$/test/" programParameters="test --no-check --unstable --allow-env=HOME --allow-run=git --allow-read=$USER_HOME$/.config/gut,/tmp,$USER_HOME$/work/forge/github/quilicicf/Gut --allow-write=/tmp">
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -53,6 +53,18 @@ function createUnknownRemote (name: string): Remote {
   );
 }
 
+export const LOCAL_REMOTE = new Remote(
+  'local',
+  stoyleGlobal`local`(theme.local),
+  (argument) => !argument || argument === 'l' || argument === 'local',
+  async (branchToDelete) => {
+    await executeProcessCriticalTask([ 'git', 'branch', '--delete', '--force', branchToDelete ]);
+  },
+  async (tagToDelete) => {
+    await executeProcessCriticalTask([ 'git', 'tag', '--delete', tagToDelete ]);
+  },
+);
+
 export const DEFAULT_REMOTE = createRemote(
   'origin',
   stoyleGlobal`origin`(theme.origin),
@@ -60,17 +72,7 @@ export const DEFAULT_REMOTE = createRemote(
 );
 
 export const REMOTES: Remote[] = [
-  new Remote(
-    'local',
-    stoyleGlobal`local`(theme.local),
-    (argument) => !argument || argument === 'l' || argument === 'local',
-    async (branchToDelete) => {
-      await executeProcessCriticalTask([ 'git', 'branch', '--delete', '--force', branchToDelete ]);
-    },
-    async (tagToDelete) => {
-      await executeProcessCriticalTask([ 'git', 'tag', '--delete', tagToDelete ]);
-    },
-  ),
+  LOCAL_REMOTE,
   DEFAULT_REMOTE,
   createRemote(
     'upstream',

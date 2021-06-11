@@ -24,6 +24,7 @@ import * as autoRebase from './src/commands/advanced/auto-rebase/auto-rebase.ts'
 import * as copyBranch from './src/commands/advanced/copy-branch/copy-branch.ts';
 import * as pullRequest from './src/commands/advanced/pull-request/pull-request.ts';
 import * as switchDefault from './src/commands/advanced/switch-default/switch-default.ts';
+import * as pruneLocalBranches from './src/commands/advanced/prune-local-branches/prune-local-branches.ts';
 
 // Install with:
 // deno install \
@@ -38,6 +39,7 @@ import * as switchDefault from './src/commands/advanced/switch-default/switch-de
 //   --force \
 //   mod.ts
 const main = async () => {
+  // @ts-ignore No idea why this is necessary
   const yargsInstance: any = yargs();
   const configuration = await getConfiguration();
 
@@ -67,6 +69,7 @@ const main = async () => {
     // Advanced commands
     .command(autoRebase)
     .command(copyBranch)
+    .command(pruneLocalBranches)
     .command(pullRequest)
     .command(switchDefault)
 
@@ -75,7 +78,7 @@ const main = async () => {
     .command(install)
 
     // To check that Gut is installed or just mess around
-    .command('groot', 'Display a random sentence, in French', () => log(Deno.stdout, 'Je s\'appelle Groot\n'))
+    .command('groot', 'Display a random sentence, in French', () => log(Deno.stdout, stoyleGlobal`Je s'appelle Groot!\n`(theme.strong)))
 
     .demandCommand(1, stoyleGlobal`Specify the command you want to run!`(theme.error))
     .strictCommands()
