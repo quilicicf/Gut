@@ -42,7 +42,7 @@ export const options: YargsOptions = {
     type: 'string',
     coerce (input: string) {
       const remoteRegex = /^[^a-z0-9A-Z_]+$/;
-      if (input !== '' && !remoteRegex.test(input)) {
+      if (Boolean(input) && !remoteRegex.test(input)) {
         throw Error(stoyleGlobal`Remote names must match ${remoteRegex}`(theme.error));
       }
       return input;
