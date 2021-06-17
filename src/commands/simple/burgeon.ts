@@ -37,6 +37,7 @@ export const options: YargsOptions = {
     alias: 'n',
     describe: 'Specifies the issue number when creating a new branch',
     type: 'string',
+    requiresArg: true,
   },
   poc: {
     alias: 'p',
