@@ -194,7 +194,7 @@ export async function handler (args: Args) {
   const description = await promptForPrDescription(tempDescriptionFile, descriptionTemplate);
 
   if (!await getBranchRemote()) {
-    await log(Deno.stdout, stoyleGlobal`The branch was never pushed, pushing it now\n'`(theme.strong));
+    await log(Deno.stdout, stoyleGlobal`The branch was never pushed, pushing it now\n`(theme.strong));
     await thrust(false);
   }
 
