@@ -126,6 +126,9 @@ export async function handler (args: Args) {
     Deno.exit(0);
   }
 
-  const deletions = branchesToPrune.map(({ name }) => LOCAL_REMOTE.deleteBranchCommand(name));
-  await Promise.all(deletions);
+  await branchesToPrune
+    .reduce(
+      (promise, { name }) => promise.then(() => LOCAL_REMOTE.deleteBranchCommand(name)),
+      Promise.resolve(),
+    );
 }
