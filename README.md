@@ -243,7 +243,7 @@ Each command's documentation explains the additional permissions it might need a
 deno install \
   --unstable \
   --allow-env=HOME \
-  --allow-read="${FORGE},${HOME}.config/gut/" \
+  --allow-read="${FORGE},${HOME}/.config/gut/" \
   --allow-write="${HOME}/.config/gut/" \
   --allow-run=git,micro \
   --name gut \

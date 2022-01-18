@@ -106,7 +106,10 @@ export async function handler (args: Args) {
 
   if (defaultBranch !== undefined) {
     const remote = defaultBranch || DEFAULT_REMOTE.name;
-    const output = await executeAndGetStdout([ 'git', 'remote', 'set-head', remote, '--auto' ], {});
+    const output = await executeAndGetStdout(
+      [ 'git', 'remote', 'set-head', remote, '--auto' ],
+      { shouldTruncateTrailingLineBreak: true },
+    );
     const defaultBranchName = output.split(' ').pop();
 
     if (!defaultBranchName) {
