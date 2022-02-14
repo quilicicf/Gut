@@ -1,5 +1,5 @@
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
 } from '../../dependencies/yargs.ts';
 
 import { getBranchRemote } from '../../lib/git/getBranchRemote.ts';
@@ -40,7 +40,7 @@ export async function thrust (force: boolean) {
   ]);
 }
 
-export async function builder (yargs: any) {
+export async function builder (yargs: YargsInstance) {
   return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 

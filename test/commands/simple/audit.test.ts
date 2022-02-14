@@ -73,7 +73,7 @@ const fileDiff = `\x1b[1m\
 ==========================
 \x1b[0m`;
 
-const lineDiff = `\x1b[32m+++4    ◼◼◼◼\x1b[31m◼◼◼◼◼◼    6---\x1b[0m\n`;
+const lineDiff = '\x1b[32m+++4    ◼◼◼◼\x1b[31m◼◼◼◼◼◼    6---\x1b[0m\n';
 
 const oddities = `\x1b[38;2;230;219;116mFile index.ts
 \x1b[0m\

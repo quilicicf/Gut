@@ -2,7 +2,7 @@ import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
 import { stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
 } from '../../dependencies/yargs.ts';
 
 import { isDirty } from '../../lib/git/isDirty.ts';
@@ -57,7 +57,7 @@ export const command = toYargsCommand(baseCommand, options);
 export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {};
 
-export async function builder (yargs: any) {
+export async function builder (yargs: YargsInstance): Promise<YargsInstance> {
   return bindOptionsAndCreateUsage(yargs, usage, options)
     .check((args: Args) => {
       if (args.description && !/^[a-zA-Z0-9_-]$/.test(args.description)) {

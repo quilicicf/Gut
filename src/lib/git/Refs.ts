@@ -11,11 +11,14 @@ export type Refs = {
 
 export const REF_TYPES: { [ key: string ]: RefType } = {
   TAG: {
-    regex: /^refs\/tags\/(.*)/,
+    regex: /^refs\/tags\/(.+)/,
     detect (ref: string) { return this.regex.test(ref); },
     extractName (ref: string) {
-      // @ts-ignore
-      return this.regex.exec(ref)[ 1 ];
+      const result: string | undefined = this.regex.exec(ref)?.[ 1 ];
+      if (!result) {
+        throw Error(`Can't extract branch name for ref ${ref}`);
+      }
+      return result;
     },
   },
   STASH: {
@@ -29,16 +32,22 @@ export const REF_TYPES: { [ key: string ]: RefType } = {
     regex: /^refs\/heads\/(.*)/,
     detect (ref: string) { return this.regex.test(ref); },
     extractName (ref: string) {
-      // @ts-ignore
-      return this.regex.exec(ref)[ 1 ];
+      const result: string | undefined = this.regex.exec(ref)?.[ 1 ];
+      if (!result) {
+        throw Error(`Can't extract branch name for ref ${ref}`);
+      }
+      return result;
     },
   },
   REMOTE: {
     regex: /^refs\/remotes\/([^/]+)\/(.*)/,
     detect (ref: string) { return this.regex.test(ref); },
     extractName (ref: string) {
-      // @ts-ignore
-      return this.regex.exec(ref)[ 2 ];
+      const result: string | undefined = this.regex.exec(ref)?.[ 1 ];
+      if (!result) {
+        throw Error(`Can't extract branch name for ref ${ref}`);
+      }
+      return result;
     },
   },
 };

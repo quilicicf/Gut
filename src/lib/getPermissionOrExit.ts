@@ -1,30 +1,36 @@
 import log from '../dependencies/log.ts';
 import { stoyleGlobal, theme } from '../dependencies/stoyle.ts';
 
-const getPermissionValue = (permissionDescriptor: Deno.PermissionDescriptor): string | undefined => {
+const getPermissionValue = (permissionDescriptor: Deno.PermissionDescriptor): string | URL | undefined => {
   switch (permissionDescriptor.name) {
-    case 'net':
+    case 'net': {
       // eslint-disable-next-line no-case-declarations
       const netPermissionDescriptor: Deno.NetPermissionDescriptor = permissionDescriptor;
       return netPermissionDescriptor.host;
-    case 'read':
+    }
+    case 'read': {
       // eslint-disable-next-line no-case-declarations
       const readPermissionDescriptor: Deno.ReadPermissionDescriptor = permissionDescriptor;
       return readPermissionDescriptor.path;
-    case 'write':
+    }
+    case 'write': {
       // eslint-disable-next-line no-case-declarations
       const writePermissionDescriptor: Deno.WritePermissionDescriptor = permissionDescriptor;
       return writePermissionDescriptor.path;
-    case 'env':
+    }
+    case 'env': {
       // eslint-disable-next-line no-case-declarations
       const envPermissionDescriptor: Deno.EnvPermissionDescriptor = permissionDescriptor;
       return envPermissionDescriptor.variable;
-    case 'run':
+    }
+    case 'run': {
       // eslint-disable-next-line no-case-declarations
       const runPermissionDescriptor: Deno.RunPermissionDescriptor = permissionDescriptor;
       return runPermissionDescriptor.command;
-    default:
+    }
+    default: {
       return undefined;
+    }
   }
 };
 

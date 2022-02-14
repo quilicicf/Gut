@@ -1,0 +1,26 @@
+{
+  "lint": {
+    "files": {
+      "include": [
+        "src/",
+        "mod.ts"
+      ],
+      "exclude": [
+        "src/fiddle*.ts"
+      ]
+    },
+    "rules": {
+      "tags": [
+        "recommended"
+      ],
+      "include": [
+        "camelcase"
+      ],
+      "exclude": [
+        "require-await",
+        "no-inferrable-types",
+        "no-invalid-triple-slash-reference"
+      ]
+    }
+  }
+}

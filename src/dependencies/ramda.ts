@@ -11,19 +11,21 @@ import lensPath from 'https://deno.land/x/ramda@v0.27.2/source/lensPath.js';
  * - Won't get the right result in case of multi-byte unicode characters in strings.
  * - Won't get the right result in case of ES6 classes.
  */
-function size (input: any | any[] | string): number {
+// deno-lint-ignore no-explicit-any
+function size (input: any | unknown[] | string): number {
   if (input === null || input === undefined) { return 0; }
   if (Array.isArray(input) || typeof input === 'string') { return input.length; }
-  // @ts-ignore
+  // @ts-ignore TS-2322 The size is supposed to return an integer
   if ([ '[object Map]', '[object Set]' ].includes(input.toString())) { return input.size; }
   return Object.keys(input).length;
 }
 
-function isNilOrEmpty (input: any | any[] | string): boolean {
+// deno-lint-ignore no-explicit-any
+function isNilOrEmpty (input: any | unknown[] | string): boolean {
   return isNil(input) || isEmpty(input);
 }
 
-function setPath (input: any, _path: any[], value: any) {
+function setPath (input: unknown, _path: unknown[], value: unknown) {
   const lens = lensPath(_path);
   return set(lens, value, input);
 }

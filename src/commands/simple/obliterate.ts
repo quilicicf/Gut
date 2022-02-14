@@ -2,7 +2,7 @@ import log from '../../dependencies/log.ts';
 import { stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
 import { promptConfirm, ConfirmOptions } from '../../dependencies/cliffy.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
 } from '../../dependencies/yargs.ts';
 
 import { findRemote } from '../../lib/git/remotes.ts';
@@ -52,7 +52,7 @@ export const command = toYargsCommand(baseCommand, options);
 export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {};
 
-export function builder (yargs: any) {
+export function builder (yargs: YargsInstance) {
   return bindOptionsAndCreateUsage(yargs, usage, options)
     .check((currentArguments: Args) => {
       if (!currentArguments.branch && !currentArguments.tag) {

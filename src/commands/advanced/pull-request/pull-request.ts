@@ -5,7 +5,7 @@ import { isEmpty, size } from '../../../dependencies/ramda.ts';
 import { stoyle, stoyleGlobal, theme } from '../../../dependencies/stoyle.ts';
 import { promptConfirm, promptSelect, promptString } from '../../../dependencies/cliffy.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions, toYargsCommand,
+  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions, toYargsCommand, YargsInstance,
 } from '../../../dependencies/yargs.ts';
 
 import { editText } from '../../../lib/editText.ts';
@@ -145,7 +145,7 @@ const findBaseBranch = async (currentBranchName: string, baseBranchNameFromCli?:
   return stringifyBranch(parentBranch);
 };
 
-export async function builder (yargs: any) {
+export async function builder (yargs: YargsInstance) {
   return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 

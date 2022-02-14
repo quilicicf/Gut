@@ -9,7 +9,7 @@ export async function getBranchRemote (): Promise<string | undefined> {
     return output === ''
       ? undefined
       : output.split('/')[ 0 ];
-  } catch (error) {
+  } catch (_error) {
     return undefined;
   }
 }

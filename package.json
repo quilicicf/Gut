@@ -4,18 +4,10 @@
   "preferGlobal": true,
   "private": true,
   "scripts": {
-    "lint": "eslint '**/*.ts'"
+    "lint": "deno lint --config ./deno.json"
   },
   "type": "module",
   "devDependencies": {
-    "@quilicicf/markdown-formatter": "3.0.4",
-    "@talend/eslint-config": "3.0.0",
-    "babel-eslint": "10.1.0",
-    "eslint": "7.23.0",
-    "eslint-config-airbnb": "18.2.1",
-    "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-jest": "24.3.2",
-    "eslint-plugin-jsx-a11y": "6.4.1",
-    "eslint-plugin-react": "7.23.1"
+    "@quilicicf/markdown-formatter": "4.0.5"
   }
 }

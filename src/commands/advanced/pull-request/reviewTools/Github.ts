@@ -59,7 +59,7 @@ const setAssigneeIfApplicable = async (
         body: JSON.stringify({ assignees: [ assignee ] }),
       },
     );
-  } catch (error) {
+  } catch (_error) {
     await log(Deno.stderr, stoyleGlobal`Could not set assignee for PR ${number}\n`(theme.error));
   }
 };
@@ -113,7 +113,7 @@ export const github: ReviewTool = {
       return handleResponseError<PullRequest>(response);
 
     } catch (error) {
-      await log(Deno.stderr, stoyleGlobal`Unknown error when creating the PR:\n${error.stack}\n`(theme.error));
+      await log(Deno.stderr, stoyleGlobal`Unknown error when creating the PR:\n${(error as Error).stack}\n`(theme.error));
       return Deno.exit(1);
     }
   },

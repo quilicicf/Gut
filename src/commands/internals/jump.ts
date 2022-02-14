@@ -7,7 +7,7 @@ import { stoyle, theme } from '../../dependencies/stoyle.ts';
 import { FullGutConfiguration } from '../../configuration.ts';
 import { getRepositoryNameFromPath } from '../../lib/git/getRepositoryNameFromPath.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsCommand, toYargsUsage, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsCommand, toYargsUsage, YargsInstance, YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 interface Args {
@@ -39,7 +39,7 @@ export const usage = toYargsUsage(baseCommand, options);
 export const describe = false; // Un-documented command
 export const aliases = [];
 
-export function builder (yargs: any) {
+export function builder (yargs: YargsInstance) {
   return bindOptionsAndCreateUsage(yargs, usage, options)
     .epilogue([
       stoyle`Command used by the shell feature ${'cr'} to manage the interactive part.\n`({ nodes: [ theme.strong ] }),

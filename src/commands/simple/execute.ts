@@ -3,7 +3,7 @@ import { resolve } from '../../dependencies/path.ts';
 import { promptSelect } from '../../dependencies/cliffy.ts';
 import { stoyle, theme } from '../../dependencies/stoyle.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
 } from '../../dependencies/yargs.ts';
 
 import { EMOJIS } from '../../lib/emojis.ts';
@@ -120,12 +120,12 @@ export const command = toYargsCommand(baseCommand, options);
 export const usage = toYargsUsage(command, options);
 export const extraPermissions: ExtraPermissions = {};
 
-export function builder (yargs: any) {
+export function builder (yargs: YargsInstance) {
   return bindOptionsAndCreateUsage(yargs, usage, options)
     .check((currentArguments: Args) => {
       const errorMessage = mutuallyExclusiveBooleanArguments
         .filter((argumentName) => (
-          // @ts-ignore
+          // @ts-ignore The arguments are all in Args
           currentArguments[ argumentName ]
         ))
         .flatMap((argumentName, index, argumentNames) => (

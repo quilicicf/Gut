@@ -4,7 +4,7 @@ import { promptConfirm } from '../../../dependencies/cliffy.ts';
 import { stoyle, stoyleGlobal, theme } from '../../../dependencies/stoyle.ts';
 import {
   ExtraPermissions, YargsOptions,
-  bindOptionsAndCreateUsage, toYargsCommand, toYargsUsage,
+  bindOptionsAndCreateUsage, toYargsCommand, toYargsUsage, YargsInstance,
 } from '../../../dependencies/yargs.ts';
 
 import { getCurrentBranchName } from '../../../lib/git/getCurrentBranchName.ts';
@@ -50,7 +50,7 @@ export const command = toYargsCommand(baseCommand, options);
 export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {};
 
-export function builder (yargs: any) {
+export function builder (yargs: YargsInstance) {
   return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 
@@ -66,7 +66,7 @@ const getBranchesInfo = async (remoteName?: string): Promise<{ [ key: string ]: 
     'git',
     'for-each-ref',
     '--sort=-committerdate',
-    `--format=%(committerdate:unix)%09%(objectname)%09%(refname:short)`,
+    '--format=%(committerdate:unix)%09%(objectname)%09%(refname:short)',
     refsLocation,
   ], { shouldTruncateTrailingLineBreak: true });
 
@@ -98,7 +98,7 @@ export async function handler (args: Args) {
   const currentBranchName = await getCurrentBranchName();
 
   const branchesToPrune = Object.values(localBranchesInfo)
-    .filter(({ name }) => !Boolean(remoteBranchesInfo[ name ]))
+    .filter(({ name }) => !remoteBranchesInfo[ name ])
     .filter(({ timestamp }) => timestamp < stalenessLimit)
     .filter(({ name }) => !isPocBranch(parseBranchName(name)))
     .filter(({ name }) => name !== currentBranchName)

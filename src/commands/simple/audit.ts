@@ -5,7 +5,7 @@ import {
   isEmpty, pad, padLeft, padRight, set, size,
 } from '../../dependencies/ramda.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
 } from '../../dependencies/yargs.ts';
 
 import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
@@ -60,7 +60,7 @@ interface Oddity {
 }
 
 interface OdditiesMap {
-  [ fileName: string ]: Oddity[]
+  [ fileName: string ]: Oddity[];
 }
 
 export interface ParsingState {
@@ -100,7 +100,7 @@ function findOddities (state: ParsingState, line: string, lineType: LineType): O
     );
 }
 
-function updateParsingState (path: string[], value: any | null): (_: ParsingState) => ParsingState {
+function updateParsingState<T> (path: string[], value: T | null): (_: ParsingState) => ParsingState {
   return (state) => set(state, path, value);
 }
 
@@ -306,7 +306,7 @@ export const command = toYargsCommand(baseCommand, options);
 export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {};
 
-export function builder (yargs: any) {
+export function builder (yargs: YargsInstance) {
   return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 

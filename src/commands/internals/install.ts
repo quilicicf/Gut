@@ -2,7 +2,7 @@ import log from '../../dependencies/log.ts';
 import { stoyle, stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
 import { resolve, fromFileUrl } from '../../dependencies/path.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
 } from '../../dependencies/yargs.ts';
 
 import { request } from '../../lib/request.ts';
@@ -85,7 +85,7 @@ export const extraPermissions: ExtraPermissions = {
   },
 };
 
-export function builder (yargs: any) {
+export function builder (yargs: YargsInstance) {
   return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 

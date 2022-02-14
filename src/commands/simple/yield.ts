@@ -1,7 +1,7 @@
 import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions,
+  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
 } from '../../dependencies/yargs.ts';
 
 import { getRemotes } from '../../lib/git/getRemotes.ts';
@@ -40,7 +40,7 @@ export const command = toYargsCommand(baseCommand, options);
 export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {};
 
-export async function builder (yargs: any) {
+export async function builder (yargs: YargsInstance) {
   return bindOptionsAndCreateUsage(yargs, usage, options)
     .check((args: Args) => {
       if (args.force && !args.noPull) {

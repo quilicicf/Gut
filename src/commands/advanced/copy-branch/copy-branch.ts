@@ -1,6 +1,6 @@
 import {
   ExtraPermissions, YargsOptions,
-  bindOptionsAndCreateUsage, toYargsCommand, toYargsUsage,
+  bindOptionsAndCreateUsage, toYargsCommand, toYargsUsage, YargsInstance,
 } from '../../../dependencies/yargs.ts';
 
 import { getCurrentBranchName } from '../../../lib/git/getCurrentBranchName.ts';
@@ -23,7 +23,7 @@ export const extraPermissions: ExtraPermissions = {
   },
 };
 
-export function builder (yargs: any) {
+export function builder (yargs: YargsInstance) {
   return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 

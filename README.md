@@ -231,7 +231,7 @@ If you want to permanently add the permissions that you are comfortable with, yo
 
 Each command's documentation explains the additional permissions it might need and for what purpose.
 
-> :light_bulb: In the script below, `FORGE` must be the path to the folder where all your repositories are. See [the Repositories location section](#repositories-location) for more information.
+> :light\_bulb: In the script below, `FORGE` must be the path to the folder where all your repositories are. See [the Repositories location section](#repositories-location) for more information.
 >
 > `HOME` must be the path to your home folder. It is already the case in most systems but in case it's not, Gut will fail to run
 

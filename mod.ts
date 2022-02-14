@@ -1,8 +1,10 @@
 import log from './src/dependencies/log.ts';
-import { yargs } from './src/dependencies/yargs.ts';
+import { yargs, YargsInstance } from './src/dependencies/yargs.ts';
 import { stoyleGlobal, theme } from './src/dependencies/stoyle.ts';
 
 import { getConfiguration } from './src/configuration.ts';
+
+import * as groot from './src/groot.ts';
 
 import * as pile from './src/commands/simple/pile.ts';
 import * as undo from './src/commands/simple/undo.ts';
@@ -39,8 +41,7 @@ import * as pruneLocalBranches from './src/commands/advanced/prune-local-branche
 //   --force \
 //   mod.ts
 const main = async () => {
-  // @ts-ignore No idea why this is necessary
-  const yargsInstance: any = yargs();
+  const yargsInstance: YargsInstance = yargs;
   const configuration = await getConfiguration();
 
   yargsInstance
@@ -78,7 +79,7 @@ const main = async () => {
     .command(install)
 
     // To check that Gut is installed or just mess around
-    .command('groot', 'Display a random sentence, in French', () => log(Deno.stdout, stoyleGlobal`Je s'appelle Groot!\n`(theme.strong)))
+    .command(groot)
 
     .demandCommand(1, stoyleGlobal`Specify the command you want to run!`(theme.error))
     .strictCommands()

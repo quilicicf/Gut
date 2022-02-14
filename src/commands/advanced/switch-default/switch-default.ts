@@ -1,6 +1,6 @@
 import {
   ExtraPermissions, YargsOptions,
-  bindOptionsAndCreateUsage, toYargsCommand, toYargsUsage,
+  bindOptionsAndCreateUsage, toYargsCommand, toYargsUsage, YargsInstance,
 } from '../../../dependencies/yargs.ts';
 import log from '../../../dependencies/log.ts';
 import { stoyleGlobal, stoyleString, theme } from '../../../dependencies/stoyle.ts';
@@ -28,7 +28,7 @@ export const command = toYargsCommand(baseCommand, options);
 export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {};
 
-export function builder (yargs: any) {
+export function builder (yargs: YargsInstance) {
   return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 

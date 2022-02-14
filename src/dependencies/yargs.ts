@@ -1,19 +1,38 @@
-import yargs from 'https://deno.land/x/yargs@v17.0.1-deno/deno.ts';
+import _yargs from 'https://deno.land/x/yargs@v17.0.1-deno/deno.ts';
 
-export { yargs };
+// Should be pulled from https://deno.land/x/yargs@v17.3.1-deno/deno-types.ts but it doesn't work in yargs yet
+export interface YargsInstance {
+  help: () => YargsInstance;
+  version: () => YargsInstance;
+  strictCommands: () => YargsInstance;
+  check: (param: unknown) => YargsInstance;
+  wrap: (param: unknown) => YargsInstance;
+  parse: (params: unknown) => YargsInstance;
+  usage: (usage: string) => YargsInstance;
+  epilogue: (epilogue: string) => YargsInstance;
+  command: (command: unknown) => YargsInstance;
+  option: (name: string, option: YargsOption) => YargsInstance;
+  positional: (name: string, option: YargsOption) => YargsInstance;
+  demandCommand: (number: number, message: string) => YargsInstance;
+}
+
+// @ts-ignore TS-2554 The arguments are optional FFS
+export const yargs: YargsInstance = _yargs();
 
 export interface YargsOption {
-  describe: string;
   type: 'integer' | 'boolean' | 'string' | 'number';
+  describe?: string;
   alias?: string;
-  default?: any;
-  choices?: any[];
+  global?: boolean;
+  hidden?: boolean;
+  default?: unknown;
+  choices?: unknown[];
   implies?: string[];
   conflicts?: string[];
   requiresArg?: boolean;
   demandOption?: boolean;
   isPositionalOption?: boolean;
-  coerce?: (input: string) => any,
+  coerce?: (input: string) => unknown,
 }
 
 export type YargsOptions = { [ key: string ]: YargsOption };
@@ -37,7 +56,7 @@ export interface Command {
   describe: string;
   usage: string;
   options: YargsOptions;
-  extraPermissions: ExtraPermissions
+  extraPermissions: ExtraPermissions;
 }
 
 export function toYargsCommand (baseCommand: string, options: YargsOptions): string {
@@ -55,13 +74,16 @@ export function toYargsUsage (baseCommand: string, options: YargsOptions): strin
   return `USAGE: gut ${toYargsCommand(baseCommand, options)} [options...]`;
 }
 
-export function bindOptionsAndCreateUsage (_yargs: any, usage: string, options: YargsOptions): any {
+export function bindOptionsAndCreateUsage (_yargs: YargsInstance, usage: string, options: YargsOptions): YargsInstance {
+  const reducer = function (seed: YargsInstance, [ name, option ]: [ name: string, option: YargsOption ]): YargsInstance {
+    const positionalOption: boolean = option.isPositionalOption || false;
+    return positionalOption
+      ? seed.positional(name, option) as YargsInstance
+      : seed.option(name, option) as YargsInstance;
+  };
+
   return Object.entries(options)
-    .reduce((seed, [ name, option ]) => (
-      option.isPositionalOption
-        ? seed.positional(name, option)
-        : seed.option(name, option)
-    ), _yargs)
+    .reduce(reducer, _yargs as YargsInstance)
     .usage(usage)
     .help();
 }
