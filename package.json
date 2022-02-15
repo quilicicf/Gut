@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npm run lint && npm run cache",
     "lint": "deno lint --config ./deno.json",
-    "cache": "deno cache --config ./deno.json --unstable mod.ts"
+    "cache": "deno cache --config ./deno.json --unstable mod.ts",
+    "generate-doc": "deno run --unstable --no-check --allow-env=HOME --allow-run=node --allow-read=$(pwd)/README.md --allow-write=$(pwd)/README.md ./scripts/generateDoc.ts"
   },
   "type": "module",
   "devDependencies": {
