@@ -4,7 +4,9 @@
   "preferGlobal": true,
   "private": true,
   "scripts": {
-    "lint": "deno lint --config ./deno.json"
+    "test": "npm run lint && npm run cache",
+    "lint": "deno lint --config ./deno.json",
+    "cache": "deno cache --config ./deno.json --unstable mod.ts"
   },
   "type": "module",
   "devDependencies": {
