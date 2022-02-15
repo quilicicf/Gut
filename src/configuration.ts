@@ -6,6 +6,7 @@ import { readTextFile } from './lib/readTextFile.ts';
 
 import { getConstants } from './constants.ts';
 import { getPermissionOrExit } from './lib/getPermissionOrExit.ts';
+import { set } from './dependencies/ramda.ts';
 
 export interface Account {
   username: string,
@@ -27,9 +28,12 @@ export interface GlobalGutConfiguration {
   tempFolderPath: string, // Used to create temporary files, i.e. for error/retry
 }
 
+export type MessageFormat = 'standard' | 'emoji' | 'angular'
+export const DEFAULT_MESSAGE_FORMAT: MessageFormat = 'emoji';
+
 export interface RepositoryGutConfiguration {
   reviewTool: string, // A key to a tool with review facet in global configuration
-  shouldUseEmojis: boolean,
+  messageFormat: MessageFormat,
   shouldUseIssueNumbers: boolean,
 }
 
@@ -67,6 +71,9 @@ export async function getConfiguration (): Promise<FullGutConfiguration> {
   if (await exists(repositoryConfigurationPath)) {
     const repositoryConfigurationAsJson = await readTextFile(repositoryConfigurationPath, {});
     const repositoryConfiguration: RepositoryGutConfiguration = JSON.parse(repositoryConfigurationAsJson);
+    if (!repositoryConfiguration.messageFormat) {
+      set(repositoryConfiguration, [ 'messageFormat' ], DEFAULT_MESSAGE_FORMAT);
+    }
 
     return {
       global: globalConfiguration,

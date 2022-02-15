@@ -6,34 +6,74 @@ import {
   bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
 } from '../../dependencies/yargs.ts';
 
-import { EMOJIS } from '../../lib/emojis.ts';
+import { EMOJIS, EMOJIS_SELECTION } from '../../lib/emojis.ts';
 import { editText } from '../../lib/editText.ts';
-import { FullGutConfiguration } from '../../configuration.ts';
+import { DEFAULT_MESSAGE_FORMAT, FullGutConfiguration, MessageFormat } from '../../configuration.ts';
 import { getIssueIdOrEmpty } from '../../lib/branch/getIssueIdOrEmpty.ts';
 import { getCommitsUpToMax } from '../../lib/git/getCommitsUpToMax.ts';
 import { getCurrentBranchName } from '../../lib/git/getCurrentBranchName.ts';
 import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
+import { COMMIT_TYPES, COMMIT_TYPES_SELECTION } from '../../lib/commitTypes.ts';
 
-class CommitMessage {
-  message: string;
+const createCommitTemplate = async (messageFormat: MessageFormat, issueId: string, emoji?: string, commitType?: string): Promise<CommitTemplate> => {
+  switch (messageFormat) {
+    case 'standard': {
+      const suffix: string = issueId ? ` (${issueId})` : '';
+      return {
+        template: `${suffix}\n`, startIndex: 0,
+      };
+    }
 
-  emoji: string;
+    case 'emoji': {
+      const finalEmoji = emoji || await promptForEmoji();
+      const suffix: string = issueId ? ` (${issueId})` : '';
+      return {
+        template: `${finalEmoji}  ${suffix}\n`,
+        startIndex: finalEmoji.length + 1,
+      };
+    }
 
-  constructor (message: string, emoji: string) {
-    this.message = message;
-    this.emoji = emoji;
+    case 'angular': {
+      const finalCommitType = commitType || await promptForCommitType();
+      const commitTopic = issueId ? `(${issueId})` : '';
+      return {
+        template: `${finalCommitType}${commitTopic}: \n`,
+        startIndex: finalCommitType.length + commitTopic.length + issueId.length + 2,
+      };
+    }
+
+    default:
+      throw Error(`Unsupported message format ${messageFormat}`);
   }
+};
 
-  getFullMessage (shouldUseEmojis: boolean, suffix: string) {
-    return shouldUseEmojis
-      ? `${this.emoji} ${this.message} ${suffix}`
-      : `${this.message} ${suffix}`;
-  }
+const createCommitMessage = async (messageFormat: MessageFormat, issueId: string, commit: Commit): Promise<string> => {
+  const { template, startIndex } = await createCommitTemplate(messageFormat, issueId, commit.emoji, commit.type);
+  return `${template.substring(0, startIndex)}${commit.message.trim()}${template.substring(startIndex)}`;
+};
+
+interface CommitTemplate {
+  template: string;
+  startIndex: number;
 }
 
-const CODE_REVIEW_MESSAGE = new CommitMessage('Code review', ':eyes:');
-const WIP_MESSAGE = new CommitMessage('WIP', ':construction:');
+interface Commit {
+  emoji: string;
+  message: string;
+  type: string;
+}
+
+const WIP_COMMIT: Commit = {
+  message: 'WIP',
+  emoji: EMOJIS.CONSTRUCTION.value,
+  type: COMMIT_TYPES.CHORE.value,
+};
+const CODE_REVIEW_COMMIT: Commit = {
+  message: 'Code review',
+  emoji: EMOJIS.EYES.value,
+  type: COMMIT_TYPES.CHORE.value,
+};
 const COMMIT_MESSAGE_FILE_NAME = 'commit-message.md';
 
 interface Args {
@@ -52,16 +92,15 @@ const commitWithMessage = async (message?: string) => (
 
 const commitWithFile = async (filePath: string) => executeAndGetStdout([ 'git', 'commit', '--file', filePath ], {});
 
-const commit = async (tempFolderPath: string, emoji: string, suffix: string) => {
+const commit = async (tempFolderPath: string, messageFormat: MessageFormat, issueId: string) => {
   const commitMessageFilePath = resolve(tempFolderPath, COMMIT_MESSAGE_FILE_NAME);
-  const paddedEmoji = emoji ? `${emoji} ` : '';
-  const paddedSuffix = suffix ? ` ${suffix}` : '';
+  const commitTemplate: CommitTemplate = await createCommitTemplate(messageFormat, issueId);
   await editText({
     fileType: 'markdown',
-    startTemplate: `${paddedEmoji}${paddedSuffix}\n`,
+    startTemplate: commitTemplate.template,
     outputFilePath: commitMessageFilePath,
     startIndex: {
-      column: paddedEmoji.length + 1,
+      column: commitTemplate.startIndex + 1,
     },
   });
 
@@ -78,7 +117,13 @@ const squashCommit = async (shaToSquashOn: string) => {
 
 const promptForEmoji = async () => promptSelect({
   message: 'Choose your emoji: ',
-  options: EMOJIS,
+  options: EMOJIS_SELECTION,
+  search: true,
+});
+
+const promptForCommitType = async () => promptSelect({
+  message: 'Choose the type of commit: ',
+  options: COMMIT_TYPES_SELECTION,
   search: true,
 });
 
@@ -97,12 +142,12 @@ export const describe = 'Commits the staged changes';
 export const options: YargsOptions = {
   [ ARG_CODE_REVIEW ]: {
     alias: 'c',
-    describe: `Auto set the message to: ${CODE_REVIEW_MESSAGE.emoji} ${CODE_REVIEW_MESSAGE.message} (if emoji is activated)`,
+    describe: `Auto set the message to: ${CODE_REVIEW_COMMIT.message}`,
     type: 'boolean',
   },
   [ ARG_WIP ]: {
     alias: 'w',
-    describe: `Auto set the message to: ${WIP_MESSAGE.emoji} ${WIP_MESSAGE.message} (if emoji is activated)`,
+    describe: `Auto set the message to: ${WIP_COMMIT.message}`,
     type: 'boolean',
   },
   [ ARG_SQUASH_ON ]: {
@@ -154,20 +199,19 @@ export async function handler (args: Args) {
     wip,
   } = args;
 
-  const shouldUseEmojis = configuration?.repository?.shouldUseEmojis || false;
+  const messageFormat: MessageFormat = configuration?.repository?.messageFormat || DEFAULT_MESSAGE_FORMAT;
   const shouldUseIssueNumbers = configuration?.repository?.shouldUseIssueNumbers || false;
 
   const issueId = shouldUseIssueNumbers ? getIssueIdOrEmpty(await getCurrentBranchName()) : '';
-  const suffix = issueId ? `(${issueId})` : '';
 
   if (wip) {
-    const fullMessage = WIP_MESSAGE.getFullMessage(shouldUseEmojis, suffix);
+    const fullMessage = await createCommitMessage(messageFormat, issueId, WIP_COMMIT);
     await commitWithMessage(fullMessage);
     return;
   }
 
   if (codeReview) {
-    const fullMessage = CODE_REVIEW_MESSAGE.getFullMessage(shouldUseEmojis, suffix);
+    const fullMessage = await createCommitMessage(messageFormat, issueId, CODE_REVIEW_COMMIT);
     await commitWithMessage(fullMessage);
     return;
   }
@@ -189,9 +233,8 @@ export async function handler (args: Args) {
     return;
   }
 
-  const emoji = shouldUseEmojis ? await promptForEmoji() : '';
   const tempFolderPath = configuration?.global?.tempFolderPath;
-  await commit(tempFolderPath, emoji, suffix);
+  await commit(tempFolderPath, messageFormat, issueId);
 }
 
 export const test = {

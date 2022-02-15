@@ -1,5 +1,5 @@
 {
-  "shouldUseEmojis": true,
+  "messageFormat": "emoji",
   "shouldUseIssueNumbers": true,
   "reviewTool": "github"
 }
