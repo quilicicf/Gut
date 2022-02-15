@@ -374,12 +374,12 @@ Commits the staged changes
 
 __Options:__
 
-| Name             | Description                                                         | Type      | Required | Default value |
-| ---------------- | ------------------------------------------------------------------- | --------- | -------- | ------------- |
-| `code-review`    | Auto set the message to: :eyes: Code review (if emoji is activated) | `boolean` | false    |               |
-| `wip`            | Auto set the message to: :construction: WIP (if emoji is activated) | `boolean` | false    |               |
-| `squash-on`      | Choose a commit in history and squash the staged changes in it      | `boolean` | false    |               |
-| `squash-on-last` | Squash the changes on the last commit in history                    | `boolean` | false    |               |
+| Name             | Description                                                    | Type      | Required | Default value |
+| ---------------- | -------------------------------------------------------------- | --------- | -------- | ------------- |
+| `code-review`    | Auto set the message to: Code review                           | `boolean` | false    |               |
+| `wip`            | Auto set the message to: WIP                                   | `boolean` | false    |               |
+| `squash-on`      | Choose a commit in history and squash the staged changes in it | `boolean` | false    |               |
+| `squash-on-last` | Squash the changes on the last commit in history               | `boolean` | false    |               |
 
 #### pile
 
