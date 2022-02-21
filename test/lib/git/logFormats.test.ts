@@ -1,4 +1,4 @@
-import { RESET_CODE, stoyle, theme } from '../../../src/dependencies/stoyle.ts';
+import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import { TEST_COMMIT, LOCATION } from './git.utils.ts';
 import { LOG_FORMATS } from '../../../src/lib/git/logFormats.ts';

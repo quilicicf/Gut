@@ -8,10 +8,10 @@ export async function getAllRefs (filterText: string = ''): Promise<Refs> {
   const accumulator: Refs = { branches: [], tags: [] };
   const { branches, tags } = allRefsAsString
     .split('\n')
-    .map((refAsString) => refAsString.split(' ')[ 1 ])
-    .filter((refName) => !REF_TYPES.STASH.detect(refName))
+    .map((refAsString: string) => refAsString.split(' ')[ 1 ])
+    .filter((refName: string) => !REF_TYPES.STASH.detect(refName))
     .reduce(
-      (seed, ref) => {
+      (seed: Refs, ref: string) => {
         if (REF_TYPES.HEADS.detect(ref)) {
           seed.branches.push(REF_TYPES.HEADS.extractName(ref));
           return seed;

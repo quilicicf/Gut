@@ -40,10 +40,13 @@ export const REF_TYPES: { [ key: string ]: RefType } = {
     },
   },
   REMOTE: {
-    regex: /^refs\/remotes\/([^/]+)\/(.*)/,
+    regex: /^refs\/remotes\/(?<remoteName>[^/]+)\/(?<branchName>.*)/,
     detect (ref: string) { return this.regex.test(ref); },
     extractName (ref: string) {
-      const result: string | undefined = this.regex.exec(ref)?.[ 1 ];
+      const result: string | undefined = this.regex
+        .exec(ref)
+        ?.groups
+        ?.branchName;
       if (!result) {
         throw Error(`Can't extract branch name for ref ${ref}`);
       }

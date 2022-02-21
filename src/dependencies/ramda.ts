@@ -3,8 +3,7 @@ import path from 'https://deno.land/x/ramda@v0.27.2/source/path.js';
 import isNil from 'https://deno.land/x/ramda@v0.27.2/source/isNil.js';
 import isEmpty from 'https://deno.land/x/ramda@v0.27.2/source/isEmpty.js';
 import lensPath from 'https://deno.land/x/ramda@v0.27.2/source/lensPath.js';
-
-// import mergeDeepRight from 'https://deno.land/x/ramda/mergeDeepRight.js';
+import mergeDeepRight from 'https://deno.land/x/ramda@v0.27.2/source/mergeDeepRight.js';
 
 /**
  * Weaker than lodash's.
@@ -62,4 +61,5 @@ export {
   size,
   setPath as set,
   isNilOrEmpty as isEmpty,
+  mergeDeepRight,
 };

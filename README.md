@@ -16,7 +16,13 @@ Ein gut git Fluss [🔊](https://translate.google.com/?sl=de\&tl=en\&text=Ein%20
 * [Gut flow](#gut-flow)
 
   * [Repositories location](#repositories-location)
+
   * [Branch naming](#branch-naming)
+
+  * [Configuration](#configuration)
+
+    * [Global configuration](#global-configuration)
+    * [Repository configuration](#repository-configuration)
 
 * [Install Gut](#install-gut)
 
@@ -216,6 +222,59 @@ A few valid examples:
 * `master__springCleanupVersion`
 * `master__springCleanupVersion__PROJ-123_removeObsoleteModuleToto`
 * `master__POC--tryUsingNodeModuleYInsteadOfX`
+
+### Configuration
+
+Gut can be configured with a global configuration and repository configuration. The first applies to Gut on all repositories. The second applies only on the repository it is stored in.
+
+#### Global configuration
+
+The schema of the global configuration can be found in [configuration.ts](./src/configuration.ts), search for `GlobalGutConfiguration`.
+
+Its location is `~/.config/.gut-config.json`.
+
+#### Repository configuration
+
+The schema of the repository configuration can be found in [configuration.ts](./src/configuration.ts), search for `RepositoryGutConfiguration`.
+
+Its location is either:
+
+* __PUBLIC:__ `$REPOSITORY_PATH/.gut-config.json` if all the contributors of the repository are OK with committing it
+* __PRIVATE:__ `$REPOSITORY_PATH/.git/.gut-config.json` otherwise
+
+If both public and private configurations are defined, the private configuration overwrites the public one.
+
+The overwriting works like this: primitive values in the private configuration take precedence over their counter-parts in the public configuration whatever their depth.
+
+Example:
+
+__PUBLIC__
+
+```json
+{
+  "messageFormat": "emoji",
+  "shouldUseIssueNumbers": true,
+  "reviewTool": "github"
+}
+```
+
+__PRIVATE__
+
+```json
+{
+  "messageFormat": "angular"
+}
+```
+
+__EFFECTIVE__
+
+```json
+{
+  "messageFormat": "angular",
+  "shouldUseIssueNumbers": true,
+  "reviewTool": "github"
+}
+```
 
 ## Install Gut
 

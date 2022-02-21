@@ -6,7 +6,7 @@ import { readTextFile } from './lib/readTextFile.ts';
 
 import { getConstants } from './constants.ts';
 import { getPermissionOrExit } from './lib/getPermissionOrExit.ts';
-import { set } from './dependencies/ramda.ts';
+import { mergeDeepRight, set } from './dependencies/ramda.ts';
 
 export interface Account {
   username: string,
@@ -42,6 +42,20 @@ export interface FullGutConfiguration {
   repository?: RepositoryGutConfiguration,
 }
 
+async function readRepositoryConfiguration (repositoryConfigurationPath: string) {
+  if (!await exists(repositoryConfigurationPath)) {
+    return {};
+  }
+
+  const repositoryConfigurationAsJson = await readTextFile(repositoryConfigurationPath, {});
+  const repositoryConfiguration: RepositoryGutConfiguration = JSON.parse(repositoryConfigurationAsJson);
+  if (!repositoryConfiguration.messageFormat) {
+    set(repositoryConfiguration, [ 'messageFormat' ], DEFAULT_MESSAGE_FORMAT);
+  }
+
+  return repositoryConfiguration;
+}
+
 export async function getConfiguration (): Promise<FullGutConfiguration> {
   const { GUT_CONFIGURATION_FOLDER, CONFIGURATION_FILE_NAME } = await getConstants();
 
@@ -66,20 +80,16 @@ export async function getConfiguration (): Promise<FullGutConfiguration> {
     return { global: globalConfiguration };
   }
 
-  const repositoryConfigurationPath = resolve(currentRepositoryTopLevel, CONFIGURATION_FILE_NAME);
+  const publicRepositoryConfigurationPath = resolve(currentRepositoryTopLevel, CONFIGURATION_FILE_NAME);
+  const publicRepositoryConfiguration = await readRepositoryConfiguration(publicRepositoryConfigurationPath);
 
-  if (await exists(repositoryConfigurationPath)) {
-    const repositoryConfigurationAsJson = await readTextFile(repositoryConfigurationPath, {});
-    const repositoryConfiguration: RepositoryGutConfiguration = JSON.parse(repositoryConfigurationAsJson);
-    if (!repositoryConfiguration.messageFormat) {
-      set(repositoryConfiguration, [ 'messageFormat' ], DEFAULT_MESSAGE_FORMAT);
-    }
+  const privateRepositoryConfigurationPath = resolve(currentRepositoryTopLevel, '.git', CONFIGURATION_FILE_NAME);
+  const privateRepositoryConfiguration = await readRepositoryConfiguration(privateRepositoryConfigurationPath);
 
-    return {
-      global: globalConfiguration,
-      repository: repositoryConfiguration,
-    };
-  }
+  const repositoryConfiguration = mergeDeepRight(publicRepositoryConfiguration, privateRepositoryConfiguration);
 
-  return { global: globalConfiguration };
+  return {
+    global: globalConfiguration,
+    repository: repositoryConfiguration,
+  };
 }
