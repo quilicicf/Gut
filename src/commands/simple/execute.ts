@@ -39,7 +39,7 @@ const createCommitTemplate = async (messageFormat: MessageFormat, issueId: strin
       const commitTopic = issueId ? `(${issueId})` : '';
       return {
         template: `${finalCommitType}${commitTopic}: \n`,
-        startIndex: finalCommitType.length + commitTopic.length + issueId.length + 2,
+        startIndex: finalCommitType.length + commitTopic.length + 2,
       };
     }
 
