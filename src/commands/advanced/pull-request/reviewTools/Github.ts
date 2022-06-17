@@ -67,10 +67,16 @@ const setAssigneeIfApplicable = async (
 export const github: ReviewTool = {
   async retrievePullRequestTemplate (): Promise<string> {
     const topLevel = await getTopLevel();
-    const pullRequestTemplatePath = resolve(topLevel, '.github', 'PULL_REQUEST_TEMPLATE.md');
+    const githubConfigurationFolder = resolve(topLevel, '.github');
+    const githubConfigurationFilesIterator = Deno.readDirSync(githubConfigurationFolder);
+    const pullRequestTemplateName = Array.from(githubConfigurationFilesIterator)
+      .filter(({ name }) => name.toLocaleLowerCase() === 'PULL_REQUEST_TEMPLATE.md'.toLocaleLowerCase())
+      .map(({ name }) => name)
+      ?.[ 0 ];
 
-    if (!await exists(pullRequestTemplatePath)) { return ''; }
+    if (!pullRequestTemplateName) { return ''; }
 
+    const pullRequestTemplatePath = resolve(githubConfigurationFolder, pullRequestTemplateName);
     return readTextFile(pullRequestTemplatePath, { permissionPath: topLevel });
   },
   async createPullRequest (pullRequestCreation: PullRequestCreation, token: string): Promise<PullRequest> {
