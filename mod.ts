@@ -38,6 +38,7 @@ import * as pruneLocalBranches from './src/commands/advanced/prune-local-branche
 //   --allow-run=git,micro,xclip,xdg-open \
 //   --name g \
 //   --no-check \
+//   --no-prompt \
 //   --force \
 //   mod.ts
 const main = async () => {
