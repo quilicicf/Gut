@@ -1,4 +1,4 @@
-import _yargs from 'https://deno.land/x/yargs@v17.0.1-deno/deno.ts';
+import _yargs from 'https://deno.land/x/yargs@v17.5.1-deno/deno.ts';
 
 // Should be pulled from https://deno.land/x/yargs@v17.3.1-deno/deno-types.ts but it doesn't work in yargs yet
 export interface YargsInstance {
