@@ -68,7 +68,9 @@ export const github: ReviewTool = {
   async retrievePullRequestTemplate (): Promise<string> {
     const topLevel = await getTopLevel();
     const githubConfigurationFolder = resolve(topLevel, '.github');
-    const githubConfigurationFilesIterator = Deno.readDirSync(githubConfigurationFolder);
+    const githubConfigurationFilesIterator = await exists(githubConfigurationFolder)
+      ? Deno.readDirSync(githubConfigurationFolder)
+      : [];
     const pullRequestTemplateName = Array.from(githubConfigurationFilesIterator)
       .filter(({ name }) => name.toLocaleLowerCase() === 'PULL_REQUEST_TEMPLATE.md'.toLocaleLowerCase())
       .map(({ name }) => name)
