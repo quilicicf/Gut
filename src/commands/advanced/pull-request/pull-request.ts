@@ -225,7 +225,9 @@ export async function handler (args: Args) {
 
   if (open) { await openInDefaultApplication(prUrl); }
 
-  await Deno.remove(tempDescriptionFile); // Only remove if PR was successfully created
+  if (await exists(tempDescriptionFile)) {
+    await Deno.remove(tempDescriptionFile); // Only remove if PR was successfully created
+  }
 }
 
 export const test = {};
