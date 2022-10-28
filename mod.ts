@@ -30,7 +30,6 @@ import * as pruneLocalBranches from './src/commands/advanced/prune-local-branche
 
 // Install with:
 // deno install \
-//   --unstable \
 //   --allow-env=HOME \
 //   --allow-net=api.github.com \
 //   --allow-read="${FORGE},${HOME}/.config/gut/" \
