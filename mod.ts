@@ -32,7 +32,7 @@ import * as pruneLocalBranches from './src/commands/advanced/prune-local-branche
 // deno install \
 //   --allow-env=HOME \
 //   --allow-net=api.github.com \
-//   --allow-read="${FORGE},${HOME}/.config/gut/" \
+//   --allow-read="${FORGE},${HOME}/.config/gut/,/tmp" \
 //   --allow-write="${HOME}/.config/gut/" \
 //   --allow-run=git,micro,xclip,xdg-open \
 //   --name g \
