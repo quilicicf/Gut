@@ -12,7 +12,6 @@ import { DEFAULT_MESSAGE_FORMAT, FullGutConfiguration, MessageFormat } from '../
 import { getIssueIdOrEmpty } from '../../lib/branch/getIssueIdOrEmpty.ts';
 import { getCommitsUpToMax } from '../../lib/git/getCommitsUpToMax.ts';
 import { getCurrentBranchName } from '../../lib/git/getCurrentBranchName.ts';
-import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
 import { COMMIT_TYPES, COMMIT_TYPES_SELECTION } from '../../lib/commitTypes.ts';
 

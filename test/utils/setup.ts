@@ -16,6 +16,8 @@ export async function initializeRepository (repositoryNamePrefix: string): Promi
   const tmpDir = resolve(path, '..');
 
   await executeProcessCriticalTask([ 'git', 'init' ]);
+  await executeProcessCriticalTask([ 'git', 'config', 'core.hooksPath', 'no-hooks' ]);
+  await executeProcessCriticalTask([ 'git', 'config', '--local', 'commit.gpgSign', 'false' ]);
   return { tmpDir, path, name };
 }
 
