@@ -6,6 +6,9 @@ export const COMMIT_TYPES: Record<string, SelectOption> = {
   FIX: { value: 'fix', name: stoyle`${'fix'} when working on a bug fix`({ nodes: [ theme.strong ] }) },
   DOC: { value: 'doc', name: stoyle`${'doc'} when working on documentation`({ nodes: [ theme.strong ] }) },
   TEST: { value: 'test', name: stoyle`${'test'} when working on tests`({ nodes: [ theme.strong ] }) },
+  STYLE: { value: 'style', name: stoyle`${'style'} when changes are only cosmetic`({ nodes: [ theme.strong ] }) },
+  REFACTOR: { value: 'refactor', name: stoyle`${'refactor'} when refactoring`({ nodes: [ theme.strong ] }) },
+  PERF: { value: 'perf', name: stoyle`${'perf'} when working on code performance`({ nodes: [ theme.strong ] }) },
   CHORE: { value: 'chore', name: stoyle`${'chore'} when working on anything else`({ nodes: [ theme.strong ] }) },
 };
 
