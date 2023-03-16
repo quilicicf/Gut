@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="CACHE" type="js.build_tools.npm">
+  <configuration default="false" name="DOC" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/package.json" />
     <command value="run" />
     <scripts>
-      <script value="cache" />
+      <script value="generate-doc" />
     </scripts>
     <node-interpreter value="$USER_HOME$/.asdf/shims/node" />
     <envs />

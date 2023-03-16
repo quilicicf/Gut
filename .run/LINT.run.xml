@@ -5,7 +5,7 @@
     <scripts>
       <script value="lint" />
     </scripts>
-    <node-interpreter value="project" />
+    <node-interpreter value="$USER_HOME$/.asdf/shims/node" />
     <envs />
     <method v="2" />
   </configuration>

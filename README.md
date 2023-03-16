@@ -458,6 +458,7 @@ __Options:__
 | `number`             | Limit the number of commits to output                   | `number`  | false    | `10`          |
 | `reverse`            | Output the commits chosen to be shown in reverse order. | `boolean` | false    |               |
 | `from-parent-branch` | Audit all commits on top of the parent branch           | `boolean` | false    |               |
+| `from-other-branch`  | Audit all commits on top of the provided branch         | `string`  | false    |               |
 
 #### obliterate
 

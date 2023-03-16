@@ -117,7 +117,6 @@ const main = async () => {
 
   const markdownFormatterPath = resolve(appRootPath, 'node_modules', '@quilicicf', 'markdown-formatter', 'bin', 'markdown-formatter.js');
   await Deno.writeTextFile(readmePath, updatedReadmeContent);
-  console.log([ 'node', markdownFormatterPath, '--file', readmePath, '--replace' ]);
   const { success, code } = await Deno.run({
     cmd: [ 'node', markdownFormatterPath, '--file', readmePath, '--replace' ],
     stdin: 'null',

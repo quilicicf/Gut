@@ -9,7 +9,7 @@
     "cache": "deno cache --config ./deno.json --unstable mod.ts",
     "all-tests": "deno test --unstable --allow-env=HOME --allow-run=git --allow-read=$HOME/.config/gut,/tmp,$(pwd) --allow-write=/tmp test/",
     "one-test": "deno test --unstable --allow-env=HOME --allow-run=git --allow-read=$HOME/.config/gut,/tmp,$(pwd) --allow-write=/tmp",
-    "generate-doc": "deno run --unstable --no-check --allow-env=HOME --allow-run=node --allow-read=$(pwd)/README.md --allow-write=$(pwd)/README.md ./scripts/generateDoc.ts"
+    "generate-doc": "deno run --unstable --no-check --allow-env=HOME --allow-run=node --allow-read=$(pwd)/README.md --allow-write=$(pwd)/README.md --no-prompt ./scripts/generateDoc.ts"
   },
   "type": "module",
   "devDependencies": {

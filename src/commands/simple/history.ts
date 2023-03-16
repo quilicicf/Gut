@@ -1,6 +1,11 @@
 import log from '../../dependencies/log.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
+  bindOptionsAndCreateUsage,
+  ExtraPermissions,
+  toYargsCommand,
+  toYargsUsage,
+  YargsInstance,
+  YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { LOG_FORMATS } from '../../lib/git/logFormats.ts';
@@ -12,6 +17,7 @@ interface Args {
   number: number,
   reverse: boolean,
   fromParentBranch?: boolean,
+  fromOtherRef?: string,
 }
 
 const DEFAULT_FORMAT = 'pretty';
@@ -19,6 +25,9 @@ const DEFAULT_FORMAT = 'pretty';
 export const baseCommand = 'history';
 export const aliases = [ 'h' ];
 export const describe = 'Displays the commit history';
+
+export const ARG_FROM_PARENT_BRANCH = 'from-parent-branch';
+export const ARG_FROM_OTHER_BRANCH = 'from-other-branch';
 export const options: YargsOptions = {
   format: {
     alias: 'f',
@@ -39,10 +48,17 @@ export const options: YargsOptions = {
     type: 'boolean',
     default: false,
   },
-  'from-parent-branch': {
+  [ ARG_FROM_PARENT_BRANCH ]: {
     alias: 'p',
     describe: 'Audit all commits on top of the parent branch',
     type: 'boolean',
+    conflicts: ARG_FROM_OTHER_BRANCH,
+  },
+  [ ARG_FROM_OTHER_BRANCH ]: {
+    alias: 'o',
+    describe: 'Audit all commits on top of the provided branch',
+    type: 'string',
+    conflicts: ARG_FROM_PARENT_BRANCH,
   },
 };
 export const command = toYargsCommand(baseCommand, options);
