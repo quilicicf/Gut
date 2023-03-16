@@ -1,11 +1,14 @@
 import log from '../../dependencies/log.ts';
 import { detect as detectEol } from '../../dependencies/fs.ts';
 import { stoyle, stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
+import { isEmpty, pad, padLeft, padRight, set, size } from '../../dependencies/ramda.ts';
 import {
-  isEmpty, pad, padLeft, padRight, set, size,
-} from '../../dependencies/ramda.ts';
-import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
+  bindOptionsAndCreateUsage,
+  ExtraPermissions,
+  toYargsCommand,
+  toYargsUsage,
+  YargsInstance,
+  YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
@@ -196,7 +199,7 @@ async function generateDiff (args: Args): Promise<string> {
   }
 
   return from
-    ? executeAndGetStdout([ ...commandWithoutRefs, `${from}..${to}` ], { shouldTruncateTrailingLineBreak: true })
+    ? executeAndGetStdout([ ...commandWithoutRefs, `${from}..${to || 'HEAD'}` ], { shouldTruncateTrailingLineBreak: true })
     : executeAndGetStdout([ ...commandWithoutRefs, 'HEAD' ], { shouldTruncateTrailingLineBreak: true });
 }
 
