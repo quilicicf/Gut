@@ -1,5 +1,10 @@
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
+  bindOptionsAndCreateUsage,
+  ExtraPermissions,
+  toYargsCommand,
+  toYargsUsage,
+  YargsInstance,
+  YargsOptions,
 } from '../../../dependencies/yargs.ts';
 
 import { isDirty } from '../../../lib/git/isDirty.ts';
@@ -14,6 +19,7 @@ import { executeProcessCriticalTasks } from '../../../lib/exec/executeProcessCri
 
 interface Args {
   remote: string;
+  base: string;
 }
 
 export const baseCommand = 'auto-rebase';
@@ -25,8 +31,16 @@ export const describe = [
 export const options: YargsOptions = {
   remote: {
     type: 'string',
+    alias: 'r',
     describe: 'The remote to fetch',
     default: DEFAULT_REMOTE.name,
+    requiresArg: true,
+  },
+  base: {
+    type: 'string',
+    alias: 'b',
+    describe: 'The base branch to use',
+    default: undefined,
     requiresArg: true,
   },
 };
@@ -39,7 +53,10 @@ export function builder (yargs: YargsInstance): YargsInstance {
 }
 
 export async function handler (args: Args) {
-  const { remote: remoteArgument } = args;
+  const {
+    remote: remoteArgument,
+    base: baseArgument,
+  } = args;
 
   const remote = findRemote(remoteArgument);
 
@@ -54,15 +71,14 @@ export async function handler (args: Args) {
 
   const currentBranchName = await getCurrentBranchName();
   const currentBranch = parseBranchName(currentBranchName);
-  const parentBranch = getParentBranch(currentBranch);
-  const parentBranchName = stringifyBranch(parentBranch);
+  const baseBranchName = baseArgument || stringifyBranch(getParentBranch(currentBranch));
 
   await executeProcessCriticalTasks([
-    [ 'git', 'checkout', parentBranchName ],
+    [ 'git', 'checkout', baseBranchName ],
     [ 'git', 'fetch', remote.name ],
-    [ 'git', 'rebase', `${remote.name}/${parentBranchName}` ],
+    [ 'git', 'rebase', `${remote.name}/${baseBranchName}` ],
     [ 'git', 'checkout', currentBranchName ],
-    [ 'git', 'rebase', parentBranchName ],
+    [ 'git', 'rebase', baseBranchName ],
   ]);
 
   if (isRepositoryDirty) {
