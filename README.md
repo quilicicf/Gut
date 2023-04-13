@@ -73,7 +73,7 @@ __One goal: reduce friction with day-to-day git usage.__
 This translates into those requirements:
 
 * a simpler API, I won't write my own rant about git's API, plenty of people did [an excellent job](https://stevebennett.me/2012/02/24/10-things-i-hate-about-git/) on that topic
-* aggressive aliases to type as few keys as possible. Given the number of git commands a developer types in a day, reducing the command lengths (and typos) is a quick win. You can alias `gut` to `g` and use command/option aliases to type Gut commands super-fast
+* aggressive aliases to type as few keys as possible. Given the number of git commands a developer types in a day, reducing the command lengths (and typos) is a quick win. You can alias `gut` to `g` and use command/option aliases to type Gut commands way faster
 * integrating with the tooling every developer uses along with git:
   * the git server (GitHub, Gitlab, Bitbucket...)
   * the CI server (Jenkins, CircleCI, Travis...)
@@ -154,8 +154,8 @@ Differences:
 * Easier PR creation: the PR creation process is both simplet and better
   * The branch is auto-pushed if it was never pushed before (can save one command)
   * The base branch is auto-detected (from the branch name)
-  * The diff from the base branch is audited for TODOs, FIXMEs and other common mistakes
-  * The title is pickable from the PR's commit subjects
+  * The diff from the base branch is audited for `TODO`s, `FIXME`s and other common mistakes
+  * The title is pick-able from the PR's commit subjects
   * The description is editable in your favorite text editor
   * You are auto-assigned to the PR (or can assign someone else)
   * All of that without leaving the CLI!
@@ -352,7 +352,7 @@ Examples:
 cr # Opens the interactive select with all repositories listed
 cr gu # Opens the interactive select with all repositories that match /gu/ listed
 cr gut # Switches to Gut immediately if its the only repository that matches
-cr sdpoigezovntr # Fails miserably because no repository matches this
+cr noExisto # Fails miserably because no repository matches this
 ```
 
 <!-- START CLI DOC -->
@@ -560,9 +560,10 @@ Stashes the local changes first if there are any
 
 __Options:__
 
-| Name     | Description         | Type     | Required | Default value |
-| -------- | ------------------- | -------- | -------- | ------------- |
-| `remote` | The remote to fetch | `string` | false    | `origin`      |
+| Name     | Description            | Type     | Required | Default value |
+| -------- | ---------------------- | -------- | -------- | ------------- |
+| `remote` | The remote to fetch    | `string` | false    | `origin`      |
+| `base`   | The base branch to use | `string` | false    |               |
 
 #### copy-branch
 
@@ -642,7 +643,7 @@ __R:__ As you may have noticed, `gut` is a typo away from `git` on most keyboard
 
 __Q (Git specialist):__ I can see the gains for some usage but Gut can't do everything git can, far from that!
 
-__R:__ Yes indeed. Gut is supposed to speed-up the 80% of your work that falls in the simple uses cases. Whenever you fall in the complex situations that are bound to happen in any serious git project, you should use git as you do today.
+__R:__ Yes indeed. Gut is supposed to speed up the 80% of your work that falls in the simple uses cases. Whenever you fall in the complex situations that are bound to happen in any serious git project, you should use git as you do today.
 
 ## Contributing
 
