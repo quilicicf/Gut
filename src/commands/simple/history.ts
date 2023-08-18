@@ -52,13 +52,13 @@ export const options: YargsOptions = {
     alias: 'p',
     describe: 'Audit all commits on top of the parent branch',
     type: 'boolean',
-    conflicts: ARG_FROM_OTHER_BRANCH,
+    conflicts: [ ARG_FROM_OTHER_BRANCH ],
   },
   [ ARG_FROM_OTHER_BRANCH ]: {
     alias: 'o',
     describe: 'Audit all commits on top of the provided branch',
     type: 'string',
-    conflicts: ARG_FROM_PARENT_BRANCH,
+    conflicts: [ ARG_FROM_PARENT_BRANCH ],
   },
 };
 export const command = toYargsCommand(baseCommand, options);
