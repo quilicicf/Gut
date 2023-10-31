@@ -23,7 +23,7 @@ export interface Tool {
 
 export interface Executable {
   command: string,
-  defaultArgs: string[],
+  args: string[],
 }
 
 export interface GlobalGutConfiguration {

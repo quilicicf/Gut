@@ -7,5 +7,5 @@ export async function openInBrowser (url: string, browser: Executable): Promise<
     throw Error(stoyleGlobal`Cannot open browser `(theme.error));
   }
 
-  return executeAndReturnStatus(browser.command, [ ...browser.defaultArgs, url ]);
+  return executeAndReturnStatus(browser.command, [ ...browser.args, url ]);
 }

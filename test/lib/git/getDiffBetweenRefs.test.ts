@@ -1,9 +1,12 @@
 import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
-  ShitCommit, commitShit,
-  initializeRepository, deleteRepositories,
-  endTestLogs, startTestLogs,
+  commitShit,
+  deleteRepositories,
+  endTestLogs,
+  initializeRepository,
+  ShitCommit,
+  startTestLogs,
 } from '../../utils/setup.ts';
 import { LOCATION } from './git.utils.ts';
 import { assertEquals, assertMatch } from '../../utils/assert.ts';
@@ -29,7 +32,7 @@ Deno.test(stoyle`@int ${`${LOCATION}/getDiffBetweenRefs`}`({ nodes: [ theme.stro
 
   await commitShit(repository, 1);
 
-  await executeProcessCriticalTask([ 'git', 'checkout', '-b', 'other-ref' ]);
+  await executeProcessCriticalTask('git', [ 'checkout', '-b', 'other-ref' ]);
 
   const commitTwo = await commitShit(repository, 2);
   const commitThree = await commitShit(repository, 3);

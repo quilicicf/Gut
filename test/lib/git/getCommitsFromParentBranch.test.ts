@@ -16,7 +16,7 @@ Deno.test(stoyle`@int ${`${LOCATION}/getCommitsFromParentBranch`}`({ nodes: [ th
 
   await commitShit(repository, 1);
 
-  await executeProcessCriticalTask([ 'git', 'checkout', '-b', 'master__devBranch' ]);
+  await executeProcessCriticalTask('git', [ 'checkout', '-b', 'master__devBranch' ]);
 
   const { subject: oldestCommitSubject } = await commitShit(repository, 2);
   const { subject: latestCommitSubject } = await commitShit(repository, 3);

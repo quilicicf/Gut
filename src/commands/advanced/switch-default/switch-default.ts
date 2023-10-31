@@ -56,5 +56,5 @@ export async function handler (args: Args) {
 
   const styledDefaultBranchName = stoyleString(defaultBranchName, theme.strong);
   await log(Deno.stdout, `Switching to default branch for remote ${remote.coloredName} -> ${styledDefaultBranchName}\n`);
-  await executeProcessCriticalTask([ 'git', 'checkout', defaultBranchName ]);
+  await executeProcessCriticalTask('git', [ 'checkout', defaultBranchName ]);
 }

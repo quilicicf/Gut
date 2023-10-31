@@ -1,7 +1,12 @@
 import { promptSelect } from '../../dependencies/cliffy.ts';
 import { stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
+  bindOptionsAndCreateUsage,
+  ExtraPermissions,
+  toYargsCommand,
+  toYargsUsage,
+  YargsInstance,
+  YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { getAllRefs } from '../../lib/git/getAllRefs.ts';
@@ -74,7 +79,7 @@ export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {};
 
 const switchToBranch = async (branch: string) => {
-  await executeProcessCriticalTask([ 'git', 'checkout', branch ]);
+  await executeProcessCriticalTask('git', [ 'checkout', branch ]);
 };
 
 const selectRefAndSwitch = async (candidateRefs: string[]) => {

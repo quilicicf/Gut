@@ -93,7 +93,7 @@ export async function handler (args: Args) {
   const remote = findRemote(remoteArgument);
 
   await log(Deno.stdout, stoyleGlobal`Fetching remote ${remote.coloredName}\n`(theme.emphasis));
-  await executeProcessCriticalTask([ 'git', 'fetch', remote.name ]);
+  await executeProcessCriticalTask('git', [ 'fetch', remote.name ]);
 
   const localBranchesInfo = await getBranchesInfo();
   const remoteBranchesInfo = await getBranchesInfo(remote.name);

@@ -2,7 +2,11 @@ import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
 import {
-  commitShit, deleteRepositories, endTestLogs, initializeRepository, startTestLogs,
+  commitShit,
+  deleteRepositories,
+  endTestLogs,
+  initializeRepository,
+  startTestLogs,
 } from '../../utils/setup.ts';
 
 import { Branch } from '../../../src/lib/branch/Branch.ts';
@@ -25,9 +29,9 @@ Deno.test(stoyle`@int ${command} should commit with message`({ nodes: [ theme.st
   };
   const branchName = stringifyBranch(branch);
 
-  await executeProcessCriticalTask([ 'git', 'checkout', '-b', branchName ]);
+  await executeProcessCriticalTask('git', [ 'checkout', '-b', branchName ]);
   await Deno.writeTextFile('aFile', 'whatever');
-  await executeProcessCriticalTask([ 'git', 'add', '.', '--all' ]);
+  await executeProcessCriticalTask('git', [ 'add', '.', '--all' ]);
 
   const expectedCommitMessage = ':construction: Test commit';
   await commitWithMessage(expectedCommitMessage);

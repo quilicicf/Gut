@@ -3,11 +3,11 @@ import { stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
 import { executeProcessCriticalTask } from '../exec/executeProcessCriticalTask.ts';
 
 async function deleteRemoteBranch (remote: string, branch: string) {
-  await executeProcessCriticalTask([ 'git', 'push', remote, '--delete', branch ]);
+  await executeProcessCriticalTask('git', [ 'push', remote, '--delete', branch ]);
 }
 
 async function deleteRemoteTag (remote: string, tag: string) {
-  await executeProcessCriticalTask([ 'git', 'push', remote, '--delete', tag ]);
+  await executeProcessCriticalTask('git', [ 'push', remote, '--delete', tag ]);
 }
 
 class Remote {
@@ -58,10 +58,10 @@ export const LOCAL_REMOTE = new Remote(
   stoyleGlobal`local`(theme.local),
   (argument) => !argument || argument === 'l' || argument === 'local',
   async (branchToDelete) => {
-    await executeProcessCriticalTask([ 'git', 'branch', '--delete', '--force', branchToDelete ]);
+    await executeProcessCriticalTask('git', [ 'branch', '--delete', '--force', branchToDelete ]);
   },
   async (tagToDelete) => {
-    await executeProcessCriticalTask([ 'git', 'tag', '--delete', tagToDelete ]);
+    await executeProcessCriticalTask('git', [ 'tag', '--delete', tagToDelete ]);
   },
 );
 

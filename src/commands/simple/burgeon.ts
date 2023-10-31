@@ -1,6 +1,11 @@
 import { promptString } from '../../dependencies/cliffy.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
+  bindOptionsAndCreateUsage,
+  ExtraPermissions,
+  toYargsCommand,
+  toYargsUsage,
+  YargsInstance,
+  YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { Branch, BranchFragment } from '../../lib/branch/Branch.ts';
@@ -76,7 +81,7 @@ export async function handler (args: Args) {
   };
 
   const newBranchName = stringifyBranch(newBranch);
-  await executeProcessCriticalTask([ 'git', 'checkout', '-b', newBranchName ]);
+  await executeProcessCriticalTask('git', [ 'checkout', '-b', newBranchName ]);
   return newBranchName;
 }
 

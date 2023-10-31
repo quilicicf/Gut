@@ -25,8 +25,8 @@ Deno.test(stoyle`@int ${command} should push to a branch`({ nodes: [ theme.stron
   const repository = await initializeRepository(localRepositoryName);
   await Deno.writeTextFile('aFile', 'whatever');
   await executeProcessCriticalTasks([
-    [ 'git', 'add', '.', '--all' ],
-    [ 'git', 'commit', '--message', 'Initialize_repository' ],
+    { command: 'git', args: [ 'add', '.', '--all' ] },
+    { command: 'git', args: [ 'commit', '--message', 'Initialize_repository' ] },
   ]);
 
   const originRepositoryPath = await initializeRemote(repository, remoteName);
@@ -34,7 +34,7 @@ Deno.test(stoyle`@int ${command} should push to a branch`({ nodes: [ theme.stron
   const { subject: commitSubject } = await commitShit(repository, 1);
   await thrust({ force: false });
 
-  await executeProcessCriticalTask([ 'git', 'checkout', 'origin/master' ]);
+  await executeProcessCriticalTask('git', [ 'checkout', 'origin/master' ]);
   const lastCommitSubject = await executeAndGetStdout(
     'git',
     [ 'log', '--max-count', '1', '--pretty=format:%s' ],
@@ -53,8 +53,8 @@ Deno.test(stoyle`@int ${command} should force-push to a branch`({ nodes: [ theme
   const repository = await initializeRepository(localRepositoryName);
   await Deno.writeTextFile('aFile', 'whatever');
   await executeProcessCriticalTasks([
-    [ 'git', 'add', '.', '--all' ],
-    [ 'git', 'commit', '--message', 'Initialize_repository' ],
+    { command: 'git', args: [ 'add', '.', '--all' ] },
+    { command: 'git', args: [ 'commit', '--message', 'Initialize_repository' ] },
   ]);
 
   const originRepositoryPath = await initializeRemote(repository, remoteName);
@@ -63,23 +63,23 @@ Deno.test(stoyle`@int ${command} should force-push to a branch`({ nodes: [ theme
   const commitSubject = 'Commit_that_will_be_redone';
   await Deno.writeTextFile(theFilePath, 'whatever, will be re-written');
   await executeProcessCriticalTasks([
-    [ 'git', 'add', '.', '--all' ],
-    [ 'git', 'commit', '--message', commitSubject ],
-    [ 'git', 'push', '--set-upstream', remoteName, 'master' ], // Push it to remote
-    [ 'git', 'reset', 'HEAD~1' ], // Undo it
+    { command: 'git', args: [ 'add', '.', '--all' ] },
+    { command: 'git', args: [ 'commit', '--message', commitSubject ] },
+    { command: 'git', args: [ 'push', '--set-upstream', remoteName, 'master' ] }, // Push it to remote
+    { command: 'git', args: [ 'reset', 'HEAD~1' ] }, // Undo it
   ]);
 
   const expectedCommitSubject = 'Commit_that_was_redone';
   const expectedContentOnMaster = 'Re-written value';
   await Deno.writeTextFile(theFilePath, expectedContentOnMaster);
   await executeProcessCriticalTasks([
-    [ 'git', 'add', '.', '--all' ],
-    [ 'git', 'commit', '--message', expectedCommitSubject ],
+    { command: 'git', args: [ 'add', '.', '--all' ] },
+    { command: 'git', args: [ 'commit', '--message', expectedCommitSubject ] },
   ]);
 
   await thrust({ force: true });
 
-  await executeProcessCriticalTask([ 'git', 'checkout', 'origin/master' ]);
+  await executeProcessCriticalTask('git', [ 'checkout', 'origin/master' ]);
   const lastCommitSubject = await executeAndGetStdout(
     'git',
     [ 'log', '--max-count', '1', '--pretty=format:%s' ],

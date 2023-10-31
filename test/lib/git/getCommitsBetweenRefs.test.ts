@@ -2,7 +2,10 @@ import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
   commitShit,
-  deleteRepositories, endTestLogs, initializeRepository, startTestLogs,
+  deleteRepositories,
+  endTestLogs,
+  initializeRepository,
+  startTestLogs,
 } from '../../utils/setup.ts';
 import { LOCATION } from './git.utils.ts';
 import { assertEquals } from '../../utils/assert.ts';
@@ -16,9 +19,9 @@ Deno.test(stoyle`@int ${`${LOCATION}/getCommitsBetweenRefs`}`({ nodes: [ theme.s
 
   await Deno.writeTextFile('aFile', 'whatever');
   await executeProcessCriticalTasks([
-    [ 'git', 'add', '.', '--all' ],
-    [ 'git', 'commit', '--message', 'Mkay' ],
-    [ 'git', 'checkout', '-b', 'other-ref' ],
+    { command: 'git', args: [ 'add', '.', '--all' ] },
+    { command: 'git', args: [ 'commit', '--message', 'Mkay' ] },
+    { command: 'git', args: [ 'checkout', '-b', 'other-ref' ] },
   ]);
 
   const { subject: oldestCommitSubject } = await commitShit(repository, 1);

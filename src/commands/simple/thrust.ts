@@ -1,5 +1,10 @@
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
+  bindOptionsAndCreateUsage,
+  ExtraPermissions,
+  toYargsCommand,
+  toYargsUsage,
+  YargsInstance,
+  YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { getBranchRemote } from '../../lib/git/getBranchRemote.ts';
@@ -35,9 +40,10 @@ export async function thrust (force: boolean) {
   const setUpstreamArg = remoteOfTrackedBranch ? [] : [ '--set-upstream' ];
   const targetRemote = remoteOfTrackedBranch || remote;
 
-  return executeProcessCriticalTask([
-    'git', 'push', ...forceArg, ...setUpstreamArg, targetRemote, currentBranchName,
-  ]);
+  return executeProcessCriticalTask(
+    'git',
+    [ 'push', ...forceArg, ...setUpstreamArg, targetRemote, currentBranchName ],
+  );
 }
 
 export async function builder (yargs: YargsInstance) {

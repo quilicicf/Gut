@@ -12,14 +12,14 @@ Deno.test(stoyle`@int ${command} should stage & add all changes in the repositor
   await startTestLogs();
   const repository = await initializeRepository('gut_test_pile');
 
-  await executeProcessCriticalTask([ 'git', 'init' ]);
+  await executeProcessCriticalTask('git', [ 'init' ]);
   await Deno.mkdir('nested');
   await Deno.writeTextFile(resolve('nested', 'witness'), 'witness');
   await Deno.writeTextFile('toRemove', 'toRemove');
   await Deno.writeTextFile('toUpdate', 'toUpdate');
   await executeProcessCriticalTasks([
-    [ 'git', 'add', '.', '--all' ],
-    [ 'git', 'commit', '--message', 'Preparation_commit' ],
+    { command: 'git', args: [ 'add', '.', '--all' ] },
+    { command: 'git', args: [ 'commit', '--message', 'Preparation_commit' ] },
   ]);
 
   await Deno.writeTextFile('updated', 'toUpdate');

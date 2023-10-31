@@ -3,7 +3,12 @@ import { path } from '../../dependencies/ramda.ts';
 import { resolve } from '../../dependencies/path.ts';
 import { stoyle, theme } from '../../dependencies/stoyle.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
+  bindOptionsAndCreateUsage,
+  ExtraPermissions,
+  toYargsCommand,
+  toYargsUsage,
+  YargsInstance,
+  YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { getConstants } from '../../constants.ts';
@@ -105,7 +110,7 @@ export async function handler (args: Args) {
     await log(Deno.stdout, `Cloning ${sshUrl} into ${repositoryPath}\n`);
   }
 
-  await executeProcessCriticalTask([ 'git', 'clone', sshUrl, repositoryPath ]);
+  await executeProcessCriticalTask('git', [ 'clone', sshUrl, repositoryPath ]);
 }
 
 export const test = { buildGitSshUrl };

@@ -21,7 +21,7 @@ export function builder (yargs: YargsInstance) {
 
 export async function handler () {
   await moveUpTop();
-  await executeProcessCriticalTask([ 'git', 'add', '.', '--all' ]);
+  await executeProcessCriticalTask('git', [ 'add', '.', '--all' ]);
 
   const output = await executeAndGetStdout(
     'git',

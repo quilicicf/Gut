@@ -2,7 +2,11 @@ import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
 import {
-  initializeRepository, deleteRepositories, initializeRemote, startTestLogs, endTestLogs,
+  deleteRepositories,
+  endTestLogs,
+  initializeRemote,
+  initializeRepository,
+  startTestLogs,
 } from '../../utils/setup.ts';
 
 import { test } from '../../../src/commands/simple/divisions.ts';
@@ -17,11 +21,11 @@ Deno.test(stoyle`@int ${command} should show local branches`({ nodes: [ theme.st
 
   await Deno.writeTextFile('aFile', 'whatever');
   await executeProcessCriticalTasks([
-    [ 'git', 'add', '.', '--all' ],
-    [ 'git', 'commit', '--message', '"Mkay"' ],
-    [ 'git', 'checkout', '-b', 'titi' ],
-    [ 'git', 'checkout', '-b', 'tata' ],
-    [ 'git', 'checkout', '-b', 'toto' ],
+    { command: 'git', args: [ 'add', '.', '--all' ] },
+    { command: 'git', args: [ 'commit', '--message', '"Mkay"' ] },
+    { command: 'git', args: [ 'checkout', '-b', 'titi' ] },
+    { command: 'git', args: [ 'checkout', '-b', 'tata' ] },
+    { command: 'git', args: [ 'checkout', '-b', 'toto' ] },
   ]);
 
   const output = await printDivisions();
@@ -42,8 +46,8 @@ Deno.test(stoyle`@int ${command} should show remote branches`({ nodes: [ theme.s
   const repository = await initializeRepository('gut_test_divisions_remote');
   await Deno.writeTextFile('aFile', 'whatever');
   await executeProcessCriticalTasks([
-    [ 'git', 'add', '.', '--all' ],
-    [ 'git', 'commit', '--message', '"Mkay"' ],
+    { command: 'git', args: [ 'add', '.', '--all' ] },
+    { command: 'git', args: [ 'commit', '--message', '"Mkay"' ] },
   ]);
 
   const originRepository = await initializeRemote(repository, 'origin');

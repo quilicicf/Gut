@@ -1,7 +1,12 @@
 import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
+  bindOptionsAndCreateUsage,
+  ExtraPermissions,
+  toYargsCommand,
+  toYargsUsage,
+  YargsInstance,
+  YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { getRemotes } from '../../lib/git/getRemotes.ts';
@@ -59,7 +64,7 @@ export async function handler (args: Args) {
   const remote = remotes[ 0 ]; // TODO: prompt user when there are multiple remotes
 
   await log(Deno.stdout, `Fetching ${remote}\n`);
-  await executeProcessCriticalTask([ 'git', 'fetch', remote ]);
+  await executeProcessCriticalTask('git', [ 'fetch', remote ]);
 
   if (noPull) { return; }
 
@@ -73,11 +78,11 @@ export async function handler (args: Args) {
       await log(Deno.stdout, 'Operation aborted');
       return;
     }
-    await executeProcessCriticalTask([ 'git', 'reset', '--hard', `${remote}/${currentBranchName}` ]);
+    await executeProcessCriticalTask('git', [ 'reset', '--hard', `${remote}/${currentBranchName}` ]);
     return;
   }
 
-  await executeProcessCriticalTask([ 'git', 'rebase', `${remote}/${currentBranchName}` ]);
+  await executeProcessCriticalTask('git', [ 'rebase', `${remote}/${currentBranchName}` ]);
 }
 
 export const test = {};

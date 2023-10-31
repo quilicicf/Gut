@@ -2,7 +2,12 @@ import log from '../../dependencies/log.ts';
 import { promptConfirm } from '../../dependencies/cliffy.ts';
 import { stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
+  bindOptionsAndCreateUsage,
+  ExtraPermissions,
+  toYargsCommand,
+  toYargsUsage,
+  YargsInstance,
+  YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { isDirty } from '../../lib/git/isDirty.ts';
@@ -86,18 +91,18 @@ export async function handler (args: Args) {
     Deno.exit(1);
   }
 
-  const resetCommand = [ 'git', 'reset', `HEAD~${commitsNumber}` ];
+  const resetArgs = [ 'reset', `HEAD~${commitsNumber}` ];
   const topLevel = await getTopLevel();
-  const addAllCommand = [ 'git', 'add', topLevel, '--all' ];
+  const addAllArgs = [ 'add', topLevel, '--all' ];
 
   if (stashChanges) {
-    const stashCommand = description
-      ? [ 'git', 'stash', 'save', description ]
-      : [ 'git', 'stash' ];
+    const stashArgs = description
+      ? [ 'stash', 'save', description ]
+      : [ 'stash' ];
     await executeProcessCriticalTasks([
-      resetCommand,
-      addAllCommand,
-      stashCommand,
+      { command: 'git', args: resetArgs },
+      { command: 'git', args: addAllArgs },
+      { command: 'git', args: stashArgs },
     ]);
     return;
   }
@@ -116,14 +121,14 @@ export async function handler (args: Args) {
       return;
     }
     await executeProcessCriticalTasks([
-      resetCommand,
-      addAllCommand,
-      [ 'git', 'reset', '--hard' ],
+      { command: 'git', args: resetArgs },
+      { command: 'git', args: addAllArgs },
+      { command: 'git', args: [ 'reset', '--hard' ] },
     ]);
     return;
   }
 
-  await executeProcessCriticalTask(resetCommand);
+  await executeProcessCriticalTask('git', resetArgs);
 }
 
 export const test = {};

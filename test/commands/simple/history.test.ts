@@ -45,7 +45,7 @@ Deno.test(stoyle`@int ${command} should show commits from base branch`({ nodes: 
   await startTestLogs();
   const repository = await initializeRepository('gut_test_history_fromBaseBranch');
   await commitShit(repository, 1);
-  await executeProcessCriticalTask([ 'git', 'checkout', '-b', 'master__anotherBranch' ]);
+  await executeProcessCriticalTask('git', [ 'checkout', '-b', 'master__anotherBranch' ]);
   await commitShit(repository, 2);
 
   const output = await history({

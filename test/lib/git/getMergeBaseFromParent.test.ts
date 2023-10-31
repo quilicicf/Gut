@@ -25,7 +25,7 @@ Deno.test(stoyle`@int ${`${LOCATION}/getMergeBaseFromParent`}`({ nodes: [ theme.
     { shouldTruncateTrailingLineBreak: true },
   );
 
-  await executeProcessCriticalTask([ 'git', 'checkout', '-b', 'master__devBranch' ]);
+  await executeProcessCriticalTask('git', [ 'checkout', '-b', 'master__devBranch' ]);
 
   await commitShit(repository, 2);
 

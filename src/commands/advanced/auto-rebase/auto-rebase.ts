@@ -64,8 +64,8 @@ export async function handler (args: Args) {
   if (isRepositoryDirty) {
     await moveUpTop();
     await executeProcessCriticalTasks([
-      [ 'git', 'add', '.', '-A' ],
-      [ 'git', 'stash' ],
+      { command: 'git', args: [ 'add', '.', '-A' ] },
+      { command: 'git', args: [ 'stash' ] },
     ]);
   }
 
@@ -74,14 +74,14 @@ export async function handler (args: Args) {
   const baseBranchName = baseArgument || stringifyBranch(getParentBranch(currentBranch));
 
   await executeProcessCriticalTasks([
-    [ 'git', 'checkout', baseBranchName ],
-    [ 'git', 'fetch', remote.name ],
-    [ 'git', 'rebase', `${remote.name}/${baseBranchName}` ],
-    [ 'git', 'checkout', currentBranchName ],
-    [ 'git', 'rebase', baseBranchName ],
+    { command: 'git', args: [ 'checkout', baseBranchName ] },
+    { command: 'git', args: [ 'fetch', remote.name ] },
+    { command: 'git', args: [ 'rebase', `${remote.name}/${baseBranchName}` ] },
+    { command: 'git', args: [ 'checkout', currentBranchName ] },
+    { command: 'git', args: [ 'rebase', baseBranchName ] },
   ]);
 
   if (isRepositoryDirty) {
-    await executeProcessCriticalTask([ 'git', 'stash', 'pop' ]);
+    await executeProcessCriticalTask('git', [ 'stash', 'pop' ]);
   }
 }

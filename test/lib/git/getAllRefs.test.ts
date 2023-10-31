@@ -1,7 +1,11 @@
 import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
-  deleteRepositories, endTestLogs, initializeRemote, initializeRepository, startTestLogs,
+  deleteRepositories,
+  endTestLogs,
+  initializeRemote,
+  initializeRepository,
+  startTestLogs,
 } from '../../utils/setup.ts';
 import { LOCATION } from './git.utils.ts';
 import { assertEquals } from '../../utils/assert.ts';
@@ -15,23 +19,23 @@ Deno.test(stoyle`@int ${`${LOCATION}/getAllRefs`}`({ nodes: [ theme.strong ] }),
 
   await Deno.writeTextFile('aFile', 'whatever');
   await executeProcessCriticalTasks([
-    [ 'git', 'add', '.', '--all' ],
-    [ 'git', 'commit', '--message', 'Mkay' ],
+    { command: 'git', args: [ 'add', '.', '--all' ] },
+    { command: 'git', args: [ 'commit', '--message', 'Mkay' ] },
   ]);
 
   const originRepositoryPath = await initializeRemote(repository, 'origin');
   await Deno.writeTextFile('anotherFile', 'whatever');
   await executeProcessCriticalTasks([
-    [ 'git', 'tag', 'da_tag' ],
-    [ 'git', 'push', 'origin', 'da_tag' ],
+    { command: 'git', args: [ 'tag', 'da_tag' ] },
+    { command: 'git', args: [ 'push', 'origin', 'da_tag' ] },
 
-    [ 'git', 'checkout', '-b', 'local-only' ],
-    [ 'git', 'checkout', '-b', 'remote-only' ],
-    [ 'git', 'add', '.', '--all' ],
-    [ 'git', 'commit', '--message', 'Mkay_bis' ],
-    [ 'git', 'push', '--set-upstream', 'origin', 'remote-only' ],
-    [ 'git', 'checkout', 'master' ],
-    [ 'git', 'branch', '--delete', 'remote-only' ],
+    { command: 'git', args: [ 'checkout', '-b', 'local-only' ] },
+    { command: 'git', args: [ 'checkout', '-b', 'remote-only' ] },
+    { command: 'git', args: [ 'add', '.', '--all' ] },
+    { command: 'git', args: [ 'commit', '--message', 'Mkay_bis' ] },
+    { command: 'git', args: [ 'push', '--set-upstream', 'origin', 'remote-only' ] },
+    { command: 'git', args: [ 'checkout', 'master' ] },
+    { command: 'git', args: [ 'branch', '--delete', 'remote-only' ] },
   ]);
 
   const allRefs = await getAllRefs();

@@ -2,9 +2,7 @@ import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 import { detect as detectEol } from '../../../src/dependencies/fs.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
-import {
-  initializeRepository, deleteRepositories, startTestLogs, endTestLogs,
-} from '../../utils/setup.ts';
+import { deleteRepositories, endTestLogs, initializeRepository, startTestLogs } from '../../utils/setup.ts';
 
 import { ParsingState, test } from '../../../src/commands/simple/audit.ts';
 import { executeProcessCriticalTasks } from '../../../src/lib/exec/executeProcessCriticalTasks.ts';
@@ -168,11 +166,11 @@ Deno.test(stoyle`@int ${command} should print oddities`({ nodes: [ theme.strong 
   const repository = await initializeRepository('gut_test_audit');
   await Deno.writeTextFile('index.ts', firstFileVersion);
   await executeProcessCriticalTasks([
-    [ 'git', 'add', '.', '--all' ],
-    [ 'git', 'commit', '--message', 'Mkay' ],
+    { command: 'git', args: [ 'add', '.', '--all' ] },
+    { command: 'git', args: [ 'commit', '--message', 'Mkay' ] },
   ]);
   await Deno.writeTextFile('index.ts', secondFileVersion);
-  await executeProcessCriticalTask([ 'git', 'add', '.', '--all' ]);
+  await executeProcessCriticalTask('git', [ 'add', '.', '--all' ]);
 
   const output = await generateDiff({});
 

@@ -4,23 +4,23 @@ import { stoyleGlobal, theme } from '../../dependencies/stoyle.ts';
 
 import { ExecOptions } from './ExecOptions.ts';
 
-export async function executeProcessCriticalTask (command: string[], options: ExecOptions = {}) {
-  const [ programName ] = command;
-  await getPermissionOrExit({ name: 'run', command: programName });
+export async function executeProcessCriticalTask (command: string, args: string[], options: ExecOptions = {}) {
+  await getPermissionOrExit({ name: 'run', command });
 
-  const process = await Deno.run({
-    cmd: command,
-    stdin: 'inherit',
-    stdout: 'inherit',
-    stderr: 'inherit',
-    env: options.env,
-  });
+  const process = await new Deno.Command(
+    command,
+    {
+      args,
+      stdin: 'inherit',
+      stdout: 'inherit',
+      stderr: 'inherit',
+      env: options.env,
+    },
+  );
 
-  const { success } = await process.status();
-  process.close();
-
+  const { success } = await process.output();
   if (success) { return; }
 
-  await log(Deno.stderr, options.errorMessage || stoyleGlobal`Command ${command.join(' ')} failed\n`(theme.error));
+  await log(Deno.stderr, options.errorMessage || stoyleGlobal`Command ${command} ${args.join(' ')} failed\n`(theme.error));
   Deno.exit(1);
 }

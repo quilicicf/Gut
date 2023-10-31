@@ -3,7 +3,12 @@ import { resolve } from '../../dependencies/path.ts';
 import { promptSelect } from '../../dependencies/cliffy.ts';
 import { stoyle, theme } from '../../dependencies/stoyle.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
+  bindOptionsAndCreateUsage,
+  ExtraPermissions,
+  toYargsCommand,
+  toYargsUsage,
+  YargsInstance,
+  YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { EMOJIS, EMOJIS_SELECTION } from '../../lib/emojis.ts';
@@ -85,11 +90,11 @@ interface Args {
 
 const commitWithMessage = async (message?: string) => (
   message
-    ? executeProcessCriticalTask([ 'git', 'commit', '--message', message ])
-    : executeProcessCriticalTask([ 'git', 'commit' ])
+    ? executeProcessCriticalTask('git', [ 'commit', '--message', message ])
+    : executeProcessCriticalTask('git', [ 'commit' ])
 );
 
-const commitWithFile = async (filePath: string) => executeProcessCriticalTask([ 'git', 'commit', '--file', filePath ]);
+const commitWithFile = async (filePath: string) => executeProcessCriticalTask('git', [ 'commit', '--file', filePath ]);
 
 const commit = async (tempFolderPath: string, messageFormat: MessageFormat, issueId: string) => {
   const commitMessageFilePath = resolve(tempFolderPath, COMMIT_MESSAGE_FILE_NAME);
@@ -108,10 +113,12 @@ const commit = async (tempFolderPath: string, messageFormat: MessageFormat, issu
 
 const squashCommit = async (shaToSquashOn: string) => {
   await log(Deno.stdout, `Commit to squash on: ${shaToSquashOn}\n`);
-  await executeProcessCriticalTask([ 'git', 'commit', '--fixup', shaToSquashOn ]);
-  await executeProcessCriticalTask([
-    'git', 'rebase', '--interactive', '--autosquash', `${shaToSquashOn}~1`,
-  ], { env: { GIT_SEQUENCE_EDITOR: ':' } });
+  await executeProcessCriticalTask('git', [ 'commit', '--fixup', shaToSquashOn ]);
+  await executeProcessCriticalTask(
+    'git',
+    [ 'rebase', '--interactive', '--autosquash', `${shaToSquashOn}~1` ],
+    { env: { GIT_SEQUENCE_EDITOR: ':' } },
+  );
 };
 
 const promptForEmoji = async () => promptSelect({

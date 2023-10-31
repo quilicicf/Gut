@@ -15,9 +15,9 @@ export async function initializeRepository (repositoryNamePrefix: string): Promi
   Deno.chdir(path);
   const tmpDir = resolve(path, '..');
 
-  await executeProcessCriticalTask([ 'git', 'init' ]);
-  await executeProcessCriticalTask([ 'git', 'config', 'core.hooksPath', 'no-hooks' ]);
-  await executeProcessCriticalTask([ 'git', 'config', '--local', 'commit.gpgSign', 'false' ]);
+  await executeProcessCriticalTask('git', [ 'init' ]);
+  await executeProcessCriticalTask('git', [ 'config', 'core.hooksPath', 'no-hooks' ]);
+  await executeProcessCriticalTask('git', [ 'config', '--local', 'commit.gpgSign', 'false' ]);
   return { tmpDir, path, name };
 }
 
@@ -46,8 +46,8 @@ export async function commitShit (repository: TestRepository, commitNumber: numb
   await Deno.writeTextFile(filePath, fileContent);
   const subject = `Commit_#${commitNumber}`;
   await executeProcessCriticalTasks([
-    [ 'git', 'add', '.', '--all' ],
-    [ 'git', 'commit', '--message', subject ],
+    { command: 'git', args: [ 'add', '.', '--all' ] },
+    { command: 'git', args: [ 'commit', '--message', subject ] },
   ]);
   return {
     subject,
@@ -61,11 +61,11 @@ export async function initializeRemote (testRepository: TestRepository, originNa
   Deno.chdir(testRepository.tmpDir);
   const name: string = `${testRepository.name}_${originName}`;
   const path = resolve(testRepository.tmpDir, name);
-  await executeProcessCriticalTask([ 'git', 'init', '--bare', name ]);
+  await executeProcessCriticalTask('git', [ 'init', '--bare', name ]);
   Deno.chdir(testRepository.path);
   await executeProcessCriticalTasks([
-    [ 'git', 'remote', 'add', originName, path ],
-    [ 'git', 'push', '--set-upstream', originName, 'master' ],
+    { command: 'git', args: [ 'remote', 'add', originName, path ] },
+    { command: 'git', args: [ 'push', '--set-upstream', originName, 'master' ] },
   ]);
   return { tmpDir: testRepository.tmpDir, path, name };
 }
