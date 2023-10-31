@@ -1,4 +1,13 @@
 {
+  "imports": {
+    "cliffy/": "https://deno.land/x/cliffy@v0.25.7/",
+    "fs/": "https://deno.land/std@0.204.0/fs/",
+    "path/": "https://deno.land/std@0.204.0/path/",
+    "ramda/": "https://deno.land/x/ramda@v0.27.2/source/",
+    "uuid/": "https://deno.land/std@0.204.0/uuid/",
+    "stoyle/": "https://raw.githubusercontent.com/quilicicf/Stoyle/0.2.0/",
+    "yargs/": "https://deno.land/x/yargs@v17.7.2-deno/"
+  },
   "lint": {
     "files": {
       "include": [

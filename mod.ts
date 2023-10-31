@@ -28,18 +28,7 @@ import * as pullRequest from './src/commands/advanced/pull-request/pull-request.
 import * as switchDefault from './src/commands/advanced/switch-default/switch-default.ts';
 import * as pruneLocalBranches from './src/commands/advanced/prune-local-branches/prune-local-branches.ts';
 
-// Install with:
-// deno install \
-//   --allow-env=HOME \
-//   --allow-net=api.github.com \
-//   --allow-read="${FORGE},${HOME}/.config/gut/,/tmp" \
-//   --allow-write="${HOME}/.config/gut/" \
-//   --allow-run=git,micro,xclip,xdg-open \
-//   --name g \
-//   --no-check \
-//   --no-prompt \
-//   --force \
-//   mod.ts
+// Install with: ./install.sh
 const main = async () => {
   const yargsInstance: YargsInstance = yargs;
   const configuration = await getConfiguration();

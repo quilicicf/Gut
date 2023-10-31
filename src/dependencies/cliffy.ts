@@ -1,6 +1,6 @@
-import { Input, InputOptions } from 'https://deno.land/x/cliffy@v0.25.4/prompt/input.ts';
-import { Confirm, ConfirmOptions as _ConfirmOptions } from 'https://deno.land/x/cliffy@v0.25.4/prompt/confirm.ts';
-import { Select, SelectOptions, SelectOption as _SelectOption } from 'https://deno.land/x/cliffy@v0.25.4/prompt/select.ts';
+import { Input, InputOptions } from 'cliffy/prompt/input.ts';
+import { Confirm, ConfirmOptions as _ConfirmOptions } from 'cliffy/prompt/confirm.ts';
+import { Select, SelectOptions, SelectOption as _SelectOption } from 'cliffy/prompt/select.ts';
 
 export type StringOptions = InputOptions;
 

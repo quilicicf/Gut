@@ -1,11 +1,15 @@
 /* eslint-disable lines-between-class-members */
 
 import {
-  stoyle, stoyleGlobal, stoyleString, styleToAnsiCode,
-  Style, DecorationCode,
-  ForegroundSimpleCode, ForegroundRgbCode,
-  // FIXME: link?
-} from 'https://raw.githubusercontent.com/quilicicf/Stoyle/0.2.0/mod.ts';
+  DecorationCode,
+  ForegroundRgbCode,
+  ForegroundSimpleCode,
+  stoyle,
+  stoyleGlobal,
+  stoyleString,
+  Style,
+  styleToAnsiCode,
+} from 'stoyle/mod.ts';
 
 const cyan = new ForegroundRgbCode(102, 217, 239);
 const green = new ForegroundRgbCode(166, 226, 46);

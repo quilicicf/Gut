@@ -1,9 +1,9 @@
-import set from 'https://deno.land/x/ramda@v0.27.2/source/set.js';
-import path from 'https://deno.land/x/ramda@v0.27.2/source/path.js';
-import isNil from 'https://deno.land/x/ramda@v0.27.2/source/isNil.js';
-import isEmpty from 'https://deno.land/x/ramda@v0.27.2/source/isEmpty.js';
-import lensPath from 'https://deno.land/x/ramda@v0.27.2/source/lensPath.js';
-import mergeDeepRight from 'https://deno.land/x/ramda@v0.27.2/source/mergeDeepRight.js';
+import set from 'ramda/set.js';
+import path from 'ramda/path.js';
+import isNil from 'ramda/isNil.js';
+import isEmpty from 'ramda/isEmpty.js';
+import lensPath from 'ramda/lensPath.js';
+import mergeDeepRight from 'ramda/mergeDeepRight.js';
 
 /**
  * Weaker than lodash's.

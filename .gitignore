@@ -1,3 +1,6 @@
+# Auto-generated import map
+import-map.json
+
 # Test file to fiddle
 src/fiddle*.ts
 
