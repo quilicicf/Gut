@@ -26,25 +26,25 @@ export async function editText (options: EditorOptions) {
     : [ generatePositionArgument({ line: 1, column: 1 }) ];
   const fileTypeArgument = options.fileType ? [ '-filetype', options.fileType ] : [];
 
-  const process = Deno.run({
-    cmd: [
-      EDITOR_NAME,
-      ...fileTypeArgument,
-      ...startIndexArgument,
-    ],
-    stdin: 'piped',
-    stdout: 'piped',
-    stderr: 'null',
-  });
+  const process = new Deno.Command(
+    EDITOR_NAME,
+    {
+      args: [ ...fileTypeArgument, ...startIndexArgument ],
+      stdin: 'piped',
+      stdout: 'piped',
+      stderr: null,
+    },
+  ).spawn();
 
-  if (process?.stdin?.write) {
+  const writer = process?.stdin?.getWriter();
+  if (writer?.write) {
     const startTemplate = options.startTemplate ? options.startTemplate : '\n';
-    await process.stdin.write(new TextEncoder().encode(startTemplate));
-    process.stdin.close();
+    await writer.write(new TextEncoder().encode(startTemplate));
+    writer.releaseLock();
+    await process.stdin.close();
   }
 
-  const result = await process.output();
-  process.close();
+  const { stdout: result } = await process.output();
 
   const resultAsText = new TextDecoder().decode(result);
 
