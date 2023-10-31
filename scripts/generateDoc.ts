@@ -117,12 +117,15 @@ const main = async () => {
 
   const markdownFormatterPath = resolve(appRootPath, 'node_modules', '@quilicicf', 'markdown-formatter', 'bin', 'markdown-formatter.js');
   await Deno.writeTextFile(readmePath, updatedReadmeContent);
-  const { success, code } = await Deno.run({
-    cmd: [ 'node', markdownFormatterPath, '--file', readmePath, '--replace' ],
-    stdin: 'null',
-    stdout: 'piped',
-    stderr: 'piped',
-  }).status();
+  const { success, code } = await new Deno.Command(
+    'node',
+    {
+      args: [ markdownFormatterPath, '--file', readmePath, '--replace' ],
+      stdin: null,
+      stdout: 'piped',
+      stderr: 'piped',
+    },
+  ).spawn().output();
 
   if (!success) { throw Error(`Markdown formatting ended in status ${code}`); }
 };
