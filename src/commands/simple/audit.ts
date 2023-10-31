@@ -177,11 +177,12 @@ async function generateDiff (args: Args): Promise<string> {
     from, to, // TODO: should be a default but yargs fails on conflicts rule if set
   } = args;
 
-  const commandWithoutRefs = [ 'git', '--no-pager', 'diff', '-U0', '--no-color' ];
+  const argsWithoutRefs = [ '--no-pager', 'diff', '-U0', '--no-color' ];
 
   if (commitsNumber) {
     return executeAndGetStdout(
-      [ ...commandWithoutRefs, `HEAD~${commitsNumber}..HEAD` ],
+      'git',
+      [ ...argsWithoutRefs, `HEAD~${commitsNumber}..HEAD` ],
       { shouldTruncateTrailingLineBreak: true },
     );
   }
@@ -193,14 +194,15 @@ async function generateDiff (args: Args): Promise<string> {
 
     if (numberOfCommits < 1) { return ''; }
     return executeAndGetStdout(
-      [ ...commandWithoutRefs, `HEAD~${numberOfCommits}..HEAD` ],
+      'git',
+      [ ...argsWithoutRefs, `HEAD~${numberOfCommits}..HEAD` ],
       { shouldTruncateTrailingLineBreak: true },
     );
   }
 
   return from
-    ? executeAndGetStdout([ ...commandWithoutRefs, `${from}..${to || 'HEAD'}` ], { shouldTruncateTrailingLineBreak: true })
-    : executeAndGetStdout([ ...commandWithoutRefs, 'HEAD' ], { shouldTruncateTrailingLineBreak: true });
+    ? executeAndGetStdout('git', [ ...argsWithoutRefs, `${from}..${to || 'HEAD'}` ], { shouldTruncateTrailingLineBreak: true })
+    : executeAndGetStdout('git', [ ...argsWithoutRefs, 'HEAD' ], { shouldTruncateTrailingLineBreak: true });
 }
 
 function printFileDiff (parsedDiff: ParsingState): string {

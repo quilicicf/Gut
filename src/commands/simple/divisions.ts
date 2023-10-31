@@ -1,18 +1,24 @@
 import log from '../../dependencies/log.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, toYargsCommand, ExtraPermissions, YargsOptions, YargsInstance,
+  bindOptionsAndCreateUsage,
+  ExtraPermissions,
+  toYargsCommand,
+  toYargsUsage,
+  YargsInstance,
+  YargsOptions,
 } from '../../dependencies/yargs.ts';
 
 import { executeAndGetStdout } from '../../lib/exec/executeAndGetStdout.ts';
 import { findRemote } from '../../lib/git/remotes.ts';
 
 const printDivisions = async (remoteArgument?: string): Promise<string> => {
-  const baseCommand = [ 'git', 'branch', '--color' ];
+  const baseArgs = [ 'branch', '--color' ];
   const remote = findRemote(remoteArgument || '');
   return executeAndGetStdout(
+    'git',
     remoteArgument
-      ? [ ...baseCommand, '--remotes', '--list', `${remote.name}/*` ]
-      : baseCommand,
+      ? [ ...baseArgs, '--remotes', '--list', `${remote.name}/*` ]
+      : baseArgs,
     {},
   );
 };

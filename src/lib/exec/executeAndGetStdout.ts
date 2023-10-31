@@ -7,19 +7,20 @@ interface _ExecuteAndGetStdoutOptions {
 
 export type ExecuteAndGetStdoutOptions = _ExecuteAndGetStdoutOptions;
 
-export async function executeAndGetStdout (command: string[], options: ExecuteAndGetStdoutOptions) {
-  const [ programName ] = command;
-  await getPermissionOrExit({ name: 'run', command: programName });
+export async function executeAndGetStdout (command: string, args: string[], options: ExecuteAndGetStdoutOptions) {
+  await getPermissionOrExit({ name: 'run', command });
 
-  const process = Deno.run({
-    cmd: command,
-    stdin: 'inherit',
-    stdout: 'piped',
-    stderr: 'null',
-  });
+  const process = new Deno.Command(
+    command,
+    {
+      args,
+      stdin: 'inherit',
+      stdout: 'piped',
+      stderr: 'null',
+    },
+  ).spawn();
 
-  const output = await process.output();
-  process.close();
+  const { stdout: output } = await process.output();
 
   const truncateTrailingLineBreak = (input: string) => input.replace(/\n$/, '');
   const trim = (input: string) => input.trim();

@@ -2,7 +2,10 @@ import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
   commitShit,
-  deleteRepositories, endTestLogs, initializeRepository, startTestLogs,
+  deleteRepositories,
+  endTestLogs,
+  initializeRepository,
+  startTestLogs,
 } from '../../utils/setup.ts';
 import { LOCATION } from './git.utils.ts';
 import { assertEquals } from '../../utils/assert.ts';
@@ -17,7 +20,8 @@ Deno.test(stoyle`@int ${`${LOCATION}/getMergeBaseFromParent`}`({ nodes: [ theme.
 
   await commitShit(repository, 1);
   const lastMasterCommitSha = await executeAndGetStdout(
-    [ 'git', 'log', '--max-count', '1', '--pretty=format:%H' ],
+    'git',
+    [ 'log', '--max-count', '1', '--pretty=format:%H' ],
     { shouldTruncateTrailingLineBreak: true },
   );
 

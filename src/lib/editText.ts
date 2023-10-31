@@ -32,7 +32,7 @@ export async function editText (options: EditorOptions) {
       args: [ ...fileTypeArgument, ...startIndexArgument ],
       stdin: 'piped',
       stdout: 'piped',
-      stderr: null,
+      stderr: "null",
     },
   ).spawn();
 

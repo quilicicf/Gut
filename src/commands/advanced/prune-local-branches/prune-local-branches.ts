@@ -3,8 +3,12 @@ import { isEmpty } from '../../../dependencies/ramda.ts';
 import { promptConfirm } from '../../../dependencies/cliffy.ts';
 import { stoyle, stoyleGlobal, theme } from '../../../dependencies/stoyle.ts';
 import {
-  ExtraPermissions, YargsOptions,
-  bindOptionsAndCreateUsage, toYargsCommand, toYargsUsage, YargsInstance,
+  bindOptionsAndCreateUsage,
+  ExtraPermissions,
+  toYargsCommand,
+  toYargsUsage,
+  YargsInstance,
+  YargsOptions,
 } from '../../../dependencies/yargs.ts';
 
 import { getCurrentBranchName } from '../../../lib/git/getCurrentBranchName.ts';
@@ -62,13 +66,16 @@ interface BranchInfo {
 
 const getBranchesInfo = async (remoteName?: string): Promise<{ [ key: string ]: BranchInfo }> => {
   const refsLocation = remoteName ? `refs/remotes/${remoteName}/` : 'refs/heads/';
-  const localBranchLines = await executeAndGetStdout([
+  const localBranchLines = await executeAndGetStdout(
     'git',
-    'for-each-ref',
-    '--sort=-committerdate',
-    '--format=%(committerdate:unix)%09%(objectname)%09%(refname:short)',
-    refsLocation,
-  ], { shouldTruncateTrailingLineBreak: true });
+    [
+      'for-each-ref',
+      '--sort=-committerdate',
+      '--format=%(committerdate:unix)%09%(objectname)%09%(refname:short)',
+      refsLocation,
+    ],
+    { shouldTruncateTrailingLineBreak: true },
+  );
 
   return localBranchLines
     .split('\n')

@@ -2,7 +2,11 @@ import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import {
   commitShit,
-  deleteRepositories, endTestLogs, initializeRemote, initializeRepository, startTestLogs,
+  deleteRepositories,
+  endTestLogs,
+  initializeRemote,
+  initializeRepository,
+  startTestLogs,
 } from '../../utils/setup.ts';
 import { LOCATION } from './git.utils.ts';
 import { assertEquals } from '../../utils/assert.ts';
@@ -17,7 +21,8 @@ Deno.test({
     await startTestLogs();
     const repository = await initializeRepository('gut_test_getRepositoryFromRemote');
     const currentGitUser = await executeAndGetStdout(
-      [ 'git', 'config', 'user.name' ],
+      'git',
+      [ 'config', 'user.name' ],
       { shouldTruncateTrailingLineBreak: true },
     );
 

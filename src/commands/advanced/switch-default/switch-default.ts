@@ -1,6 +1,10 @@
 import {
-  ExtraPermissions, YargsOptions,
-  bindOptionsAndCreateUsage, toYargsCommand, toYargsUsage, YargsInstance,
+  bindOptionsAndCreateUsage,
+  ExtraPermissions,
+  toYargsCommand,
+  toYargsUsage,
+  YargsInstance,
+  YargsOptions,
 } from '../../../dependencies/yargs.ts';
 import log from '../../../dependencies/log.ts';
 import { stoyleGlobal, stoyleString, theme } from '../../../dependencies/stoyle.ts';
@@ -38,7 +42,8 @@ export async function handler (args: Args) {
   const remote = findRemote(remoteArgument);
 
   const defaultBranchLine = await executeAndGetStdout(
-    [ 'git', 'remote', 'set-head', remote.name, '--auto' ],
+    'git',
+    [ 'remote', 'set-head', remote.name, '--auto' ],
     { shouldTrim: true },
   );
 

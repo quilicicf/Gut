@@ -10,7 +10,8 @@ export async function getMergeBaseFromParent (): Promise<string> { // FIXME: can
   const parentBranch = getParentBranch(currentBranch);
   const parentBranchName = stringifyBranch(parentBranch);
   return executeAndGetStdout(
-    [ 'git', 'merge-base', parentBranchName, currentBranchName ],
+    'git',
+    [ 'merge-base', parentBranchName, currentBranchName ],
     { shouldTruncateTrailingLineBreak: true },
   );
 }

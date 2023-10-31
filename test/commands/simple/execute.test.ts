@@ -31,7 +31,7 @@ Deno.test(stoyle`@int ${command} should commit with message`({ nodes: [ theme.st
 
   const expectedCommitMessage = ':construction: Test commit';
   await commitWithMessage(expectedCommitMessage);
-  const actualCommitMessage = await executeAndGetStdout([ 'git', 'log', '--max-count=1', '--pretty=format:%s' ], {});
+  const actualCommitMessage = await executeAndGetStdout('git', [ 'log', '--max-count=1', '--pretty=format:%s' ], {});
 
   await deleteRepositories(repository);
 

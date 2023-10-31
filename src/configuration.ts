@@ -31,7 +31,7 @@ export interface GlobalGutConfiguration {
   preferredGitServer: string, // A key to a tool with server facet
   forgePath: string,
   tempFolderPath: string, // Used to create temporary files, i.e. for error/retry
-  browser: Executable
+  browser?: Executable
 }
 
 export type MessageFormat = 'standard' | 'emoji' | 'angular'

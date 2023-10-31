@@ -23,9 +23,11 @@ export async function handler () {
   await moveUpTop();
   await executeProcessCriticalTask([ 'git', 'add', '.', '--all' ]);
 
-  const output = await executeAndGetStdout([
-    'git', '-c', 'color.status=always', 'status', '--short', '--branch',
-  ], {});
+  const output = await executeAndGetStdout(
+    'git',
+    [ '-c', 'color.status=always', 'status', '--short', '--branch' ],
+    {},
+  );
 
   await log(Deno.stdout, `${output}\n`);
 

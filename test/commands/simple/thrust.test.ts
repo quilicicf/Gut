@@ -2,7 +2,12 @@ import { stoyle, theme } from '../../../src/dependencies/stoyle.ts';
 
 import { assertEquals } from '../../utils/assert.ts';
 import {
-  commitShit, deleteRepositories, endTestLogs, initializeRemote, initializeRepository, startTestLogs,
+  commitShit,
+  deleteRepositories,
+  endTestLogs,
+  initializeRemote,
+  initializeRepository,
+  startTestLogs,
 } from '../../utils/setup.ts';
 
 import { executeAndGetStdout } from '../../../src/lib/exec/executeAndGetStdout.ts';
@@ -31,7 +36,8 @@ Deno.test(stoyle`@int ${command} should push to a branch`({ nodes: [ theme.stron
 
   await executeProcessCriticalTask([ 'git', 'checkout', 'origin/master' ]);
   const lastCommitSubject = await executeAndGetStdout(
-    [ 'git', 'log', '--max-count', '1', '--pretty=format:%s' ],
+    'git',
+    [ 'log', '--max-count', '1', '--pretty=format:%s' ],
     { shouldTruncateTrailingLineBreak: true },
   );
 
@@ -75,7 +81,8 @@ Deno.test(stoyle`@int ${command} should force-push to a branch`({ nodes: [ theme
 
   await executeProcessCriticalTask([ 'git', 'checkout', 'origin/master' ]);
   const lastCommitSubject = await executeAndGetStdout(
-    [ 'git', 'log', '--max-count', '1', '--pretty=format:%s' ],
+    'git',
+    [ 'log', '--max-count', '1', '--pretty=format:%s' ],
     { shouldTruncateTrailingLineBreak: true },
   );
   const newContentOnMaster = await Deno.readTextFile(theFilePath);

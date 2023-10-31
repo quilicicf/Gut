@@ -3,7 +3,7 @@ import { executeAndGetStdout } from '../exec/executeAndGetStdout.ts';
 import { REF_TYPES, Refs } from './Refs.ts';
 
 export async function getAllRefs (filterText: string = ''): Promise<Refs> {
-  const allRefsAsString = await executeAndGetStdout([ 'git', 'show-ref' ], { shouldTruncateTrailingLineBreak: true });
+  const allRefsAsString = await executeAndGetStdout('git', [ 'show-ref' ], { shouldTruncateTrailingLineBreak: true });
 
   const accumulator: Refs = { branches: [], tags: [] };
   const { branches, tags } = allRefsAsString
