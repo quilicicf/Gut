@@ -2,9 +2,11 @@
 
 main() (
   cd "$(git rev-parse --show-toplevel)" || true
+
   jq --compact-output '{ imports: .imports }' \
     < ./deno.json \
     > ./import-map.json
+
   deno install \
     --import-map=./import-map.json \
     --allow-env=HOME \

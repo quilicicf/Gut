@@ -21,11 +21,17 @@ export interface Tool {
   account: Account,
 }
 
+export interface Executable {
+  command: string,
+  defaultArgs: string[],
+}
+
 export interface GlobalGutConfiguration {
   tools: { [ key: string ]: Tool },
   preferredGitServer: string, // A key to a tool with server facet
   forgePath: string,
   tempFolderPath: string, // Used to create temporary files, i.e. for error/retry
+  browser: Executable
 }
 
 export type MessageFormat = 'standard' | 'emoji' | 'angular'

@@ -5,14 +5,19 @@ import { isEmpty, size } from '../../../dependencies/ramda.ts';
 import { stoyle, stoyleGlobal, theme } from '../../../dependencies/stoyle.ts';
 import { promptConfirm, promptSelect, promptString } from '../../../dependencies/cliffy.ts';
 import {
-  bindOptionsAndCreateUsage, toYargsUsage, ExtraPermissions, YargsOptions, toYargsCommand, YargsInstance,
+  bindOptionsAndCreateUsage,
+  ExtraPermissions,
+  toYargsCommand,
+  toYargsUsage,
+  YargsInstance,
+  YargsOptions,
 } from '../../../dependencies/yargs.ts';
 
 import { editText } from '../../../lib/editText.ts';
 import { readTextFile } from '../../../lib/readTextFile.ts';
 import { writeToClipboard } from '../../../lib/clipboard.ts';
 import { DEFAULT_REMOTE } from '../../../lib/git/remotes.ts';
-import { openInDefaultApplication } from '../../../lib/open.ts';
+import { openInBrowser } from '../../../lib/open.ts';
 import { getBranchRemote } from '../../../lib/git/getBranchRemote.ts';
 import { getParentBranch } from '../../../lib/branch/getParentBranch.ts';
 import { parseBranchName } from '../../../lib/branch/parseBranchName.ts';
@@ -223,7 +228,7 @@ export async function handler (args: Args) {
 
   if (copyUrl) { await writeToClipboard(prUrl); }
 
-  if (open) { await openInDefaultApplication(prUrl); }
+  if (open) { await openInBrowser(prUrl, configuration.global.browser); }
 
   if (await exists(tempDescriptionFile)) {
     await Deno.remove(tempDescriptionFile); // Only remove if PR was successfully created
