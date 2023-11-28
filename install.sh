@@ -8,16 +8,16 @@ main() (
     > ./import-map.json
 
   deno install \
-    --import-map=./import-map.json \
-    --allow-env=HOME \
-    --allow-net=api.github.com \
-    --allow-read="${FORGE},${HOME}/.config/gut/,/tmp" \
-    --allow-write="${HOME}/.config/gut/" \
-    --allow-run=git,micro,xclip,xdg-open \
-    --name g \
+    --name 'g' \
+    --force \
     --no-check \
     --no-prompt \
-    --force \
+    --import-map=./import-map.json \
+    --allow-env='HOME' \
+    --allow-net='api.github.com' \
+    --allow-read="${FORGE},${HOME}/.config/gut/,/tmp" \
+    --allow-write="${HOME}/.config/gut/" \
+    --allow-run='git,micro,xclip,firefox' \
     mod.ts
 )
 
