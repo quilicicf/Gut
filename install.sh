@@ -17,7 +17,7 @@ main() (
     --allow-net='api.github.com' \
     --allow-read="${FORGE},${HOME}/.config/gut/,/tmp" \
     --allow-write="${HOME}/.config/gut/" \
-    --allow-run='git,micro,xclip,firefox' \
+    --allow-run='git,micro,xclip,firefox-devedition' \
     mod.ts
 )
 
