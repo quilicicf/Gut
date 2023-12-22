@@ -30,6 +30,7 @@ function setPath (input: unknown, _path: unknown[], value: unknown) {
 }
 
 function padRight (string: string, length: number, paddingChar: string = ' ') {
+  if (isNaN(length)) { return string; }
   if (string.length >= length) { return string; }
   const padding = new Array(length - string.length)
     .fill(paddingChar)
