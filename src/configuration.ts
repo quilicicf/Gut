@@ -7,18 +7,13 @@ import { readTextFile } from './lib/readTextFile.ts';
 import { getConstants } from './constants.ts';
 import { getPermissionOrExit } from './lib/getPermissionOrExit.ts';
 import { mergeDeepRight, set } from './dependencies/ramda.ts';
-
-export interface Account {
-  username: string,
-  password: string,
-  // password: { // TODO: encrypt password
-  //   crypt: string,
-  //   iv: string,
-  // },
-}
+import { passCreator } from './lib/passwordManager/passwordManagers/pass.ts';
+import { PasswordManager, SupportedPasswordManager } from './lib/passwordManager/passwordManager.ts';
 
 export interface Tool {
-  account: Account,
+  accountName: string,
+  passwordManagerType: SupportedPasswordManager,
+  passwordManager?: PasswordManager,
 }
 
 export interface Executable {
@@ -78,6 +73,11 @@ export async function getConfiguration (): Promise<FullGutConfiguration> {
   const tempFolderPath = resolve(GUT_CONFIGURATION_FOLDER, 'temp');
   globalConfiguration.tempFolderPath = tempFolderPath;
   await ensureDir(tempFolderPath);
+
+  Object.entries(globalConfiguration.tools)
+    .forEach(([ toolName, tool ]) =>
+      tool.passwordManager = passCreator(toolName, tool.accountName), // TODO: make it configurable
+    );
 
   await getPermissionOrExit({ name: 'read', path: globalConfiguration.forgePath });
   const currentRepositoryTopLevel = await getTopLevel();

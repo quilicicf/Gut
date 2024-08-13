@@ -231,7 +231,7 @@ Gut can be configured with a global configuration and repository configuration. 
 
 The schema of the global configuration can be found in [configuration.ts](./src/configuration.ts), search for `GlobalGutConfiguration`.
 
-Its location is `~/.config/.gut-config.json`.
+Its location is `~/.config/gut/.gut-config.json`.
 
 #### Repository configuration
 

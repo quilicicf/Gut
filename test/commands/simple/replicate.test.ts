@@ -4,6 +4,7 @@ import { test } from '../../../src/commands/simple/replicate.ts';
 import { FullGutConfiguration } from '../../../src/configuration.ts';
 import { assertEquals, fail } from '../../utils/assert.ts';
 import { set } from '../../../src/dependencies/ramda.ts';
+import { SupportedPasswordManager } from '../../../src/lib/passwordManager/passwordManager.ts';
 
 const { buildGitSshUrl } = test;
 
@@ -14,7 +15,8 @@ const CONFIGURATION: FullGutConfiguration = {
   global: {
     tools: {
       github: {
-        account: { username: OWNER, password: PASSWORD },
+        accountName: OWNER,
+        passwordManagerType: 'pass' as SupportedPasswordManager,
       },
     },
     preferredGitServer: GIT_SERVER,

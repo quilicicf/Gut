@@ -1,5 +1,4 @@
 import log from '../../dependencies/log.ts';
-import { path } from '../../dependencies/ramda.ts';
 import { resolve } from '../../dependencies/path.ts';
 import { stoyle, theme } from '../../dependencies/stoyle.ts';
 import {
@@ -52,10 +51,7 @@ const buildGitSshUrl = (args: Args): RepositoryMetadata => {
     ));
   }
 
-  const ownerName = owner || path(
-    [ 'tools', serverName, 'account', 'username' ],
-    globalConfiguration,
-  );
+  const ownerName = owner || globalConfiguration?.tools?.[ serverName ]?.accountName;
 
   if (!ownerName) {
     throw Error('Cannot replicate a repository without owner');
