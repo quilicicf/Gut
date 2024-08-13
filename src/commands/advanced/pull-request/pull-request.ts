@@ -206,11 +206,11 @@ export async function handler (args: Args) {
   const { owner: originOwner } = await getRepositoryFromRemote();
   const { owner: repositoryOwner, name: repositoryName } = await getRepositoryFromRemote(remote);
   const reviewToolConfiguration = configuration.global.tools?.github; // TODO: allow changing this from configuration
-  const username = reviewToolConfiguration?.account?.username;
-  const token = reviewToolConfiguration?.account?.password;
+  const username = reviewToolConfiguration?.accountName;
+  const token = await reviewToolConfiguration?.passwordManager.readPassword();
 
   if (!username || !token) {
-    await log(Deno.stderr, stoyleGlobal`No valid account found for git server: github'`(theme.error));
+    await log(Deno.stderr, stoyleGlobal`No valid account found for git server: github\n`(theme.error));
     Deno.exit(1);
   }
 

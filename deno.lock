@@ -208,5 +208,12 @@
     "https://deno.land/x/yargs_parser@v20.2.4-deno/build/lib/yargs-parser.js": "453200a7dfbb002e605d8009b7dad30f2b1d93665e046ab89c073a4fe63dfd48",
     "https://deno.land/x/yargs_parser@v20.2.4-deno/deno.ts": "ad53c0c82c3982c4fc5be9472384b259e0a32ce1f7ae0f68de7b2445df5642fc",
     "https://raw.githubusercontent.com/quilicicf/Stoyle/0.2.0/mod.ts": "1617cb93a593766e6f3eb2ecc11e56be9298b2dc378d99c344b48ab779edd6f4"
+  },
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:@quilicicf/markdown-formatter@4.0.5"
+      ]
+    }
   }
 }
