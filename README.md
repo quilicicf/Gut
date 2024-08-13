@@ -318,6 +318,19 @@ deno install \
 | `--name`        | The name of the command that will be generated. You can change it if you want (I use `g`, faster to type)                                          |
 | `--no-check`    | Makes Deno skip the TypeScript validation before running Gut, it is not needed at runtime                                                          |
 
+### Completion
+
+You can install gut completions by running:
+
+```shell
+completionScript="$(gut completion)"
+printf '%s\n' "${completionScript//deno run/gut}" >> ~/.bashrc
+```
+
+See [this Yargs issue](https://github.com/yargs/yargs/issues/2050), it explains why you have to substitute `deno run` for `gut` in the completions.
+
+> Note: Of course, if you install Gut under an alias, you need to update the command above to complete your alias and not `gut`.
+
 ## CLI documentation
 
 ### Shell features

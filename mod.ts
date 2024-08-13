@@ -28,7 +28,7 @@ import * as pullRequest from './src/commands/advanced/pull-request/pull-request.
 import * as switchDefault from './src/commands/advanced/switch-default/switch-default.ts';
 import * as pruneLocalBranches from './src/commands/advanced/prune-local-branches/prune-local-branches.ts';
 
-// Install with: ./install.sh
+// Install with: bash ./install.sh
 const main = async () => {
   const yargsInstance: YargsInstance = yargs;
   const configuration = await getConfiguration();
@@ -71,6 +71,7 @@ const main = async () => {
     .command(groot)
 
     .demandCommand(1, stoyleGlobal`Specify the command you want to run!`(theme.error))
+    .completion('completion', 'Generate completion script, add it to your .bashrc')
     .strictCommands()
     .help()
     .version()
