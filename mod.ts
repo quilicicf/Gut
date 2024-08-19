@@ -73,6 +73,7 @@ const main = async () => {
     .demandCommand(1, stoyleGlobal`Specify the command you want to run!`(theme.error))
     .completion('completion', 'Generate completion script, add it to your .bashrc')
     .strictCommands()
+    .scriptName('gut')
     .help()
     .version()
     .epilogue('For more information, read the manual at https://github.com/quilicicf/Gut')
