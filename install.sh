@@ -4,7 +4,6 @@ main() (
   cd "$(git rev-parse --show-toplevel)" || true
 
   deno install \
-    --name 'g' \
     --force \
     --no-check \
     --no-prompt \
