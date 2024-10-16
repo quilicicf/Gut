@@ -29,7 +29,7 @@ export interface GlobalGutConfiguration {
   browser?: Executable
 }
 
-export type MessageFormat = 'standard' | 'emoji' | 'angular'
+export type MessageFormat = 'standard' | 'emoji' | 'angular' | 'prefix'
 export const DEFAULT_MESSAGE_FORMAT: MessageFormat = 'emoji';
 
 export interface RepositoryGutConfiguration {

@@ -47,6 +47,14 @@ const createCommitTemplate = async (messageFormat: MessageFormat, issueId: strin
       };
     }
 
+    case 'prefix': {
+      const prefix = issueId ? issueId : '';
+      return {
+        template: `${prefix} \n`,
+        startIndex: prefix.length + 1,
+      };
+    }
+
     default:
       throw Error(`Unsupported message format ${messageFormat}`);
   }

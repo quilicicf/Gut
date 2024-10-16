@@ -12,7 +12,7 @@ main() (
     --allow-net='api.github.com' \
     --allow-read="${FORGE},${HOME}/.config/gut/,/tmp" \
     --allow-write="${HOME}/.config/gut/" \
-    --allow-run='git,micro,wl-clipboard,firefox-esr,pass' \
+    --allow-run='git,micro,wl-copy,firefox,pass' \
     mod.ts
 )
 

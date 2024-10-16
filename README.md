@@ -26,6 +26,8 @@ Ein gut git Fluss [🔊](https://translate.google.com/?sl=de\&tl=en\&text=Ein%20
 
 * [Install Gut](#install-gut)
 
+  * [Completion](#completion)
+
 * [CLI documentation](#cli-documentation)
 
   * [Shell features](#shell-features)
