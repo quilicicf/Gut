@@ -21,35 +21,60 @@ interface Command {
   writeText: (data: string) => Promise<number>,
 }
 
-type CommandsByOs = {
+interface CommandsByOs {
   windows: Command,
   darwin: Command,
-  linux: Command,
-};
+  linuxOnX: Command,
+  linuxOnWayland: Command,
+}
 
 const COMMANDS_BY_OS: CommandsByOs = {
   windows: {
     programName: 'powershell',
-    async writeText (data: string): Promise<number> {
-      return writeText('powershell', [ '-noprofile', '-command', '$input|Set-Clipboard' ], data);
+    async writeText(data: string): Promise<number> {
+      return writeText('powershell', ['-noprofile', '-command', '$input|Set-Clipboard'], data);
     },
   },
   darwin: {
     programName: 'pbcopy',
-    async writeText (data: string): Promise<number> {
+    async writeText(data: string): Promise<number> {
       return writeText('pbcopy', [], data);
     },
   },
-  linux: {
+  linuxOnX: {
     programName: 'xclip',
-    async writeText (data: string): Promise<number> {
-      return writeText('xclip', [ '-selection', 'clipboard' ], data);
+    async writeText(data: string): Promise<number> {
+      return writeText('xclip', ['-selection', 'clipboard'], data);
+    },
+  },
+  linuxOnWayland: {
+    programName: 'wl-copy',
+    async writeText(data: string): Promise<number> {
+      return writeText('wl-copy', [], data);
     },
   },
 };
 
-export async function writeToClipboard (data: string): Promise<number> {
-  const command = COMMANDS_BY_OS[ Deno.build.os ];
+async function computePlatform(os) {
+  if (os !== 'linux') {
+    return os;
+  }
+
+  await getPermissionOrExit({ name: 'env', variable: 'XDG_SESSION_TYPE' });
+  const compositor = Deno.env.get('XDG_SESSION_TYPE');
+  switch (compositor) {
+    case 'x11':
+      return 'linuxOnX';
+    case'wayland':
+      return 'linuxOnWayland';
+    default:
+      throw Error(`Unsupported compositor ${compositor}`);
+  }
+}
+
+export async function writeToClipboard(data: string): Promise<number> {
+  const os = Deno.build.os;
+  const command = COMMANDS_BY_OS[ await computePlatform(os) ];
   await getPermissionOrExit({ name: 'run', command: command.programName });
   return command.writeText(data);
 }

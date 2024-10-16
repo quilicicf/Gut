@@ -17,7 +17,8 @@ export const extraPermissions: ExtraPermissions = {
     value: [
       '`powershell` (Windows)',
       '`pbcopy` (Mac)',
-      '`xclip` (Linux)',
+      '`xclip` (Linux w/ X)',
+      '`wl-clipboard` (Linux w/ Wayland)',
     ].join('<br>'),
     description: 'Allows writing the current branch\'s name to the clipboard',
   },

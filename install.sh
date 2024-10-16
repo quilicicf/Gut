@@ -8,7 +8,7 @@ main() (
     --no-check \
     --no-prompt \
     --config=./deno.json \
-    --allow-env='HOME' \
+    --allow-env='HOME,XDG_SESSION_TYPE' \
     --allow-net='api.github.com' \
     --allow-read="${FORGE},${HOME}/.config/gut/,/tmp" \
     --allow-write="${HOME}/.config/gut/" \
