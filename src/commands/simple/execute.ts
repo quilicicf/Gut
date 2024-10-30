@@ -48,10 +48,10 @@ const createCommitTemplate = async (messageFormat: MessageFormat, issueId: strin
     }
 
     case 'prefix': {
-      const prefix = issueId ? issueId : '';
+      const prefix = issueId ? `${issueId} ` : '';
       return {
-        template: `${prefix} \n`,
-        startIndex: prefix.length + 1,
+        template: `${prefix}\n`,
+        startIndex: prefix.length,
       };
     }
 
