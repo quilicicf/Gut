@@ -48,7 +48,7 @@ export const extraPermissions: ExtraPermissions = {};
 export async function builder (yargs: YargsInstance) {
   return bindOptionsAndCreateUsage(yargs, usage, options)
     .check((args: Args) => {
-      if (args.force && !args.noPull) {
+      if (args.force && args.noPull) {
         throw Error(`Arguments --${ARG_FORCE} & --${ARG_NO_PULL} are mutually exclusive`);
       }
 
