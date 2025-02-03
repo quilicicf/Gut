@@ -108,10 +108,10 @@ const firstFileVersion = `\
 // TODO: the links may need to be changed.
 import {
   BackgroundCode, ForegroundCode, StyleCode, createStyle,
-} from 'https://raw.githubusercontent.com/quilicicf/ColorMee/master/createStyle.ts';
+} from 'https://raw.githubusercontent.com/quilicicf/Stoyle/master/createStyle.ts';
 import {
   parse, applyStyle, StyleMode,
-} from 'https://raw.githubusercontent.com/quilicicf/ColorMee/master/index.ts';
+} from 'https://raw.githubusercontent.com/quilicicf/Stoyle/master/index.ts';
 
 const boldCyanOnRed = createStyle({
   foreground: ForegroundCode.Cyan,
@@ -139,10 +139,10 @@ const secondFileVersion = `\
 // TODO: the links may need to be changed.
 import {
   BackgroundCode, ForegroundCode, StyleCode, createStyle,
-} from 'https://raw.githubusercontent.com/quilicicf/ColorMee/master/createStyle.ts';
+} from 'https://raw.githubusercontent.com/quilicicf/Stoyle/master/createStyle.ts';
 import {
   parse, applyStyle, StyleMode,
-} from 'https://raw.githubusercontent.com/quilicicf/ColorMee/master/index.ts';
+} from 'https://raw.githubusercontent.com/quilicicf/Stoyle/master/index.ts';
 
 const boldCyanOnRed = createStyle({
   foreground: ForegroundCode.Cyan,

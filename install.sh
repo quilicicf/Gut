@@ -5,6 +5,7 @@ main() (
 
   deno install \
     --force \
+    --global \
     --no-check \
     --no-prompt \
     --config=./deno.json \
