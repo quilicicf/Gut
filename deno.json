@@ -9,15 +9,13 @@
     "yargs/": "https://deno.land/x/yargs@v17.7.2-deno/"
   },
   "lint": {
-    "files": {
-      "include": [
-        "src/",
-        "mod.ts"
-      ],
-      "exclude": [
-        "src/fiddle*.ts"
-      ]
-    },
+    "include": [
+      "src/",
+      "mod.ts"
+    ],
+    "exclude": [
+      "src/fiddle*.ts"
+    ],
     "rules": {
       "tags": [
         "recommended"

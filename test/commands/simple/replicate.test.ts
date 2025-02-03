@@ -75,7 +75,7 @@ Deno.test(stoyle`@unit ${command} should fail with unknown server`({ nodes: [ th
     fail('Should have failed with unknown server');
   } catch (error) {
     assertEquals(
-      error.message,
+      (error as Error).message,
       stoyle`Server ${'unknown'} not configured. Please make sure it is not being implemented and create an issue.`(
         { nodes: [ theme.strong ] },
       ),
@@ -93,6 +93,6 @@ Deno.test(stoyle`@unit ${command} should fail without owner`({ nodes: [ theme.st
     });
     fail('Should have failed without owner');
   } catch (error) {
-    assertEquals(error.message, 'Cannot replicate a repository without owner');
+    assertEquals((error as Error).message, 'Cannot replicate a repository without owner');
   }
 });
