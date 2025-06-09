@@ -10,10 +10,10 @@ main() (
     --no-prompt \
     --config=./deno.json \
     --allow-env='HOME,XDG_SESSION_TYPE' \
-    --allow-net='api.github.com' \
+    --allow-net='api.github.com,codeberg.org' \
     --allow-read="${FORGE},${HOME}/.config/gut/,/tmp" \
     --allow-write="${HOME}/.config/gut/" \
-    --allow-run='git,micro,wl-copy,firefox,pass' \
+    --allow-run='git,micro,wl-copy,firefox-esr,firefox,pass' \
     mod.ts
 )
 
