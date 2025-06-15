@@ -13,6 +13,7 @@ import {
 import { getConstants } from '../../constants.ts';
 import { FullGutConfiguration } from '../../configuration.ts';
 import { executeProcessCriticalTask } from '../../lib/exec/executeProcessCriticalTask.ts';
+import { RepositoryMetadata } from '../../lib/git/RepositoryMetadata.ts';
 
 interface Args {
   configuration: FullGutConfiguration,
@@ -23,13 +24,6 @@ interface Args {
 
   // Test thingies
   isTestRun: boolean,
-}
-
-interface RepositoryMetadata {
-  sshUrl: string,
-  server: string,
-  owner: string,
-  repository: string,
 }
 
 const { GIT_SERVERS } = await getConstants();

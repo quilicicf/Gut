@@ -1,3 +1,3 @@
-import { basename, fromFileUrl, resolve } from 'path/mod.ts';
+import { basename, toFileUrl, fromFileUrl, resolve } from 'path/mod.ts';
 
-export { resolve, basename, fromFileUrl };
+export { resolve, basename, toFileUrl, fromFileUrl };

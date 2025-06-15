@@ -110,12 +110,12 @@ export const github: ReviewTool = {
         },
       );
 
-      if (response.status < 299) {
+      if (response.status < 300) {
         const pullRequest = await response.json();
-        const { html_url: prUrl } = pullRequest;
+        const { html_url: prUrl, number: prNumber } = pullRequest;
         await log(Deno.stdout, stoyle`Your PR is available at ${prUrl} 🎉\n`({ nodes: [ theme.link ] }));
         await setAssigneeIfApplicable(pullRequestCreation, pullRequest, token);
-        return { url: prUrl, number: pullRequest.number };
+        return { url: prUrl, number: prNumber };
       }
 
       return handleResponseError<PullRequest>(response);

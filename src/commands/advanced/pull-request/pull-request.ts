@@ -29,13 +29,15 @@ import { getCommitsBetweenRefs } from '../../../lib/git/getCommitsBetweenRefs.ts
 import { getRepositoryFromRemote } from '../../../lib/git/getRepositoryFromRemote.ts';
 
 import { github } from './reviewTools/Github.ts';
+import { codeberg } from './reviewTools/Codeberg.ts';
 import { PullRequestCreation, ReviewTool } from './ReviewTool.ts';
 
 import { thrust } from '../../simple/thrust.ts';
 import { parseDiffAndDisplay } from '../../simple/audit.ts';
 import { FullGutConfiguration } from '../../../configuration.ts';
+import { getRepositoryMetadata } from '../../../lib/git/getRepositoryMetadata.ts';
 
-async function promptForPrTitle (commitsNumber: number): Promise<string> {
+async function promptForPrTitle(commitsNumber: number): Promise<string> {
   const tenLastCommits = await getCommitsUpToMax(commitsNumber, false);
   const titleOptions = tenLastCommits
     .map(({ subject }) => subject)
@@ -62,7 +64,7 @@ async function promptForPrTitle (commitsNumber: number): Promise<string> {
   });
 }
 
-async function promptForPrDescription (tempDescriptionFile: string, descriptionTemplate?: string): Promise<string> {
+async function promptForPrDescription(tempDescriptionFile: string, descriptionTemplate?: string): Promise<string> {
   const shouldWriteDescription = await promptConfirm({
     message: 'Do you want to write a description?',
     default: !!descriptionTemplate,
@@ -92,6 +94,16 @@ interface Args {
 const PR_DESCRIPTION_FILE_NAME = 'pr-description.md';
 const ARG_OPEN = 'open';
 const ARG_COPY = 'copy-url';
+
+enum REVIEW_TOOL {
+  github = 'github',
+  codeberg = 'codeberg',
+}
+
+const REVIEW_TOOLS: Record<REVIEW_TOOL, ReviewTool> = {
+  [ REVIEW_TOOL.github ]: github,
+  [ REVIEW_TOOL.codeberg ]: codeberg,
+};
 
 export const baseCommand = 'pull-request';
 export const describe = 'Creates a pull request on your git server';
@@ -124,7 +136,7 @@ export const options: YargsOptions = {
   },
 };
 export const command = toYargsCommand(baseCommand, options);
-export const aliases = [ 'pr' ];
+export const aliases = ['pr'];
 export const usage = toYargsUsage(baseCommand, options);
 export const extraPermissions: ExtraPermissions = {
   '--allow-run': {
@@ -150,11 +162,11 @@ const findBaseBranch = async (currentBranchName: string, baseBranchNameFromCli?:
   return stringifyBranch(parentBranch);
 };
 
-export async function builder (yargs: YargsInstance) {
+export async function builder(yargs: YargsInstance) {
   return bindOptionsAndCreateUsage(yargs, usage, options);
 }
 
-export async function handler (args: Args) {
+export async function handler(args: Args) {
   const {
     open, copyUrl, assignee, baseBranch, remote,
     configuration,
@@ -172,7 +184,7 @@ export async function handler (args: Args) {
 
   const commitsNumber = size(commitsInPr);
   await log(Deno.stdout, stoyle`Auditing ${commitsNumber.toString()} commit(s)\n`(
-    { nodes: [ theme.commitsNumber ] },
+    { nodes: [theme.commitsNumber] },
   ));
 
   const diff = await getDiffBetweenRefs(baseBranchName, currentBranchName);
@@ -190,7 +202,12 @@ export async function handler (args: Args) {
   }
 
   const title = await promptForPrTitle(commitsNumber);
-  const reviewTool: ReviewTool = github; // TODO: allow changing this from configuration
+  const repositoryMetadata = await getRepositoryMetadata();
+  const reviewTool: ReviewTool = REVIEW_TOOLS[ repositoryMetadata.server ];
+
+  if (!reviewTool) {
+    throw Error(`No review tool registered with name ${repositoryMetadata.server}`);
+  }
 
   const tempDescriptionFile = resolve(configuration.global.tempFolderPath, PR_DESCRIPTION_FILE_NAME);
   const descriptionTemplate = await exists(tempDescriptionFile)

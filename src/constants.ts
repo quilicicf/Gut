@@ -19,14 +19,19 @@ const constants: Constants = {
   GUT_CONFIGURATION_FOLDER: '',
   GIT_SERVERS: { // TODO: get custom servers from gut-config
     github: {
-      getSshUrl (owner, repository): string {
+      getSshUrl(owner: string, repository: string): string {
         return `git@github.com:${owner}/${repository}.git`;
+      },
+    },
+    codeberg: {
+      getSshUrl(owner: string, repository: string): string {
+        return `git@codeberg.org:${owner}/${repository}.git`;
       },
     },
   },
 };
 
-export async function getConstants (): Promise<Constants> {
+export async function getConstants(): Promise<Constants> {
   if (!constants.CONFIGURATION_FILE_NAME) {
     await getPermissionOrExit({ name: 'env', variable: 'HOME' });
     constants.HOME_DIR = Deno.env.get('HOME') || '';
