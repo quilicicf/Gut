@@ -18,25 +18,25 @@ const PARTS = [ // From : man git log
 export const ASV_FORMAT_ARGUMENT = `--pretty=format:${PARTS.join(ASCII_UNIT_SEPARATOR)}${ASCII_GROUP_SEPARATOR}`;
 
 export const LOG_FORMATS: { [ key: string ]: LogFormat } = {
-  JSON: (commits: Commit[]): string => `${JSON.stringify(commits)}\n`,
-  SHA: (commits: Commit[]): string => `${commits.map(({ sha }) => sha).join('\n')}\n`,
-  SUBJECT: (commits: Commit[]): string => `${commits.map(({ subject }) => subject).join('\n')}\n`,
+  JSON: (commits: Commit[]): string => `${JSON.stringify(commits)}`,
+  SHA: (commits: Commit[]): string => `${commits.map(({ sha }) => sha).join('\n')}`,
+  SUBJECT: (commits: Commit[]): string => `${commits.map(({ subject }) => subject).join('\n')}`,
   FULL_BODY: (commits: Commit[]): string => commits
     .map((commit: Commit) => (
       commit.body?.length
-        ? stoyle`${commit.subject}\n\n${commit.body}\n`({ nodes: [ theme.strong, undefined ] })
-        : stoyleGlobal`${commit.subject}\n`(theme.strong)
+        ? stoyle`${commit.subject}\n\n${commit.body}`({ nodes: [ theme.strong, undefined ] })
+        : stoyleGlobal`${commit.subject}`(theme.strong)
     ))
-    .join('=====================================\n'),
+    .join('\n=====================================\n'),
   SIMPLE: (commits: Commit[]): string => commits
-    .map((commit: Commit) => stoyle`${commit.sha.substr(0, 7)} ${commit.subject} ${`<${commit.author}>`}\n`(
+    .map((commit: Commit) => stoyle`${commit.sha.substr(0, 7)} ${commit.subject} ${`<${commit.author}>`}`(
       { nodes: [ theme.sha, undefined, theme.author ] },
     ))
-    .join(''),
+    .join('\n'),
   PRETTY: (commits: Commit[]): string => commits
     .map((commit: Commit) => (
-      stoyle`${commit.sha}\n\t${commit.subject} ${`(${commit.relativeDate})`} ${`<${commit.author}>`}\n\t${`(${commit.branches.join(', ')})`}\n`(
+      stoyle`${commit.sha}\n\t${commit.subject} ${`(${commit.relativeDate})`} ${`<${commit.author}>`}\n\t${`(${commit.branches.join(', ')})`}`(
         { nodes: [ theme.sha, undefined, theme.relativeDate, theme.author, theme.branches ] },
       )))
-    .join(''),
+    .join('\n'),
 };
