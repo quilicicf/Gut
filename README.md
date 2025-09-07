@@ -7,6 +7,10 @@ Ein gut git Fluss [🔊](https://translate.google.com/?sl=de\&tl=en\&text=Ein%20
 [![Maintainability](https://api.codeclimate.com/v1/badges/a090970db27a541d83b3/maintainability)](https://codeclimate.com/github/quilicicf/Gut/maintainability)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d5723842f6e14066a6e68e692ced1c4e)](https://www.codacy.com/app/quilicicf/Gut?utm_source=github.com\&utm_medium=referral\&utm_content=quilicicf/Gut\&utm_campaign=Badge_Grade)
 
+## 🚨 Migrated to codeberg
+
+De-GAFAMization in process, [new repository available here](https://codeberg.org/quilicicf/gut).
+
 <!-- TOC START -->
 
 * [Why Gut?](#why-gut)
